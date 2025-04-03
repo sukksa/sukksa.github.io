@@ -1,0 +1,769 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sukksa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="正则表达式正则表达式用于定义一些字符串的规则，计算机可以根据正则表达式，来检查一个字符串是否符合规则，获取将字符串中符合规则的内容提取出来">
+<meta property="og:type" content="article">
+<meta property="og:title" content="正则表达式">
+<meta property="og:url" content="http://example.com/2021/04/27/javaScript/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/index.html">
+<meta property="og:site_name" content="sukksa blog">
+<meta property="og:description" content="正则表达式正则表达式用于定义一些字符串的规则，计算机可以根据正则表达式，来检查一个字符串是否符合规则，获取将字符串中符合规则的内容提取出来">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-04-27T06:23:30.000Z">
+<meta property="article:modified_time" content="2021-11-06T09:04:07.290Z">
+<meta property="article:author" content="sukksa">
+<meta property="article:tag" content="javaScript">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>正则表达式 - sukksa blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="正则表达式"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-04-27 15:23" pubdate>
+          2021年4月27日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          11 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">正则表达式</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h1><p>正则表达式用于定义一些字符串的规则，计算机可以根据正则表达式，来检查一个字符串是否符合规则，获取将字符串中符合规则的内容提取出来</p>
+<span id="more"></span>
+
+<h2 id="创建正则表达式的对象"><a href="#创建正则表达式的对象" class="headerlink" title="创建正则表达式的对象"></a>创建正则表达式的对象</h2><h3 id="构造函数方式构造"><a href="#构造函数方式构造" class="headerlink" title="构造函数方式构造"></a>构造函数方式构造</h3><ul>
+<li>语法：<br>var 变量 &#x3D; new RegExp(“正则表达式”,”匹配模式”);<br>  var reg &#x3D; new RegExp(“a”); &#x2F;&#x2F;这个正则表达式可以来检查一个字符串中是否含有a<br>  var reg &#x3D; new RegExp(“a”, “i”); &#x2F;&#x2F;不区分大小写</li>
+<li>使用typeof检查正则对象，会返回object</li>
+<li>在构造函数中可以传递一个匹配模式作为第二个参数，可以是<br>  i 忽略大小写<br>  g 全局匹配模式</li>
+</ul>
+<h3 id="使用字面量来创建"><a href="#使用字面量来创建" class="headerlink" title="使用字面量来创建"></a>使用字面量来创建</h3><ul>
+<li><pre><code class="hljs">语法：
+</code></pre>
+  var 变量 &#x3D; &#x2F;正则表达式&#x2F;匹配模式<br>     var reg &#x3D; &#x2F;a&#x2F;;  &#x2F;&#x2F;等价于var reg &#x3D; new RegExp(“a”);<br>     var reg &#x3D; &#x2F;a&#x2F;i; &#x2F;&#x2F;等价于var reg &#x3D; new RegExp(“a”, “i”);</li>
+</ul>
+<h2 id="正则表达式的语法"><a href="#正则表达式的语法" class="headerlink" title="正则表达式的语法"></a>正则表达式的语法</h2><h3 id="使用-或-表示或者的意思"><a href="#使用-或-表示或者的意思" class="headerlink" title="使用 | 或 [] 表示或者的意思"></a>使用 | 或 [] 表示或者的意思</h3><pre><code class="hljs">//下面三个表达式等价
+var reg = /a|b|c/
+var reg = /[abc]/
+var reg = /[a-c]/
+</code></pre>
+<ul>
+<li>[a-z] 任意小写字母</li>
+<li>[A-Z] 任意大写字母</li>
+<li>[A-z] 任意字母</li>
+<li>[0-9] 任意数字</li>
+<li>[^ ]  非</li>
+</ul>
+<h3 id="量词"><a href="#量词" class="headerlink" title="量词"></a>量词</h3><ul>
+<li><p>通过量词可以设置一个内容出现的次数</p>
+</li>
+<li><p>量词只对它前边的一个内容起作用</p>
+<pre><code class="hljs">  &#123;n&#125;		正好出现n次
+  &#123;m,n&#125;	出现m-n次
+  &#123;m,&#125;	m次以上
+  \+		至少一个，相当于&#123;1,&#125;
+  \*		0个或多个，相当于&#123;0,&#125;
+  ?		0个或1个，相当于&#123;0,1&#125;
+</code></pre>
+</li>
+</ul>
+<h3 id="检查一个字符串中开头或结尾"><a href="#检查一个字符串中开头或结尾" class="headerlink" title="检查一个字符串中开头或结尾"></a>检查一个字符串中开头或结尾</h3><ul>
+<li><pre><code class="hljs">^ 表示开头
+</code></pre>
+</li>
+<li><pre><code class="hljs">$ 表示结尾
+
+
+  var reg = /^a/; //以a开始
+  var reg = /a$/; //以a结尾
+</code></pre>
+</li>
+<li><p>如果在正则表达式中同时使用^ $则要求字符串必须完全符合正则表达式</p>
+<pre><code class="hljs">  var reg = /^a&amp;/; //要求正则表达式必须为a
+</code></pre>
+</li>
+</ul>
+<h3 id="使用-作为转义字符"><a href="#使用-作为转义字符" class="headerlink" title="使用 \ 作为转义字符"></a>使用 \ 作为转义字符</h3><ul>
+<li><code>\\\.</code> 表示 <code>.</code></li>
+<li><code>\\\\</code>  表示 <code>\\</code></li>
+</ul>
+<h3 id="元字符"><a href="#元字符" class="headerlink" title="元字符"></a>元字符</h3><ul>
+<li><p><code>.</code>  单个字符，除了换行和行结束符 </p>
+</li>
+<li><p><code>\w</code> 任意字母、数字、_  [A-z0-9_]</p>
+</li>
+<li><p><code>\W</code> 非字母、数字、_  [^A-z0-9_]</p>
+</li>
+<li><p><code>\d</code> 任意的数字 [0-9]</p>
+</li>
+<li><p><code>\D</code> 非数字 [^0-9]</p>
+</li>
+<li><p><code>\s</code> 空格</p>
+</li>
+<li><p><code>\S</code> 非空格</p>
+</li>
+<li><p><code>\b</code> 单词边界</p>
+</li>
+<li><p><code>\B</code> 非单词边界</p>
+<pre><code class="hljs">  电子邮件
+  hello  .nihao          @     abc  .com.cn
+   
+  任意字母数字下划线    .任意字母数字下划线  @   任意字母数字     .任意字母（2-5位）   .任意字母（2-5位）
+   
+  \w&#123;3,&#125;  (\.\w+)*  @  [A-z0-9]+  (\.[A-z]&#123;2,5&#125;)&#123;1,2&#125;
+  
+  var emailReg = /^\w&#123;3,&#125;(\.\w+)*@[A-z0-9]+(\.[A-z]&#123;2,5&#125;)&#123;1,2&#125;$/;
+  var email = &quot;abc.hello@163.com&quot;;
+  console.log(emailReg.test(email)); //true
+</code></pre>
+</li>
+</ul>
+<h2 id="正则表达式的方法"><a href="#正则表达式的方法" class="headerlink" title="正则表达式的方法"></a>正则表达式的方法</h2><h3 id="test"><a href="#test" class="headerlink" title="test()"></a>test()</h3><ul>
+<li>使用这个方法可以用来检查一个字符串是否符合正则表达式的规则，如果符合则返回true，否则返回false<br>  var str &#x3D; “abc123”;<br>  var reg &#x3D; new RegExp(“aB”, “i”);<br><br>  console.log(reg.test(str)); &#x2F;&#x2F;true</li>
+</ul>
+<h3 id="split"><a href="#split" class="headerlink" title="split()"></a>split()</h3><ul>
+<li>可以将一个字符串拆分为一个数组</li>
+<li>方法中可以传递一个正则表达式作为参数，这样方法将会根据正则表达式去拆分字符串</li>
+<li>这个方法即使不指定全局匹配，也会全都拆分<br>  &#x2F;&#x2F;根据任意字母来将字符串拆分<br>  var str &#x3D; “1a2b3c4d5e6f7”;<br>  console.log(str.split(&#x2F;[A-z]&#x2F;)); &#x2F;&#x2F;[‘1’, ‘2’, ‘3’, ‘4’, ‘5’, ‘6’, ‘7’]</li>
+</ul>
+<h3 id="search"><a href="#search" class="headerlink" title="search()"></a>search()</h3><ul>
+<li>可以搜索字符串中是否含有指定内容</li>
+<li>如果搜索到指定内容，则会返回第一次出现的索引，如果没有搜索到返回-1</li>
+<li>它可以接受一个正则表达式作为参数，然后会根据正则表达式去检索字符串</li>
+<li>serach()只会查找第一个，即使设置全局匹配也没用<br> &#x2F;&#x2F;搜索字符串中是否含有abc 或 aec 或 afc<br> str &#x3D; “hello abc hello aec afc”;<br> console.log(str.search(&#x2F;a[bef]c&#x2F;)); &#x2F;&#x2F;6</li>
+</ul>
+<h3 id="match"><a href="#match" class="headerlink" title="match()"></a>match()</h3><ul>
+<li>可以根据正则表达式，从一个字符串中将符合条件的内容提取出来</li>
+<li>默认情况下我们的match只会找到第一个符合要求的内容，找到以后就停止检索<ul>
+<li>我们可以设置正则表达式为全局匹配模式，这样就会匹配到所有的内容</li>
+<li>可以为一个正则表达式设置多个匹配模式，且顺序无所谓</li>
+</ul>
+</li>
+<li>match()会将匹配到的内容封装到一个数组中返回，即使只查询到一个结果<br>  var str &#x3D; “1a2a3a4a5e6f7A8B9C”;<br>  &#x2F;&#x2F;提取字符串中所有的字母（不区分大小写）<br>  console.log(str.match(&#x2F;[a-z]&#x2F;ig)); &#x2F;&#x2F;返回值是数组</li>
+</ul>
+<h3 id="replace"><a href="#replace" class="headerlink" title="replace()"></a>replace()</h3><ul>
+<li>可以将字符串中指定内容替换为新的内容</li>
+<li>参数：<ul>
+<li>第一个：被替换的内容，可以接受一个正则表达式作为参数</li>
+<li>第二个：新的内容</li>
+</ul>
+</li>
+<li>默认只会替换第一个，设置正则表达式为全局匹配模式，这样就会替换到所有符合正则表达式的内容</li>
+<li>第二个参数设为空串，相当于删除匹配到的内容<br>  var str &#x3D; “1a2a3a4a5e6f7A8B9C”;<br>  console.log(str.replace(&#x2F;[a-z]&#x2F;gi, “@”)); &#x2F;&#x2F; 1@2@3@4@5@6@7@8@9@<br>  console.log(str.replace(&#x2F;[a-z]&#x2F;gi, “”));  &#x2F;&#x2F; 123456789</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/javaScript/" class="category-chain-item">javaScript</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/javaScript/" class="print-no-link">#javaScript</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>正则表达式</div>
+      <div>http://example.com/2021/04/27/javaScript/正则表达式/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sukksa</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年4月27日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/04/27/javaScript/%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%96%B9%E6%B3%95/" title="字符串方法">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">字符串方法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/04/27/javaScript/%E6%95%B0%E7%BB%84/" title="数组">
+                        <span class="hidden-mobile">数组</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

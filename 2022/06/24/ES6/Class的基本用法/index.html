@@ -1,0 +1,930 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sukksa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Class的基本用法ES6 提供了更接近传统语言的写法，引入了 Class(类)这个概念，作为对象的模板。通过class关键字，可以定义类。基本上，ES6 的class可以看作只是一个语法糖，它的绝大部分功能，ES5 都可以做到，新的class写法只是让对象原型的写法更加清晰、更像面向对象编程的语法而已。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Class的基本用法">
+<meta property="og:url" content="http://example.com/2022/06/24/ES6/Class%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/index.html">
+<meta property="og:site_name" content="sukksa blog">
+<meta property="og:description" content="Class的基本用法ES6 提供了更接近传统语言的写法，引入了 Class(类)这个概念，作为对象的模板。通过class关键字，可以定义类。基本上，ES6 的class可以看作只是一个语法糖，它的绝大部分功能，ES5 都可以做到，新的class写法只是让对象原型的写法更加清晰、更像面向对象编程的语法而已。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-06-24T06:11:40.000Z">
+<meta property="article:modified_time" content="2022-07-19T13:45:35.177Z">
+<meta property="article:author" content="sukksa">
+<meta property="article:tag" content="ES6">
+<meta property="article:tag" content="javaScript">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Class的基本用法 - sukksa blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Class的基本用法"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-06-24 15:11" pubdate>
+          2022年6月24日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          19 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Class的基本用法</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Class的基本用法"><a href="#Class的基本用法" class="headerlink" title="Class的基本用法"></a>Class的基本用法</h1><p>ES6 提供了更接近传统语言的写法，引入了 Class(类)这个概念，作为对象的模板。通过class关键字，可以定义类。<br>基本上，ES6 的class可以看作只是一个语法糖，它的绝大部分功能，ES5 都可以做到，新的class写法只是让对象原型的写法更加清晰、更像面向对象编程的语法而已。</p>
+<span id="more"></span>
+
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>JavaScript 语言中，生成实例对象的传统方法是通过构造函数。下面是一个例子。</p>
+<pre><code class="hljs">    function Obj(x, y) &#123;
+        this.x = x
+        this.y = y
+    &#125;
+
+    Obj.prototype.add = function () &#123;
+        return this.x + this.y
+    &#125;
+
+    let num = new Obj(1, 2)
+</code></pre>
+<p>上面的代码用 ES6 的class改写，就是下面这样</p>
+<pre><code class="hljs">    class Obj &#123;
+        constructor(x, y)&#123;
+            this.x = x
+            this.y = y
+        &#125;
+        add() &#123;
+            return this.x + this.y
+        &#125;
+    &#125; 
+</code></pre>
+<p>上面代码定义了一个“类”，可以看到里面有一个constructor方法，这就是构造方法，而this关键字则代表实例对象</p>
+<p><code>obj</code> 类除了构造方法，还定义了一个 <code>add()</code> 方法。注意，定义“类”的方法的时候，前面不需要加上<code>function</code>这个关键字，直接把函数定义放进去了就可以了。另外，方法之间不需要逗号分隔，加了会报错。</p>
+<p>ES6 的类，完全可以看作构造函数的另一种写法,类的数据类型就是函数，类本身就指向构造函数。</p>
+<pre><code class="hljs">    class Obj &#123;
+      // ...
+    &#125;
+    
+    typeof Obj // &quot;function&quot;
+    Obj === Obj.prototype.constructor // true
+</code></pre>
+<p>构造函数的 <code>prototype</code> 属性，在 ES6 的“类”上面继续存在。事实上，类的所有方法都定义在类的 <code>prototype</code> 属性上面</p>
+<pre><code class="hljs">    class Obj &#123;
+        constructor()&#123;	&#125;
+        add() &#123;	&#125;
+    &#125; 
+    //等同于
+    Obj.prototype = &#123;
+        constructor()&#123;	&#125;,
+        add() &#123;	&#125;
+    &#125;
+</code></pre>
+<p>因此在类的实例上调用方法。相当于调用原型上的方法。</p>
+<h2 id="constructor方法"><a href="#constructor方法" class="headerlink" title="constructor方法"></a>constructor方法</h2><p><code>constructor</code>方法是类的默认方法，通过new命令生成对象实例时，自动调用该方法。一个类必须有<code>constructor</code>方法，如果没有显式定义，一个空的<code>constructor</code>方法会被默认添加</p>
+<pre><code class="hljs">    class Obj &#123;&#125;
+    
+    // 等同于
+    class Obj &#123;
+      constructor() &#123;&#125;
+    &#125;
+</code></pre>
+<p>上面代码中，定义了一个空的类 <code>Obj</code>，JavaScript 引擎会自动为它添加一个空的<code>constructor</code>方法。 <code>constructor</code>方法默认返回实例对象(即<code>this</code>)，完全可以指定返回另外一个对象</p>
+<pre><code class="hljs">    class Foo &#123;
+        constructor()&#123;
+            return &#123;&#125;
+        &#125;
+    &#125;
+    new Foo() instanceof Foo  // flase
+</code></pre>
+<p><code>constructor</code> 函数返回一个全新的对象，结果导致实例对象不是Foo类的实例</p>
+<p><strong>注</strong>：类必须使用<code>new</code>调用，否则会报错。这是它跟普通构造函数的一个主要区别，构造函数不用<code>new</code>也可以执行。</p>
+<h2 id="new操作符"><a href="#new操作符" class="headerlink" title="new操作符"></a>new操作符</h2><p>众所周知，在JS中，new的作用是通过构造函数来创建一个实例对象</p>
+<p>实际上，<code>new</code> 操作符帮我们做了这些事</p>
+<ol>
+<li><p>帮我们创建了一个空对象，例如：obj；</p>
+</li>
+<li><p>将空对象原型的内存地址__proto__指向函数的原型对象；</p>
+</li>
+<li><p>利用函数的call方法，将原本指向window的绑定对象this指向了obj。（这样一来，当我们向函数中再传递实参时，对象的属性就会被挂载到obj上。）</p>
+</li>
+<li><p>利用函数返回对象obj。</p>
+<pre><code class="hljs"> function Foo(name) &#123;
+     this.name = name
+ &#125;
+ let foo = new Foo(&quot;aaa&quot;)
+
+ //等价于
+ function Foo(name) &#123;
+     this.name = name
+     return this 			   //4
+ &#125;
+ let obj = &#123;&#125; 				  //1
+ obj.__proto__ = Foo.prototype  //2
+ // Foo.call(obj, &#39;aaa&#39;)
+ let foo = Foo.call(obj, &#39;aaa&#39;) //3
+</code></pre>
+</li>
+</ol>
+<p><strong>注</strong>：类的构造函数与普通构造函数之间的区别是，调用构造函数必须使用<code>new</code> 操作符。而普通构造函数如果不使用 <code>new</code> 调用，name就会以全局的 <code>this</code> （通常是 <code>window</code>）作为内部对象。调用类构造函数时如果忘记使用 <code>new</code> 则会报错。</p>
+<h2 id="类的实例对象"><a href="#类的实例对象" class="headerlink" title="类的实例对象"></a>类的实例对象</h2><p>与 ES5 一样，实例的属性除非显式定义在其本身(即定义在this对象上)，否则都是定义在原型上(即定义在class上)。 </p>
+<pre><code class="hljs">    //定义类
+    class Point &#123;
+      constructor(x, y) &#123;
+        this.x = x
+        this.y = y
+      &#125;
+    
+      toString() &#123;
+        return &quot;(&quot; + this.x + &quot;, &quot; + this.y + &quot;)&quot;
+      &#125;
+    &#125;
+    
+    let point = new Point(2, 3)
+    
+    point.toString() // (2, 3)
+    
+    point.hasOwnProperty(&quot;x&quot;) // true
+    point.hasOwnProperty(&quot;y&quot;) // true
+    point.hasOwnProperty(&quot;toString&quot;) // false
+    point.__proto__.hasOwnProperty(&quot;toString&quot;) // true
+</code></pre>
+<p>上面代码中，<code>x</code>和<code>y</code>都是实例对象<code>point</code>自身的属性(因为定义在<code>this</code>变量上)，所以<code>hasOwnProperty</code>方法返回<code>true</code>，而<code>toString</code>是原型对象的属性(因为定义在<code>Point</code>类上)，所以<code>hasOwnProperty</code>方法返回<code>false</code>。这些都与 ES5 的行为保持一致。</p>
+<p>与 ES5 一样，类的所有实例共享一个原型对象。</p>
+<pre><code class="hljs">    let p1 = new Point(2, 3)
+    let p2 = new Point(3, 2)
+    
+    p1.__proto__ === p2.__proto__	//true
+</code></pre>
+<p>上面代码中，<code>p1</code>和<code>p2</code>都是<code>Point</code>的实例，它们的原型都是P<code>oint.prototype</code>，所以<code>__proto__</code>属性是相等的。</p>
+<p>这也意味着，可以通过实例的<code>__proto__</code>属性为“类”添加方法。</p>
+<blockquote>
+<p><strong>proto</strong> 并不是语言本身的特性，这是各大厂商具体实现时添加的私有属性，虽然目前很多现代浏览器的 JS 引擎中都提供了这个私有属性，但依旧不建议在生产中使用该属性，避免对环境产生依赖。生产环境中，我们可以使用 <code>Object.getPrototypeOf</code> 方法来获取实例对象的原型，然后再来为原型添加方法&#x2F;属性。</p>
+</blockquote>
+<h2 id="Class表达式"><a href="#Class表达式" class="headerlink" title="Class表达式"></a>Class表达式</h2><p>与函数一样，类也可以使用表达式的形式定义</p>
+<pre><code class="hljs">    const MyClass = class Me &#123;
+      getClassName() &#123;
+        return Me.name
+      &#125;
+    &#125;
+</code></pre>
+<p>上面代码使用表达式定义了一个类。需要注意的是，这个类的名字是<code>MyClass</code>而不是<code>Me</code>，<code>Me</code>只在 Class 的内部代码可用，指代当前类。如果类的内部没用到的话，可以省略 <code>Me</code></p>
+<pre><code class="hljs">    let inst = new MyClass()
+    inst.getClassName() // Me
+    Me.name // ReferenceError: Me is not defined
+</code></pre>
+<p>采用 Class 表达式，可以写出立即执行的 Class。</p>
+<pre><code class="hljs">    let person = new (class &#123;
+      constructor(name) &#123;
+        this.name = name
+      &#125;
+    
+      sayName() &#123;
+        console.log(this.name)
+      &#125;
+    &#125;)(&quot;张三&quot;)
+    
+    person.sayName() // &quot;张三&quot;
+</code></pre>
+<h2 id="Class-的取值函数-getter-和存值函数-setter"><a href="#Class-的取值函数-getter-和存值函数-setter" class="headerlink" title="Class 的取值函数(getter)和存值函数(setter)"></a>Class 的取值函数(getter)和存值函数(setter)</h2><p>与 ES5 一样，在“类”的内部可以使用<code>get</code>和<code>set</code>关键字，对某个属性设置存值函数和取值函数，拦截该属性的存取行为。</p>
+<pre><code class="hljs">    class MyClass &#123;
+        constructor() &#123;
+            // ...
+        &#125;
+        get prop() &#123;
+            return &quot;getter&quot;
+        &#125;
+        set prop(value) &#123;
+            console.log(&quot;setter: &quot; + value)
+        &#125;
+    &#125;
+
+    let inst = new MyClass()
+
+    inst.prop = 123  // setter: 123
+
+    inst.prop  // &#39;getter&#39;
+</code></pre>
+<p>上面代码中，<code>prop</code>属性有对应的存值函数和取值函数，因此赋值和读取行为都被自定义了。</p>
+<p>存值函数和取值函数是设置在属性的 <code>Descriptor</code> 对象上的</p>
+<pre><code class="hljs">    class CustomHTMLElement &#123;
+      constructor(element) &#123;
+        this.element = element
+      &#125;
+    
+      get html() &#123;
+        return this.element.innerHTML
+      &#125;
+    
+      set html(value) &#123;
+        this.element.innerHTML = value
+      &#125;
+    &#125;
+    
+    let descriptor = Object.getOwnPropertyDescriptor(
+      CustomHTMLElement.prototype,
+      &quot;html&quot;
+    );
+    
+    &quot;get&quot; in descriptor // true
+    &quot;set&quot; in descriptor // true
+</code></pre>
+<p>上面代码中，存值函数和取值函数是定义在<code>html</code>属性的描述对象上面，这与 ES5 完全一致</p>
+<h2 id="Class-的-Generator-方法"><a href="#Class-的-Generator-方法" class="headerlink" title="Class 的 Generator 方法"></a>Class 的 Generator 方法</h2><p>如果某个方法之前加上星号(*)，就表示该方法是一个 Generator 函数。 </p>
+<pre><code class="hljs">    class Foo &#123;
+      constructor(...args) &#123;
+        this.args = args;
+      &#125;
+      *[Symbol.iterator]() &#123;
+        for (let arg of this.args) &#123;
+          yield arg;
+        &#125;
+      &#125;
+    &#125;
+    
+    for (let x of new Foo(&quot;hello&quot;, &quot;world&quot;)) &#123;
+      console.log(x);
+    &#125;
+    // hello
+    // world
+</code></pre>
+<p>上面代码中，<code>Foo</code>类的<code>Symbol.iterator</code>方法前有一个星号，表示该方法是一个 <code>Generator</code> 函数。<br><code>Symbol.iterator</code>方法返回一个<code>Foo</code>类的默认遍历器，<code>for...of</code>循环会自动调用这个遍历器</p>
+<h2 id="Class-的静态方法"><a href="#Class-的静态方法" class="headerlink" title="Class 的静态方法"></a>Class 的静态方法</h2><p>类相当于实例的原型，所有在类中定义的方法，都会被实例继承。如果在一个方法前，加上<code>static</code>关键字，就表示该方法不会被实例继承，而是直接通过类来调用，这就称为“静态方法”。</p>
+<pre><code class="hljs">    class Foo &#123;
+        static classMethod() &#123;
+            return &quot;hello&quot;
+        &#125;
+    &#125;
+    
+    Foo.classMethod() // &#39;hello&#39;
+    
+    let foo = new Foo()
+    foo.classMethod() // TypeError: foo.classMethod is not a function
+</code></pre>
+<p><code>Foo</code>类的<code>classMethod</code>方法前有<code>static</code>关键字，表明该方法是一个静态方法，可以直接在<code>Foo</code>类上调用<code>Foo.classMethod()</code>，而不是在<code>Foo</code>类的实例上调用。如果在实例上调用静态方法，会抛出一个错误，表示不存在该方法</p>
+<p>注意，如果静态方法包含this关键字，这个this指的是类，而不是实例。</p>
+<pre><code class="hljs">    class Foo &#123;
+        static bar() &#123;
+            this.baz()
+        &#125;
+        static baz() &#123;
+            console.log(&quot;hello&quot;)
+        &#125;
+        baz() &#123;
+            console.log(&quot;world&quot;)
+        &#125;
+    &#125;
+
+    Foo.bar() // hello
+</code></pre>
+<p>静态方法<code>bar</code>调用了<code>this.baz</code>，这里的<code>this</code>指的是<code>Foo</code>类，而不是<code>Foo</code>的实例，等同于调用<code>Foo.baz</code>。另外，从这个例子还可以看出，静态方法可以与非静态方法重名</p>
+<p>父类的静态方法，可以被子类继承</p>
+<pre><code class="hljs">    class Foo &#123;
+        static classMethod() &#123;
+            return &quot;hello&quot;
+        &#125;
+    &#125;
+
+    class Bar extends Foo &#123;&#125;
+
+    Bar.classMethod(); // &#39;hello&#39;
+</code></pre>
+<p>并且，静态方法也是可以从<code>super</code>对象上调用的。</p>
+<pre><code class="hljs">    class Foo &#123;
+        static classMethod() &#123;
+            return &quot;hello&quot;
+        &#125;
+    &#125;
+
+    class Bar extends Foo &#123;
+        static classMethod() &#123;
+            return super.classMethod() + &quot;, too&quot;
+        &#125;
+    &#125;
+
+    Bar.classMethod() // &quot;hello, too&quot;
+</code></pre>
+<h2 id="Class-的静态属性"><a href="#Class-的静态属性" class="headerlink" title="Class 的静态属性"></a>Class 的静态属性</h2><p>类的静态属性只要在上面的实例属性写法前面，加上static关键字就可以了。 </p>
+<pre><code class="hljs">    class MyClass &#123;
+        static myStaticProp = &#39;aa&#39;
+
+        constructor() &#123;
+            console.log(MyClass.myStaticProp) // &#39;aa&#39;
+        &#125;
+    &#125;
+</code></pre>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ES6/" class="category-chain-item">ES6</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ES6/" class="print-no-link">#ES6</a>
+      
+        <a href="/tags/javaScript/" class="print-no-link">#javaScript</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Class的基本用法</div>
+      <div>http://example.com/2022/06/24/ES6/Class的基本用法/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sukksa</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年6月24日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/06/25/ES6/Class%E7%9A%84%E7%BB%A7%E6%89%BF/" title="Class的基本用法">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Class的基本用法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/12/18/ES6/set%E4%B8%8Emap/" title="set 与 map">
+                        <span class="hidden-mobile">set 与 map</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,1035 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sukksa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="模块化 module基本概述历史上，JavaScript 一直没有模块(module)体系，无法将一个大程序拆分成互相依赖的小文件，再用简单的方法拼装起来。其他语言都有这项功能，比如 Ruby 的require、Python 的import，甚至就连 CSS 都有@import，但是 JavaScript 任何这方面的支持都没有，这对开发大型的、复杂的项目形成了巨大障碍。 在 ES6 之前，社区制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Module 模块化">
+<meta property="og:url" content="http://example.com/2022/07/21/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/index.html">
+<meta property="og:site_name" content="sukksa blog">
+<meta property="og:description" content="模块化 module基本概述历史上，JavaScript 一直没有模块(module)体系，无法将一个大程序拆分成互相依赖的小文件，再用简单的方法拼装起来。其他语言都有这项功能，比如 Ruby 的require、Python 的import，甚至就连 CSS 都有@import，但是 JavaScript 任何这方面的支持都没有，这对开发大型的、复杂的项目形成了巨大障碍。 在 ES6 之前，社区制">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-21T06:32:08.000Z">
+<meta property="article:modified_time" content="2022-07-23T15:49:05.769Z">
+<meta property="article:author" content="sukksa">
+<meta property="article:tag" content="ES6">
+<meta property="article:tag" content="javaScript">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Module 模块化 - sukksa blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Module 模块化"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-07-21 15:32" pubdate>
+          2022年7月21日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          35 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Module 模块化</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="模块化-module"><a href="#模块化-module" class="headerlink" title="模块化 module"></a>模块化 module</h1><h2 id="基本概述"><a href="#基本概述" class="headerlink" title="基本概述"></a>基本概述</h2><p>历史上，JavaScript 一直没有模块(<code>module</code>)体系，无法将一个大程序拆分成互相依赖的小文件，再用简单的方法拼装起来。其他语言都有这项功能，比如 Ruby 的<code>require</code>、Python 的<code>import</code>，甚至就连 CSS 都有<code>@import</code>，但是 JavaScript 任何这方面的支持都没有，这对开发大型的、复杂的项目形成了巨大障碍。</p>
+<p>在 ES6 之前，社区制定了一些模块加载方案，最主要的有 CommonJS 和 AMD 两种。前者用于服务器，后者用于浏览器。ES6 在语言标准的层面上，实现了模块功能，而且实现得相当简单，完全可以取代 CommonJS 和 AMD 规范，成为浏览器和服务器通用的模块解决方案</p>
+<span id="more"></span>
+<pre><code class="hljs">    // CommonJS模块
+    let &#123; stat, exists, readFile &#125; = require(&#39;fs&#39;)
+
+    // 等同于
+    let _fs = require(&#39;fs&#39;)
+    let stat = _fs.stat
+    let exists = _fs.exists
+    let readfile = _fs.readfile
+</code></pre>
+<p>上面代码的实质是整体加载<code>fs</code>模块(即加载<code>fs</code>的所有方法)，生成一个对象(<code>_fs</code>)，然后再从这个对象上面读取 3 个方法。这种加载称为“<strong>运行时加载</strong>”，因为只有运行时才能得到这个对象，导致完全没办法在编译时做“静态优化”</p>
+<p>ES6 模块不是对象，而是通过<code>export</code>命令显式指定输出的代码，再通过<code>import</code>命令输入</p>
+<pre><code class="hljs">    // ES6模块
+    import &#123; stat, exists, readFile &#125; from &quot;fs&quot;
+</code></pre>
+<p>上面代码的实质是从fs模块加载 3 个方法，其他方法不加载。这种加载称为“<strong>编译时加载</strong>”或者静态加载，即 ES6 可以在编译时就完成模块加载，效率要比 CommonJS 模块的加载方式高。当然，这也导致了没法引用 ES6 模块本身，因为它不是对象</p>
+<p>由于 ES6 模块是编译时加载，使得静态分析成为可能。有了它，就能进一步拓宽 JavaScript 的语法，比如引入宏(<code>macro</code>)和类型检验(<code>type system</code>)这些只能靠静态分析实现的功能。<br>除了静态加载带来的各种好处，ES6 模块还有以下好处。 </p>
+<ul>
+<li>不再需要UMD模块格式了，将来服务器和浏览器都会支持 ES6 模块格式。目前，通过各种工具库，其实已经做到了这一点。 </li>
+<li>将来浏览器的新 API 就能用模块格式提供，不再必须做成全局变量或者<code>navigator</code>对象的属性。 </li>
+<li>不再需要对象作为命名空间(比如<code>Math</code>对象)，未来这些功能可以通过模块提供。</li>
+</ul>
+<h2 id="严格模式"><a href="#严格模式" class="headerlink" title="严格模式"></a>严格模式</h2><p>ES6 的模块自动采用严格模式，不管您有没有在模块头部加上<code>&quot;use strict&quot;</code>。</p>
+<p>严格模式主要有以下限制。 </p>
+<ul>
+<li>变量必须声明后再使用 </li>
+<li>函数的参数不能有同名属性，否则报错 </li>
+<li>不能使用<code>with</code>语句 不能对只读属性赋值，否则报错 </li>
+<li>不能使用前缀 0 表示八进制数，否则报错 </li>
+<li>不能删除不可删除的属性，否则报错 </li>
+<li>不能删除变量<code>delete prop</code>，会报错，只能删除属性<code>delete global[prop]</code> </li>
+<li><code>eval</code>不会在它的外层作用域引入变量 </li>
+<li><code>eval</code>和<code>arguments</code>不能被重新赋值 </li>
+<li><code>arguments</code>不会自动反映函数参数的变化 </li>
+<li>不能使用<code>arguments.callee</code> </li>
+<li>不能使用<code>arguments.caller </code></li>
+<li>禁止<code>this</code>指向全局对象 </li>
+<li>不能使用<code>fn.caller</code>和<code>fn.arguments</code>获取函数调用的堆栈 </li>
+<li>增加了保留字(比如<code>protected</code>、<code>static</code>和<code>interface</code>)</li>
+</ul>
+<p>上面这些限制，模块都必须遵守。<br>其中，尤其需要注意<code>this</code>的限制。ES6 模块之中，顶层的<code>this</code>指向<code>undefined</code>，即不应该在顶层代码使用<code>this</code></p>
+<h2 id="export-命令"><a href="#export-命令" class="headerlink" title="export 命令"></a>export 命令</h2><p>模块功能主要由两个命令构成: <code>export</code>和<code>import</code>。</p>
+<ul>
+<li><code>export</code>命令用于规定模块的对外接口</li>
+<li><code>import</code>命令用于输入其他模块提供的功能。</li>
+</ul>
+<p>一个模块就是一个独立的文件。该文件内部的所有变量，外部无法获取。<br>如果您希望外部能够读取模块内部的某个变量，就必须使用<code>export</code>关键字输出该变量。</p>
+<h3 id="分别暴露"><a href="#分别暴露" class="headerlink" title="分别暴露"></a>分别暴露</h3><p>下面是一个 JS 文件，里面使用<code>export</code>命令输出变量，在每个需要暴露的变量前加上<code>export</code>关键字</p>
+<pre><code class="hljs">    // profile.js
+    export var firstName = &#39;Michael&#39;
+    export var lastName = &#39;Jackson&#39;
+    export function fun() &#123;
+        console.log(&quot;fun&quot;);
+    &#125;
+</code></pre>
+<p>上面代码是<code>profile.js</code>文件，保存了用户信息。ES6 将其视为一个模块，里面用<code>export</code>命令对外部输出了三个变量</p>
+<h3 id="统一暴露"><a href="#统一暴露" class="headerlink" title="统一暴露"></a>统一暴露</h3><p>在<code>export</code>命令后面，使用大括号指定所要输出的一组变量。它与前一种写法(直接放置在<code>var</code>语句前)是等价的</p>
+<pre><code class="hljs">    // profile.js
+    var firstName = &#39;Michael&#39;
+    var lastName = &#39;Jackson&#39;
+    function fun() &#123;
+        console.log(&quot;fun&quot;);
+    &#125;
+
+    export &#123; firstName, lastName, fun &#125;
+</code></pre>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><ul>
+<li><p>通常情况下，<code>export</code>输出的变量就是本来的名字，但是可以使用<code>as</code>关键字重命名</p>
+<pre><code class="hljs">  function v1() &#123;&#125;
+  function v2() &#123;&#125;
+
+  export &#123; 
+      v1 as streamV1, 
+      v2 as streamV2, 
+      v2 as streamLatestVersion 
+  &#125;
+</code></pre>
+<p>  上面代码使用<code>as</code>关键字，重命名了函数<code>v1</code>和<code>v2</code>的对外接口。重命名后，<code>v2</code>可以用不同的名字输出两次</p>
+</li>
+<li><p><code>export</code>语句输出的接口，与其对应的值是动态绑定关系，即通过该接口，可以取到模块内部实时的值</p>
+<pre><code class="hljs">  export var foo = &#39;bar&#39;
+  setTimeout(() =&gt; (foo = &#39;baz&#39;), 500)
+</code></pre>
+<p>  上面代码输出变量<code>foo</code>，值为<code>bar</code>，500 毫秒之后变成<code>baz</code></p>
+</li>
+</ul>
+<h2 id="import-命令"><a href="#import-命令" class="headerlink" title="import 命令"></a>import 命令</h2><p>使用<code>export</code>命令定义了模块的对外接口以后，其他 JS 文件就可以通过<code>import</code>命令加载这个模块</p>
+<h3 id="解构赋值形式"><a href="#解构赋值形式" class="headerlink" title="解构赋值形式"></a>解构赋值形式</h3><p><code>import</code>命令接受一对大括号，里面指定要从其他模块导入的变量名。大括号里面的变量名，必须与被导入模块(profile.js)对外接口的名称相同。类似于解构赋值的形式</p>
+<pre><code class="hljs">    import &#123; firstName, lastName, fun &#125; from &quot;./profile.js&quot;
+</code></pre>
+<p>如果想为输入的变量重新取一个名字，<code>import</code>命令要使用<code>as</code>关键字，将输入的变量重命名</p>
+<pre><code class="hljs">    import &#123; lastName as surname &#125; from &quot;./profile.js&quot;
+</code></pre>
+<h3 id="整体加载形式"><a href="#整体加载形式" class="headerlink" title="整体加载形式"></a>整体加载形式</h3><p>除了指定加载某个输出值，还可以使用整体加载，即用星号(<code>*</code>)指定一个对象，所有输出值都加载在这个对象上面</p>
+<pre><code class="hljs">    import * as info from &#39;./profile.js&#39;
+</code></pre>
+<p>注意，模块整体加载所在的那个对象，应该是可以静态分析的，所以不允许运行时改变。<br>下面的写法都是不允许</p>
+<pre><code class="hljs">    import * as info from &#39;./profile.js&#39;
+    info.firstName = &#39;a&#39;
+    // Cannot assign to read only property &#39;firstName&#39; of object &#39;[object Module]&#39;
+</code></pre>
+<h2 id="export-default-命令"><a href="#export-default-命令" class="headerlink" title="export default 命令"></a>export default 命令</h2><p>从前面的例子可以看出，使用<code>import</code>命令的时候，用户需要知道所要加载的变量名或函数名，否则无法加载。但是，用户肯定希望快速上手，未必愿意阅读文档，去了解模块有哪些属性和方法。 </p>
+<p>为了给用户提供方便，让他们不用阅读文档就能加载模块，就要用到<code>export default</code>命令，为模块指定默认输出</p>
+<pre><code class="hljs">    // export-default.js
+    export default function () &#123;
+        console.log(&#39;foo&#39;)
+    &#125;
+</code></pre>
+<p>其他模块加载该模块时，<code>import</code>命令可以为该匿名函数指定任意名字</p>
+<pre><code class="hljs">    // import-default.js
+    import customName from &#39;./export-default&#39;
+    customName() // &#39;foo&#39;
+</code></pre>
+<p>上面代码的<code>import</code>命令，可以用任意名称指向<code>export-default.js</code>输出的方法，这时就不需要知道原模块输出的函数名。需要注意的是，这时<code>import</code>命令后面，不使用大括号</p>
+<p><code>export default</code>命令用在非匿名函数前，也是可以的</p>
+<pre><code class="hljs">    // export-default.js
+    export default function foo() &#123;
+        console.log(&#39;foo&#39;)
+    &#125;
+
+    // 或者写成
+
+    function foo() &#123;
+        console.log(&#39;foo&#39;)
+    &#125;
+
+    export default foo
+</code></pre>
+<p>上面代码中，<code>foo</code>函数的函数名<code>foo</code>，在模块外部是无效的。加载的时候，视同匿名函数加载</p>
+<hr>
+<p>下面比较一下默认输出和正常输出</p>
+<pre><code class="hljs">    // 第一组
+    export default function crc32() &#123;
+        // 输出
+        // ...
+    &#125;
+
+    import crc32 from &#39;crc32&#39; // 输入
+
+    // 第二组
+    export function crc32() &#123;
+        // 输出
+        // ...
+    &#125;
+
+    import &#123; crc32 &#125; from &#39;crc32&#39; // 输入
+</code></pre>
+<p>上面代码的两组写法，第一组是使用<code>export default</code>时，对应的<code>import</code>语句不需要使用大括号；第二组是不使用<code>export default</code>时，对应的<code>import</code>语句需要使用大括号。 </p>
+<p><code>export default</code>命令用于指定模块的默认输出。显然，一个模块只能有一个默认输出，因此<code>export default</code>命令只能使用一次。所以，<code>import</code> 命令后面才不用加大括号，因为只可能唯一对应<code>export default</code>命令。 </p>
+<p>本质上，<code>export default</code>就是输出一个叫做<code>default</code>的变量或方法，然后系统允许您为它取任意名字</p>
+<p>所以，下面的写法是有效的</p>
+<pre><code class="hljs">    // modules.js
+    function add(x, y) &#123;
+        return x * y
+    &#125;
+    export &#123; add as default &#125;
+    // 等同于
+    // export default add
+
+    // app.js
+    import &#123; default as foo &#125; from &#39;modules&#39;
+    // 等同于
+    // import foo from &#39;modules&#39;
+</code></pre>
+<p>正是因为<code>export default</code>命令其实只是输出一个叫做<code>default</code>的变量，所以它后面不能跟变量声明语句</p>
+<pre><code class="hljs">    // 正确
+    export var a = 1
+
+    // 正确
+    var a = 1
+    export default a
+
+    // 错误
+    export default var a = 1
+</code></pre>
+<hr>
+<p>例：<br>有了<code>export default</code>命令，输入模块时就非常直观了，以输入 lodash 模块为例</p>
+<pre><code class="hljs">    import _ from &quot;lodash&quot;
+</code></pre>
+<p>如果想在一条import语句中，同时输入默认方法和其他接口，可以写成下面这样</p>
+<pre><code class="hljs">    import _, &#123; each, each as forEach &#125; from &quot;lodash&quot;
+</code></pre>
+<p>对应上面代码的<code>export</code>语句如下。</p>
+<pre><code class="hljs">    export default function (obj) &#123;&#125;
+
+    export function each(obj, iterator, context) &#123;&#125;
+
+    export &#123; each as forEach &#125;
+</code></pre>
+<p>上面代码的最后一行的意思是，暴露出<code>forEach</code>接口，默认指向<code>each</code>接口，即<code>forEach</code>和<code>each</code>指向同一个方法</p>
+<p><code>export default</code>也可以用来输出类</p>
+<pre><code class="hljs">    // MyClass.js
+    export default class &#123;&#125;
+
+    // main.js
+    import MyClass from &#39;MyClass&#39;
+    let o = new MyClass()
+</code></pre>
+<h2 id="export-与-import-的复合写法"><a href="#export-与-import-的复合写法" class="headerlink" title="export 与 import 的复合写法"></a>export 与 import 的复合写法</h2><p>如果在一个模块之中，先输入后输出同一个模块，<code>import</code>语句可以与<code>export</code>语句写在一起</p>
+<pre><code class="hljs">    export &#123; foo, bar &#125; from &#39;my_module&#39;
+
+    // 可以简单理解为
+    import &#123; foo, bar &#125; from &#39;my_module&#39;
+    export &#123; foo, bar &#125;
+</code></pre>
+<p>上面代码中，<code>export</code>和<code>import</code>语句可以结合在一起，写成一行。但需要注意的是，写成一行以后，<code>foo</code>和<code>bar</code>实际上并没有被导入当前模块，只是相当于对外转发了这两个接口，导致当前模块不能直接使用<code>foo</code>和<code>bar</code></p>
+<p>上面代码中，<code>export</code>和<code>import</code>语句可以结合在一起，写成一行。<br>但需要注意的是，写成一行以后，<code>foo</code>和<code>bar</code>实际上并没有被导入当前模块，只是相当于对外转发了这两个接口，导致当前模块不能直接使用<code>foo</code>和<code>bar</code></p>
+<p>模块的接口改名和整体输出，也可以采用这种写法</p>
+<pre><code class="hljs">    // 接口改名
+    export &#123; foo as myFoo &#125; from &quot;my_module&quot;
+    
+    // 整体输出
+    export * from &quot;my_module&quot;
+</code></pre>
+<p>默认接口的写法如下</p>
+<pre><code class="hljs">    export &#123; default &#125; from &quot;foo&quot;
+</code></pre>
+<p>具名接口改为默认接口的写法如下</p>
+<pre><code class="hljs">    export &#123; es6 as default &#125; from &#39;./someModule&#39;
+
+    // 等同于
+    import &#123; es6 &#125; from &#39;./someModule&#39;
+    export default es6
+</code></pre>
+<p>默认接口也可以改名为具名接口</p>
+<pre><code class="hljs">    export &#123; default as es6 &#125; from &#39;./someModule&#39;
+</code></pre>
+<p>下面三种import语句，没有对应的复合写法。</p>
+<pre><code class="hljs">    import * as someIdentifier from &#39;someModule&#39;
+    import someIdentifier from &#39;someModule&#39;
+    import someIdentifier, &#123; namedIdentifier &#125; from &#39;someModule&#39;
+</code></pre>
+<h2 id="模块的继承"><a href="#模块的继承" class="headerlink" title="模块的继承"></a>模块的继承</h2><p>模块之间也可以继承。</p>
+<p>假设有一个<code>circleplus</code>模块，继承了<code>circle</code>模块</p>
+<pre><code class="hljs">    // circleplus.js
+
+    export * from &#39;circle&#39;
+    export var e = 2.71828182846
+    export default function (x) &#123;
+        return Math.exp(x)
+    &#125;
+</code></pre>
+<p>上面代码中的<code>export *</code>，表示再输出<code>circle</code>模块的所有属性和方法。注意，<code>export *</code>命令会忽略<code>circle</code>模块的<code>default</code>方法。然后，上面代码又输出了自定义的<code>e</code>变量和默认方法</p>
+<p>这时，也可以将circle的属性或方法，改名后再输出</p>
+<pre><code class="hljs">    // circleplus.js
+
+    export &#123; area as circleArea &#125; from &#39;circle&#39;
+</code></pre>
+<p>上面代码表示，只输出<code>circle</code>模块的<code>area</code>方法，且将其改名为<code>circleArea</code></p>
+<p>加载上面模块的写法如下</p>
+<pre><code class="hljs">    // main.js
+
+    import * as math from &#39;circleplus&#39;
+    import exp from &#39;circleplus&#39;
+    console.log(exp(math.e))
+</code></pre>
+<p>上面代码中的<code>import exp</code>表示，将<code>circleplus</code>模块的默认方法加载为<code>exp</code>方法</p>
+<h2 id="跨模块常量"><a href="#跨模块常量" class="headerlink" title="跨模块常量"></a>跨模块常量</h2><p>由于<code>const</code>声明的常量只在当前代码块有效，如果想设置跨模块的常量(即跨多个文件)，或者说一个值要被多个模块共享，可以采用下面的写法</p>
+<pre><code class="hljs">    // constants.js 模块
+    export const A = 1
+    export const B = 3
+    export const C = 4
+
+    // test1.js 模块
+    import * as constants from &#39;./constants&#39;
+    console.log(constants.A) // 1
+    console.log(constants.B) // 3
+
+    // test2.js 模块
+    import &#123; A, B &#125; from &#39;./constants&#39;
+    console.log(A) // 1
+    console.log(B) // 3
+</code></pre>
+<p>如果要使用的常量非常多，可以建一个专门的<code>constants</code>目录，将各种常量写在不同的文件里面，保存在该目录下</p>
+<pre><code class="hljs">    // constants/db.js
+    export const db = &#123;
+        url: &#39;https://my.couchdbserver.local:5984&#39;,
+        admin_username: &#39;admin&#39;,
+        admin_password: &#39;admin password&#39;,
+    &#125;
+
+    // constants/user.js
+    export const users = [&#39;root&#39;, &#39;admin&#39;, &#39;staff&#39;, &#39;ceo&#39;, &#39;chief&#39;, &#39;moderator&#39;]
+</code></pre>
+<p>然后，将这些文件输出的常量，合并在<code>index.js</code>里面</p>
+<pre><code class="hljs">    // constants/index.js
+    export &#123; db &#125; from &#39;./db&#39;
+    export &#123; users &#125; from &#39;./users&#39;
+</code></pre>
+<p>使用的时候，直接加载<code>index.js</code>就可以了。</p>
+<pre><code class="hljs">    // script.js
+    import &#123; db, users &#125; from &quot;./constants/index&quot;
+</code></pre>
+<h2 id="import"><a href="#import" class="headerlink" title="import()"></a>import()</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>前面介绍过，<code>import</code>命令会被 JavaScript 引擎静态分析，先于模块内的其他语句执行(<code>import</code>命令叫做“连接” binding 其实更合适)。所以，下面的代码会报错</p>
+<pre><code class="hljs">    // 报错
+    if (x === 2) &#123;
+        import MyModual from &#39;./myModual&#39;
+    &#125;
+</code></pre>
+<p>上面代码中，引擎处理<code>import</code>语句是在编译时，这时不会去分析或执行if语句，所以<code>import</code>语句放在<code>if</code>代码块之中毫无意义，因此会报句法错误，而不是执行时错误。<br>也就是说，<code>import</code>和<code>export</code>命令只能在模块的顶层，不能在代码块之中(比如，在if代码块之中，或在函数之中)。<br>这样的设计，固然有利于编译器提高效率，但也导致无法在运行时加载模块。在语法上，条件加载就不可能实现。<br>如果<code>import</code>命令要取代 Node 的<code>require</code>方法，这就形成了一个障碍。因为<code>require</code>是运行时加载模块，<code>import</code>命令无法取代<code>require</code>的动态加载功能。</p>
+<pre><code class="hljs">    const path = &#39;./&#39; + fileName
+    const myModual = require(path)
+</code></pre>
+<p>上面的语句就是动态加载，<code>require</code>到底加载哪一个模块，只有运行时才知道。<code>import</code>命令做不到这一点</p>
+<p>因此，有一个提案，建议引入<code>import()</code>函数，完成动态加载</p>
+<pre><code class="hljs">    import(specifier)
+</code></pre>
+<p>上面代码中，<code>import</code>函数的参数<code>specifier</code>，指定所要加载的模块的位置。<code>import</code>命令能够接受什么参数，<code>import()</code>函数就能接受什么参数，两者区别主要是后者为动态加载</p>
+<hr>
+<p><code>import()</code>返回一个 Promise 对象。下面是一个例子。</p>
+<pre><code class="hljs">    const main = document.querySelector(&#39;main&#39;)
+
+    import(`./section-modules/$&#123;someVariable&#125;.js`)
+        .then((module) =&gt; &#123;
+            module.loadPageInto(main)
+        &#125;)
+        .catch((err) =&gt; &#123;
+            main.textContent = err.message
+        &#125;)
+</code></pre>
+<p><code>import()</code>函数可以用在任何地方，不仅仅是模块，非模块的脚本也可以使用。它是运行时执行，也就是说，什么时候运行到这一句，就会加载指定的模块。另外，<code>import()</code>函数与所加载的模块没有静态连接关系，这点也是与<code>import</code>语句不相同。<code>import()</code>类似于 Node 的<code>require</code>方法，<strong>区别主要是前者是异步加载，后者是同步加载</strong></p>
+<h3 id="适用场合"><a href="#适用场合" class="headerlink" title="适用场合"></a>适用场合</h3><p>下面是<code>import()</code>的一些适用场合</p>
+<h4 id="按需加载"><a href="#按需加载" class="headerlink" title="按需加载"></a>按需加载</h4><p><code>import()</code>可以在需要的时候，再加载某个模块</p>
+<pre><code class="hljs">    button.addEventListener(&#39;click&#39;, (event) =&gt; &#123;
+        import(&#39;./dialogBox.js&#39;)
+            .then((dialogBox) =&gt; &#123;
+                dialogBox.open()
+            &#125;)
+            .catch((error) =&gt; &#123;
+                /* Error handling */
+            &#125;)
+    &#125;)
+</code></pre>
+<p>上面代码中，<code>import()</code>方法放在<code>click</code>事件的监听函数之中，只有用户点击了按钮，才会加载这个模块</p>
+<h4 id="条件加载"><a href="#条件加载" class="headerlink" title="条件加载"></a>条件加载</h4><p><code>import()</code>可以放在<code>if</code>代码块，根据不同的情况，加载不同的模块</p>
+<pre><code class="hljs">    if (condition) &#123;
+        import(&#39;moduleA&#39;).then()
+    &#125; else &#123;
+        import(&#39;moduleB&#39;).then()
+    &#125;
+</code></pre>
+<p>上面代码中，如果满足条件，就加载模块 A，否则加载模块 B</p>
+<h4 id="动态的模块路径"><a href="#动态的模块路径" class="headerlink" title="动态的模块路径"></a>动态的模块路径</h4><p><code>import()</code>允许模块路径动态生成</p>
+<pre><code class="hljs">    import(f()).then()
+</code></pre>
+<p>上面代码中，根据函数<code>f</code>的返回结果，加载不同的模块</p>
+<h3 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h3><p><code>import()</code>加载模块成功以后，这个模块会作为一个对象，当作<code>then</code>方法的参数。因此，可以使用对象解构赋值的语法，获取输出接口</p>
+<pre><code class="hljs">    import(&#39;./myModule.js&#39;).then((&#123; export1, export2 &#125;) =&gt; &#123;
+        // ...·
+    &#125;)
+</code></pre>
+<p>上面代码中，<code>export1</code>和<code>export2</code>都是<code>myModule.js</code>的输出接口，可以解构获得。</p>
+<p>如果模块有<code>default</code>输出接口，可以用参数直接获得</p>
+<pre><code class="hljs">    import(&#39;./myModule.js&#39;).then((myModule) =&gt; &#123;
+        console.log(myModule.default)
+    &#125;)
+
+    //上面的代码也可以使用具名输入的形式
+    import(&#39;./myModule.js&#39;).then((&#123; default: theDefault &#125;) =&gt; &#123;
+        console.log(theDefault)
+    &#125;)
+</code></pre>
+<p>如果想同时加载多个模块，可以采用下面的写法</p>
+<pre><code class="hljs">    Promise.all([
+        import(&#39;./module1.js&#39;), 
+        import(&#39;./module2.js&#39;), 
+        import(&#39;./module3.js&#39;)])
+    .then(([module1, module2, module3]) =&gt; &#123;
+
+    &#125;)
+</code></pre>
+<p><code>import()</code>也可以用在 async 函数之中。</p>
+<pre><code class="hljs">    async function main() &#123;
+        const myModule = await import(&#39;./myModule.js&#39;)
+        const &#123; export1, export2 &#125; = await import(&#39;./myModule.js&#39;)
+        const [module1, module2, module3] = await Promise.all([
+            import(&#39;./module1.js&#39;),
+            import(&#39;./module2.js&#39;),
+            import(&#39;./module3.js&#39;),
+        ])
+    &#125;
+    main()
+</code></pre>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ES6/" class="category-chain-item">ES6</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ES6/" class="print-no-link">#ES6</a>
+      
+        <a href="/tags/javaScript/" class="print-no-link">#javaScript</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Module 模块化</div>
+      <div>http://example.com/2022/07/21/ES6/模块化 module/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sukksa</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年7月21日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/07/23/ES6/Moudle%20%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%AE%9E%E7%8E%B0/" title="Module 的加载实现">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Module 的加载实现</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/07/19/ES6/%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%89%A9%E5%B1%95/" title="对象的扩展">
+                        <span class="hidden-mobile">对象的扩展</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

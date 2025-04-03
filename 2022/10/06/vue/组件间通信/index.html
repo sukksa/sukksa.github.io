@@ -1,0 +1,764 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sukksa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="组件间通信props方式一个组件里面引入另外一个组件，此时构成了一种“父子关系”，当前组件为“父”，引入的组件为“子”，如当前组件（父），在父组件中通过 :message向子组件通信。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="组件间通信">
+<meta property="og:url" content="http://example.com/2022/10/06/vue/%E7%BB%84%E4%BB%B6%E9%97%B4%E9%80%9A%E4%BF%A1/index.html">
+<meta property="og:site_name" content="sukksa blog">
+<meta property="og:description" content="组件间通信props方式一个组件里面引入另外一个组件，此时构成了一种“父子关系”，当前组件为“父”，引入的组件为“子”，如当前组件（父），在父组件中通过 :message向子组件通信。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/%5Cimages%5Cvue%5Cvue_%E7%BB%84%E4%BB%B6%E9%97%B4%E9%80%9A%E4%BF%A1_%E5%85%A8%E5%B1%80%E4%BA%8B%E4%BB%B6%E6%80%BB%E7%BA%BF.png">
+<meta property="article:published_time" content="2022-10-06T12:25:42.000Z">
+<meta property="article:modified_time" content="2022-10-06T16:34:05.221Z">
+<meta property="article:author" content="sukksa">
+<meta property="article:tag" content="Vue">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/%5Cimages%5Cvue%5Cvue_%E7%BB%84%E4%BB%B6%E9%97%B4%E9%80%9A%E4%BF%A1_%E5%85%A8%E5%B1%80%E4%BA%8B%E4%BB%B6%E6%80%BB%E7%BA%BF.png">
+  
+  
+  
+  <title>组件间通信 - sukksa blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="组件间通信"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-10-06 21:25" pubdate>
+          2022年10月6日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          26 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">组件间通信</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="组件间通信"><a href="#组件间通信" class="headerlink" title="组件间通信"></a>组件间通信</h1><h2 id="props"><a href="#props" class="headerlink" title="props"></a>props</h2><h3 id="方式"><a href="#方式" class="headerlink" title="方式"></a>方式</h3><p>一个组件里面引入另外一个组件，此时构成了一种“父子关系”，当前组件为“父”，引入的组件为“子”，如当前组件（父），在父组件中通过 <code>:message</code>向子组件通信。</p>
+<span id="more"></span>
+
+<p>父组件 <code>Parent.vue</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs vue">&lt;template&gt;<br>    &lt;div class=&quot;parent-box&quot;&gt;<br>        &lt;div&gt;<br>            &lt;div&gt;我是父组件&lt;/div&gt;<br>            &lt;div&gt;&#123;&#123; message &#125;&#125;&lt;/div&gt;<br>        &lt;/div&gt;<br>        &lt;children :message=&quot;toChildrenMsg&quot;&gt;&lt;/children&gt;<br>    &lt;/div&gt;<br>&lt;/template&gt;<br>  <br>&lt;script&gt;<br>    import Children from &#x27;./Children.vue&#x27; //当前页引入子组件<br>    export default &#123;<br>        name: &#x27;Parent&#x27;,<br>        components: &#123;<br>            Children,<br>        &#125;,<br>        data() &#123;<br>            return &#123;<br>                message: &#x27;我是父组件的内容&#x27;,<br>                toChildrenMsg: &#x27;从父组件传过到子组件的内容&#x27;,<br>            &#125;<br>        &#125;,<br>    &#125;<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+
+<p>子组件 <code>Children.vue</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs vue">&lt;template&gt;<br>    &lt;div class=&quot;children-box&quot;&gt;<br>        &lt;div&gt;<br>            &lt;div&gt;我是子组件&lt;/div&gt;<br>            &lt;div&gt;&#123;&#123; message &#125;&#125;&lt;/div&gt;<br>        &lt;/div&gt;<br>    &lt;/div&gt;<br>&lt;/template&gt;<br>  <br>&lt;script&gt;<br>    export default &#123;<br>        name: &#x27;Children&#x27;,<br>        props: &#123;<br>            message: &#123;<br>                type: String, //类型判断<br>                default: &#x27;&#x27;, //默认值<br>            &#125;,<br>        &#125;,<br>    &#125;<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+
+<p>在子组件通过<code>props</code>进行接收，注意子组件<code>props</code>里面接收的对象名称必须与父组件中在子组件绑定的名称一致，当前例子为<code>message</code>，可以在组件中<code>this.message</code>的方式使用<code>props</code>里面的值。</p>
+<h3 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h3><ol>
+<li><p>此方式用于父组件向子组件传递数据</p>
+</li>
+<li><p>所有标签属性都会成为组件对象的属性，模板组件可以直接引用</p>
+</li>
+<li><p>问题:</p>
+<p>a. 如果需要向非子后代传递数据必须多层逐层传递</p>
+<p>b. 兄弟组件间也不能直接 props 通信，必须借助父组件才可以</p>
+</li>
+</ol>
+<h2 id="自定义事件"><a href="#自定义事件" class="headerlink" title="自定义事件"></a>自定义事件</h2><p>组件自定义事件是一种组件间通信的方式，适用于：<strong style="color:red">子组件 &#x3D;&#x3D;&#x3D;&gt; 父组件</strong></p>
+<p><strong>使用场景</strong></p>
+<p>A是父组件，B是子组件，B想给A传数据，那么就要在A中给B绑定自定义事件（<span style="color:red">事件的回调在A中</span>）。</p>
+<h3 id="第一种绑定方式"><a href="#第一种绑定方式" class="headerlink" title="第一种绑定方式"></a>第一种绑定方式</h3><p>在父组件中：<code>&lt;Demo @hello=&quot;test&quot;/&gt;</code>或 <code>&lt;Demo v-on:hello=&quot;test&quot;/&gt;</code></p>
+<p><code>App.vue</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs vue">&lt;template&gt;<br>	&lt;div class=&quot;app&quot;&gt;<br>		&lt;!-- 通过父组件给子组件绑定一个自定义事件实现：子给父传递数据（第一种写法，使用@或v-on） --&gt;<br>		&lt;Student @atguigu=&quot;getStudentName&quot;/&gt; <br>	&lt;/div&gt;<br>&lt;/template&gt;<br><br>&lt;script&gt;<br>	import Student from &#x27;./components/Student&#x27;<br><br>	export default &#123;<br>		name:&#x27;App&#x27;,<br>		components:&#123;Student&#125;,<br>		data() &#123;<br>			return &#123;<br>				msg:&#x27;你好啊！&#x27;,<br>				studentName:&#x27;&#x27;<br>			&#125;<br>		&#125;,<br>		methods: &#123;<br>			getStudentName(name,...params)&#123;<br>				console.log(&#x27;App收到了学生名：&#x27;,name,params)<br>				this.studentName = name<br>			&#125;<br>		&#125;<br>	&#125;<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+
+<p><code>Student.vue</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs vue">&lt;template&gt;<br>	&lt;div class=&quot;student&quot;&gt;<br>		&lt;button @click=&quot;sendStudentlName&quot;&gt;把学生名给App&lt;/button&gt;<br>	&lt;/div&gt;<br>&lt;/template&gt;<br><br>&lt;script&gt;<br>	export default &#123;<br>		name:&#x27;Student&#x27;,<br>		data() &#123;<br>			return &#123;<br>				name:&#x27;张三&#x27;,<br>			&#125;<br>		&#125;,<br>		methods: &#123;<br>			sendStudentlName()&#123;<br>				//触发Student组件实例身上的atguigu事件<br>				this.$emit(&#x27;atguigu&#x27;,this.name,666,888,900)<br>			&#125;<br>		&#125;,<br>	&#125;<br>&lt;/script&gt;<br><br>&lt;style lang=&quot;less&quot; scoped&gt;<br>	.student&#123;<br>		background-color: pink;<br>		padding: 5px;<br>		margin-top: 30px;<br>	&#125;<br>&lt;/style&gt;<br></code></pre></td></tr></table></figure>
+
+<p>当子组件<code>Student.vue</code>触发点击事件时，<code>Student.vue</code>中<code>$emit</code>执行，触发 <code>App.vue</code>组件上<code>Student</code>组件实例身上的<code>atguigu</code>事件，将<code>this.$emit(&#39;atguigu&#39;,this.name,666,888,900)</code>中，需要的参数交给<code>App.vue</code>以实现子组件向父组件传参。</p>
+<h3 id="第二种绑定方式"><a href="#第二种绑定方式" class="headerlink" title="第二种绑定方式"></a>第二种绑定方式</h3><p>在父组件中：使用 <code>this.$refs.xxx.$on()</code> </p>
+<p>这样写起来更灵活，比如可以加定时器啥的。</p>
+<p><code>App.vue</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs vue">&lt;template&gt;<br>	&lt;div class=&quot;app&quot;&gt;<br>		&lt;!-- 通过父组件给子组件绑定一个自定义事件实现：子给父传递数据（第二种写法，使用ref） --&gt;<br>		&lt;Student ref=&quot;student&quot;/&gt;<br>	&lt;/div&gt;<br>&lt;/template&gt;<br><br>&lt;script&gt;<br>	import Student from &#x27;./components/Student&#x27;<br><br>	export default &#123;<br>		name:&#x27;App&#x27;,<br>		components:&#123;Student&#125;,<br>		data() &#123;<br>			return &#123;<br>				studentName:&#x27;&#x27;<br>			&#125;<br>		&#125;,<br>		methods: &#123;<br>			getStudentName(name,...params)&#123;<br>				console.log(&#x27;App收到了学生名：&#x27;,name,params)<br>				this.studentName = name<br>			&#125;,<br>		&#125;,<br>		mounted() &#123;<br>			this.$refs.student.$on(&#x27;atguigu&#x27;,this.getStudentName) //绑定自定义事件<br>			// this.$refs.student.$once(&#x27;atguigu&#x27;,this.getStudentName) //绑定自定义事件（一次性）<br>		&#125;,<br>	&#125;<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+
+<p><code>Student.vue</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs vue">&lt;template&gt;<br>	&lt;div class=&quot;student&quot;&gt;<br>		&lt;button @click=&quot;sendStudentlName&quot;&gt;把学生名给App&lt;/button&gt;<br>	&lt;/div&gt;<br>&lt;/template&gt;<br><br>&lt;script&gt;<br>	export default &#123;<br>		name:&#x27;Student&#x27;,<br>		data() &#123;<br>			return &#123;<br>				name:&#x27;张三&#x27;,<br>			&#125;<br>		&#125;,<br>		methods: &#123;<br>			sendStudentlName()&#123;<br>				//触发Student组件实例身上的atguigu事件<br>				this.$emit(&#x27;atguigu&#x27;,this.name,666,888,900)<br>			&#125;<br>		&#125;,<br>	&#125;<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+
+<p>上述实例代码中，在父组件 <code>App.vue</code> 中为 <code>Student</code>组件取别名 <code>&lt;Student ref=&quot;student&quot;/&gt;</code>，通过<code>this.$refs.student.$on(&#39;atguigu&#39;,this.getStudentName)</code>绑定自定义事件 <code>atguigu</code> ，然后在子组件<code>Student</code>中触发事件传参</p>
+<blockquote>
+<p>注意：通过<code>this.$refs.xxx.$on(&#39;atguigu&#39;,回调)</code>绑定自定义事件时，回调<span style="color:red">要么配置在methods中</span>，<span style="color:red">要么用箭头函数</span>，否则this指向会出问题！</p>
+</blockquote>
+<h3 id="解绑自定义事件"><a href="#解绑自定义事件" class="headerlink" title="解绑自定义事件"></a>解绑自定义事件</h3><p>解绑自定义事件，<code>this.$off(&#39;atguigu&#39;)</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs vue">this.$off(&#x27;atguigu&#x27;) //解绑一个自定义事件<br>// this.$off([&#x27;atguigu&#x27;,&#x27;demo&#x27;]) //解绑多个自定义事件<br>// this.$off() //解绑所有的自定义事件<br></code></pre></td></tr></table></figure>
+
+<p>在绑定自定义事件后，如果组价执行完毕，在<code>beforeDestroy</code>钩子中解绑自定义事件，防止冲突</p>
+<h2 id="全局事件总线"><a href="#全局事件总线" class="headerlink" title="全局事件总线"></a>全局事件总线</h2><p>全局事件总线是一种组件间通信的方式，适用于<strong>任意组件间通信</strong>。</p>
+<h3 id="安装全局事件总线"><a href="#安装全局事件总线" class="headerlink" title="安装全局事件总线"></a>安装全局事件总线</h3><p>在<code>main.js</code>中，创建 <code>Vue</code>实例时，使用<code>Vue.prototype.$bus = this</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">new</span> <span class="hljs-title class_">Vue</span>(&#123;<br>	<span class="hljs-attr">el</span>:<span class="hljs-string">&#x27;#app&#x27;</span>,<br>	<span class="hljs-attr">render</span>: <span class="hljs-function"><span class="hljs-params">h</span> =&gt;</span> <span class="hljs-title function_">h</span>(<span class="hljs-title class_">App</span>),<br>	<span class="hljs-title function_">beforeCreate</span>(<span class="hljs-params"></span>) &#123;<br>		<span class="hljs-title class_">Vue</span>.<span class="hljs-property"><span class="hljs-keyword">prototype</span></span>.<span class="hljs-property">$bus</span> = <span class="hljs-variable language_">this</span> <span class="hljs-comment">//安装全局事件总线，$bus就是当前应用的vm</span><br>	&#125;,<br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<h3 id="使用全局事件总线"><a href="#使用全局事件总线" class="headerlink" title="使用全局事件总线"></a>使用全局事件总线</h3><ol>
+<li><p>接收数据：A组件想接收数据，则在A组件中给<code>$bus</code>绑定自定义事件，事件的<span style="color:red">回调留在A组件自身。</span></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-title function_">methods</span>(<span class="hljs-params"></span>)&#123;<br>  <span class="hljs-title function_">demo</span>(<span class="hljs-params">data</span>)&#123;&#125;<br>&#125;<br><span class="hljs-comment">// </span><br><span class="hljs-title function_">mounted</span>(<span class="hljs-params"></span>) &#123;<br>  <span class="hljs-variable language_">this</span>.<span class="hljs-property">$bus</span>.$on(<span class="hljs-string">&#x27;xxxx&#x27;</span>,<span class="hljs-variable language_">this</span>.<span class="hljs-property">demo</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>提供数据：<code>this.$bus.$emit(&#39;xxxx&#39;,数据)</code></p>
+</li>
+<li><p>最好在<code>beforeDestroy</code>钩子中，用<code>$off</code>去解绑<span style="color:red">当前组件所用到的</span>事件。</p>
+</li>
+</ol>
+<h3 id="实例代码"><a href="#实例代码" class="headerlink" title="实例代码"></a>实例代码</h3><p><code>School.vue</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs vue">&lt;template&gt;<br>	&lt;div class=&quot;school&quot;&gt;<br>		&lt;h2&gt;学校名称：&#123;&#123;name&#125;&#125;&lt;/h2&gt;<br>		&lt;h2&gt;学校地址：&#123;&#123;address&#125;&#125;&lt;/h2&gt;<br>	&lt;/div&gt;<br>&lt;/template&gt;<br><br>&lt;script&gt;<br>	export default &#123;<br>		name:&#x27;School&#x27;,<br>		data() &#123;<br>			return &#123;<br>				name:&#x27;尚硅谷&#x27;,<br>				address:&#x27;北京&#x27;,<br>			&#125;<br>		&#125;,<br>        methods: &#123;<br>            demo(data) &#123;<br>                console.log(&#x27;我是School组件，收到了数据&#x27;,data)<br>            &#125;<br>        &#125;<br>		mounted() &#123;<br>            // 在接收数据的组件上绑定事件<br>			this.$bus.$on(&#x27;hello&#x27;,this.demo)<br>		&#125;,<br>		beforeDestroy() &#123;<br>            // 解绑事件<br>			this.$bus.$off(&#x27;hello&#x27;)<br>		&#125;,<br>	&#125;<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+
+<p><code>Student.vue</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs vue">&lt;template&gt;<br>	&lt;div class=&quot;student&quot;&gt;<br>		&lt;h2&gt;学生姓名：&#123;&#123;name&#125;&#125;&lt;/h2&gt;<br>		&lt;h2&gt;学生性别：&#123;&#123;sex&#125;&#125;&lt;/h2&gt;<br>		&lt;button @click=&quot;sendStudentName&quot;&gt;把学生名给School组件&lt;/button&gt;<br>	&lt;/div&gt;<br>&lt;/template&gt;<br><br>&lt;script&gt;<br>	export default &#123;<br>		name:&#x27;Student&#x27;,<br>		data() &#123;<br>			return &#123;<br>				name:&#x27;张三&#x27;,<br>				sex:&#x27;男&#x27;,<br>			&#125;<br>		&#125;,<br>		methods: &#123;<br>			sendStudentName()&#123;<br>                // 触发想接收数据的组件上的事件，传入想发送的数据<br>				this.$bus.$emit(&#x27;hello&#x27;,this.name)<br>			&#125;<br>		&#125;,<br>	&#125;<br>&lt;/script&gt;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/%5Cimages%5Cvue%5Cvue_%E7%BB%84%E4%BB%B6%E9%97%B4%E9%80%9A%E4%BF%A1_%E5%85%A8%E5%B1%80%E4%BA%8B%E4%BB%B6%E6%80%BB%E7%BA%BF.png" srcset="/img/loading.gif" lazyload alt="vue_组件间通信_全局事件总线"></p>
+<h2 id="消息订阅与发布"><a href="#消息订阅与发布" class="headerlink" title="消息订阅与发布"></a>消息订阅与发布</h2><p>一种组件间通信的方式，适用于<span style="color:red">任意组件间通信</span>。</p>
+<h3 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h3><ol>
+<li><p>安装pubsub：<code>npm i pubsub-js</code></p>
+</li>
+<li><p>引入: <code>import pubsub from &#39;pubsub-js&#39;</code></p>
+</li>
+<li><p>接收数据：A组件想接收数据，则在A组件中订阅消息，订阅的<span style="color:red">回调留在A组件自身。</span></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">import</span> <span class="hljs-title class_">PubSub</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;pubsub-js&#x27;</span> <span class="hljs-comment">//引入</span><br><span class="hljs-title class_">PubSub</span>.<span class="hljs-title function_">subscribe</span>(<span class="hljs-string">&#x27;delete&#x27;</span>, <span class="hljs-keyword">function</span>(<span class="hljs-params">msg, data</span>)&#123; &#125;) <span class="hljs-comment">//订阅</span><br><span class="hljs-title class_">PubSub</span>.<span class="hljs-title function_">publish</span>(<span class="hljs-string">&#x27;delete&#x27;</span>, data) <span class="hljs-comment">//发布消息</span><br></code></pre></td></tr></table></figure>
+</li>
+<li><p>提供数据：<code>pubsub.publish(&#39;xxx&#39;,数据)</code></p>
+</li>
+<li><p>最好在beforeDestroy钩子中，用<code>PubSub.unsubscribe(pid)</code>去<span style="color:red">取消订阅。</span></p>
+</li>
+</ol>
+<h3 id="实例代码-1"><a href="#实例代码-1" class="headerlink" title="实例代码"></a>实例代码</h3><p>订阅消息<code>School.vue</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;school&quot;</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>学校名称：&#123;&#123;name&#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>学校地址：&#123;&#123;address&#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript">	<span class="hljs-keyword">import</span> pubsub <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;pubsub-js&#x27;</span></span><br><span class="language-javascript">	<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;</span><br><span class="language-javascript">		<span class="hljs-attr">name</span>:<span class="hljs-string">&#x27;School&#x27;</span>,</span><br><span class="language-javascript">		<span class="hljs-title function_">data</span>(<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">			<span class="hljs-keyword">return</span> &#123;</span><br><span class="language-javascript">				<span class="hljs-attr">name</span>:<span class="hljs-string">&#x27;尚硅谷&#x27;</span>,</span><br><span class="language-javascript">				<span class="hljs-attr">address</span>:<span class="hljs-string">&#x27;北京&#x27;</span>,</span><br><span class="language-javascript">			&#125;</span><br><span class="language-javascript">		&#125;,</span><br><span class="language-javascript">		<span class="hljs-title function_">mounted</span>(<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">			<span class="hljs-comment">/* this.$bus.$on(&#x27;hello&#x27;,(data)=&gt;&#123;</span></span><br><span class="hljs-comment"><span class="language-javascript">				console.log(&#x27;我是School组件，收到了数据&#x27;,data)</span></span><br><span class="hljs-comment"><span class="language-javascript">			&#125;) */</span></span><br><span class="language-javascript">			<span class="hljs-variable language_">this</span>.<span class="hljs-property">pubId</span> = pubsub.<span class="hljs-title function_">subscribe</span>(<span class="hljs-string">&#x27;hello&#x27;</span>,<span class="hljs-function">(<span class="hljs-params">msgName,data</span>)=&gt;</span>&#123;</span><br><span class="language-javascript">				<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-variable language_">this</span>)</span><br><span class="language-javascript">				<span class="hljs-comment">// console.log(&#x27;有人发布了hello消息，hello消息的回调执行了&#x27;,msgName,data)</span></span><br><span class="language-javascript">			&#125;)</span><br><span class="language-javascript">		&#125;,</span><br><span class="language-javascript">		<span class="hljs-title function_">beforeDestroy</span>(<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">			<span class="hljs-comment">// this.$bus.$off(&#x27;hello&#x27;)</span></span><br><span class="language-javascript">			pubsub.<span class="hljs-title function_">unsubscribe</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">pubId</span>)</span><br><span class="language-javascript">		&#125;,</span><br><span class="language-javascript">	&#125;</span><br><span class="language-javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<p>发布消息<code>Student.vue</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span><br>	<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;student&quot;</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>学生姓名：&#123;&#123;name&#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>学生性别：&#123;&#123;sex&#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span><br>		<span class="hljs-tag">&lt;<span class="hljs-name">button</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">&quot;sendStudentName&quot;</span>&gt;</span>把学生名给School组件<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span><br>	<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript">	<span class="hljs-keyword">import</span> pubsub <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;pubsub-js&#x27;</span></span><br><span class="language-javascript">	<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;</span><br><span class="language-javascript">		<span class="hljs-attr">name</span>:<span class="hljs-string">&#x27;Student&#x27;</span>,</span><br><span class="language-javascript">		<span class="hljs-title function_">data</span>(<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">			<span class="hljs-keyword">return</span> &#123;</span><br><span class="language-javascript">				<span class="hljs-attr">name</span>:<span class="hljs-string">&#x27;张三&#x27;</span>,</span><br><span class="language-javascript">				<span class="hljs-attr">sex</span>:<span class="hljs-string">&#x27;男&#x27;</span>,</span><br><span class="language-javascript">			&#125;</span><br><span class="language-javascript">		&#125;,</span><br><span class="language-javascript">		<span class="hljs-title function_">mounted</span>(<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">			<span class="hljs-comment">// console.log(&#x27;Student&#x27;,this.x)</span></span><br><span class="language-javascript">		&#125;,</span><br><span class="language-javascript">		<span class="hljs-attr">methods</span>: &#123;</span><br><span class="language-javascript">			<span class="hljs-title function_">sendStudentName</span>(<span class="hljs-params"></span>)&#123;</span><br><span class="language-javascript">				<span class="hljs-comment">// this.$bus.$emit(&#x27;hello&#x27;,this.name)</span></span><br><span class="language-javascript">				pubsub.<span class="hljs-title function_">publish</span>(<span class="hljs-string">&#x27;hello&#x27;</span>,<span class="hljs-number">666</span>)</span><br><span class="language-javascript">			&#125;</span><br><span class="language-javascript">		&#125;,</span><br><span class="language-javascript">	&#125;</span><br><span class="language-javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="slot插槽"><a href="#slot插槽" class="headerlink" title="slot插槽"></a>slot插槽</h2><ol>
+<li><p>插槽（slot）是 vue 为组件的封装者提供的能力。允许开发者在封装组件时，把不确定的、希望由用户指定的部分定义为插槽。可以把插槽认为是组件封装期间，为用户预留的内容的占位符。 </p>
+</li>
+<li><p>作用：让父组件可以向子组件指定位置插入html结构，也是一种组件间通信的方式，适用于 <strong style="color:red">父组件 &#x3D;&#x3D;&#x3D;&gt; 子组件</strong> 。</p>
+</li>
+<li><p>分类：默认插槽、具名插槽、作用域插槽</p>
+</li>
+<li><p>注意：<strong>插槽内容是在父组件中编译后, 再传递给子组件的</strong>。</p>
+</li>
+</ol>
+<h3 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h3><p>vue 官方规定：每一个 <code>slot</code> 插槽，都要有一个 <code>name</code> 名称</p>
+<p>如果省略了 <code>slot</code> 的 <code>name</code> 属性，则有一个默认名称叫做 <code>default</code> </p>
+<p>在封装组件时，可以通过 <code>&lt;slot&gt;&lt;/slot&gt;</code> 元素定义插槽，从而为用户预留内容占位符。</p>
+<p>如果在父组件引用子组件中没有结构，则会显示子组件中插槽<code>&lt;slot&gt;&lt;/slot&gt;</code>的内容</p>
+<h3 id="默认插槽"><a href="#默认插槽" class="headerlink" title="默认插槽"></a>默认插槽</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs html">// 父组件中：<br><span class="hljs-tag">&lt;<span class="hljs-name">Category</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>html结构1<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">Category</span>&gt;</span><br>//子组件中：<br><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><br>        <span class="hljs-comment">&lt;!-- 定义插槽 --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">slot</span>&gt;</span>插槽默认内容...<span class="hljs-tag">&lt;/<span class="hljs-name">slot</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="具名插槽"><a href="#具名插槽" class="headerlink" title="具名插槽"></a>具名插槽</h3><ul>
+<li><p>子组件：如果在封装组件时需要预留多个插槽节点，则需要为每个 <code>&lt;slot&gt;&lt;/slot&gt;</code> 插槽指定具体的<code>name</code> 名称。这种带有具体名称的插槽叫做“具名插槽”。</p>
+</li>
+<li><p>父组件：在向具名插槽提供内容的时候，我们可以在一个 <code>&lt;template&gt;</code> 元素上使用<code>v-slot</code> 指令，并以<code>v-slot</code> 的参数的形式提供其名称，<code>v-slot</code>也有缩写，即把参数之前的所有内容<code>v-slot:</code> 替换为字符<code>#</code></p>
+</li>
+</ul>
+<p>注意：没有指定 <code>name</code> 名称的插槽，会有隐含的名称叫做 <code>default</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs html">// 父组件中：<br><span class="hljs-tag">&lt;<span class="hljs-name">Category</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">template</span> <span class="hljs-attr">slot</span>=<span class="hljs-string">&quot;center&quot;</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>html结构1<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span><br><br>    <span class="hljs-tag">&lt;<span class="hljs-name">template</span> <span class="hljs-attr">v-slot:header</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>html结构2<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span><br>    <br>    <span class="hljs-tag">&lt;<span class="hljs-name">template</span> #<span class="hljs-attr">footer</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>html结构3<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">Category</span>&gt;</span><br>// 子组件中：<br><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><br>        <span class="hljs-comment">&lt;!-- 定义插槽 --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">slot</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;center&quot;</span>&gt;</span>插槽默认内容1...<span class="hljs-tag">&lt;/<span class="hljs-name">slot</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">slot</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;header&quot;</span>&gt;</span>插槽默认内容2...<span class="hljs-tag">&lt;/<span class="hljs-name">slot</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">slot</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;footer&quot;</span>&gt;</span>插槽默认内容3...<span class="hljs-tag">&lt;/<span class="hljs-name">slot</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="作用域插槽"><a href="#作用域插槽" class="headerlink" title="作用域插槽"></a>作用域插槽</h3><p>理解：<span style="color:red">数据在组件的自身（子组件），但根据数据生成的结构需要组件的使用者（父组件）来决定。</span>（games数据在Category（子）组件中，但使用数据所遍历出来的结构由App（父）组件决定）</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs html">// 父组件中：<br><span class="hljs-tag">&lt;<span class="hljs-name">Category</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">template</span> <span class="hljs-attr">scope</span>=<span class="hljs-string">&quot;scopeData&quot;</span>&gt;</span><br>        <span class="hljs-comment">&lt;!-- 生成的是ul列表 --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span><br>            <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">v-for</span>=<span class="hljs-string">&quot;g in scopeData.games&quot;</span> <span class="hljs-attr">:key</span>=<span class="hljs-string">&quot;g&quot;</span>&gt;</span>&#123;&#123;g&#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span><br>        <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">Category</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">Category</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">template</span> <span class="hljs-attr">slot-scope</span>=<span class="hljs-string">&quot;scopeData&quot;</span>&gt;</span><br>        <span class="hljs-comment">&lt;!-- 生成的是h4标题 --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">h4</span> <span class="hljs-attr">v-for</span>=<span class="hljs-string">&quot;g in scopeData.games&quot;</span> <span class="hljs-attr">:key</span>=<span class="hljs-string">&quot;g&quot;</span>&gt;</span>&#123;&#123;g&#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">h4</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">Category</span>&gt;</span><br><br>// 子组件中：<br><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><br>        <span class="hljs-comment">&lt;!-- 通过数据绑定就可以把子组件的数据传到父组件 --&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">slot</span> <span class="hljs-attr">:games</span>=<span class="hljs-string">&quot;games&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">slot</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"></span><br><span class="language-javascript">    <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;</span><br><span class="language-javascript">        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Category&#x27;</span>,</span><br><span class="language-javascript">        <span class="hljs-attr">props</span>: [<span class="hljs-string">&#x27;title&#x27;</span>],</span><br><span class="language-javascript">        <span class="hljs-comment">//数据在子组件自身</span></span><br><span class="language-javascript">        <span class="hljs-title function_">data</span>(<span class="hljs-params"></span>) &#123;</span><br><span class="language-javascript">            <span class="hljs-keyword">return</span> &#123;</span><br><span class="language-javascript">                <span class="hljs-attr">games</span>: [<span class="hljs-string">&#x27;红色警戒&#x27;</span>, <span class="hljs-string">&#x27;穿越火线&#x27;</span>, <span class="hljs-string">&#x27;劲舞团&#x27;</span>, <span class="hljs-string">&#x27;超级玛丽&#x27;</span>],</span><br><span class="language-javascript">            &#125;</span><br><span class="language-javascript">        &#125;,</span><br><span class="language-javascript">    &#125;</span><br><span class="language-javascript"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span><br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Vue/" class="category-chain-item">Vue</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Vue/" class="print-no-link">#Vue</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>组件间通信</div>
+      <div>http://example.com/2022/10/06/vue/组件间通信/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sukksa</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年10月6日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/10/06/vue/Vue%E8%84%9A%E6%89%8B%E6%9E%B6/" title="Vue 脚手架">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Vue 脚手架</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/10/06/vue/%E6%8C%89%E9%94%AE%E4%BF%AE%E9%A5%B0%E7%AC%A6/" title="按键修饰符">
+                        <span class="hidden-mobile">按键修饰符</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

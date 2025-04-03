@@ -1,0 +1,1313 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sukksa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="DOM DOM全称Document Object Model(文档对象模型) 文档:整个HTML网页文档对象 对象:网页中的每一个部分都被转换为了一个对象 模型:使用模型表示对象之间的关系，方便我们获取对象">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DOM介绍">
+<meta property="og:url" content="http://example.com/2021/04/27/DOM/DOM/index.html">
+<meta property="og:site_name" content="sukksa blog">
+<meta property="og:description" content="DOM DOM全称Document Object Model(文档对象模型) 文档:整个HTML网页文档对象 对象:网页中的每一个部分都被转换为了一个对象 模型:使用模型表示对象之间的关系，方便我们获取对象">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-04-27T11:45:31.000Z">
+<meta property="article:modified_time" content="2021-10-26T14:11:17.682Z">
+<meta property="article:author" content="sukksa">
+<meta property="article:tag" content="javaScript">
+<meta property="article:tag" content="DOM">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>DOM介绍 - sukksa blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="DOM介绍"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-04-27 20:45" pubdate>
+          2021年4月27日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          42 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">DOM介绍</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="DOM"><a href="#DOM" class="headerlink" title="DOM"></a>DOM</h2><ul>
+<li>DOM全称Document Object Model(文档对象模型)<ul>
+<li>文档:整个HTML网页文档对象</li>
+<li>对象:网页中的每一个部分都被转换为了一个对象</li>
+<li>模型:使用模型表示对象之间的关系，方便我们获取对象</li>
+</ul>
+</li>
+</ul>
+<span id="more"></span>
+<hr>
+<h3 id="节点"><a href="#节点" class="headerlink" title="节点"></a>节点</h3><ul>
+<li><strong>Node(节点)是构成HTML5的基本单元</strong>，DOM节点主要分为四类<ul>
+<li><strong>文档节点</strong>:整个HTML文档</li>
+<li><strong>元素节点</strong>:HTML文档中的HTML标签</li>
+<li><strong>属性节点</strong>:元素的属性</li>
+<li><strong>文本节点</strong>:HTML标签中的文本内容</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th align="center">节点</th>
+<th align="center">nodeName(节点名)</th>
+<th align="center">nodeType(节点类型)</th>
+<th align="center">nodeValue(节点值)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">文档节点</td>
+<td align="center">#document</td>
+<td align="center">9</td>
+<td align="center">null</td>
+</tr>
+<tr>
+<td align="center">元素节点</td>
+<td align="center">标签名</td>
+<td align="center">1</td>
+<td align="center">null</td>
+</tr>
+<tr>
+<td align="center">属性节点</td>
+<td align="center">属性名</td>
+<td align="center">2</td>
+<td align="center">属性值</td>
+</tr>
+<tr>
+<td align="center">文本节点</td>
+<td align="center">#text</td>
+<td align="center">3</td>
+<td align="center">文本内容</td>
+</tr>
+</tbody></table>
+<ul>
+<li>浏览器已经为我们提供了文档节点对象window,该对象可以在页面中直接使用,代表的是整个网页 </li>
+<li>通过nodeType&#x3D;&#x3D;&#x3D;1可以判断某节点是否是元素节点 </li>
+<li>文本节点包含了在写代码时的回车换行符间产生的空白，但是IE8及以下的浏览器中不会将空白节点当作子节点，而其他浏览器会</li>
+<li>通过nodeName返回的标签名是全大写的 </li>
+<li>元素节点的名字也可以通过专门的TagName属性获得</li>
+</ul>
+<hr>
+<h3 id="DOM事件"><a href="#DOM事件" class="headerlink" title="DOM事件"></a>DOM事件</h3><ul>
+<li>事件是用户和浏览器之间的交互行为</li>
+</ul>
+<h4 id="鼠标事件"><a href="#鼠标事件" class="headerlink" title="鼠标事件"></a>鼠标事件</h4><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>onclick</td>
+<td>当用户点击某个对象时调用的事件句柄。单击鼠标左键或者按下回车键时触发,意味着onclick事件处理程序既可以通过键盘也可以通过鼠标执行</td>
+</tr>
+<tr>
+<td>oncontextmenu</td>
+<td>在用户点击鼠标右键打开上下文菜单时触发。可以用做自定义菜单</td>
+</tr>
+<tr>
+<td>ondblclick</td>
+<td>当用户双击某个对象时调用的事件句柄。双击鼠标左键时触发</td>
+</tr>
+<tr>
+<td>onmousedown</td>
+<td>鼠标按钮被按下。</td>
+</tr>
+<tr>
+<td>onmouseenter</td>
+<td>当鼠标指针移动到元素上时触发。该事件不冒泡，即鼠标移到其后代元素上时不会触发</td>
+</tr>
+<tr>
+<td>onmouseleave</td>
+<td>当鼠标指针移出元素时触发。该事件不冒泡，即鼠标移出其后代元素时不会触发。</td>
+</tr>
+<tr>
+<td>onmousemove</td>
+<td>鼠标被移动。</td>
+</tr>
+<tr>
+<td>onmouseover</td>
+<td>鼠标移到某元素之上。鼠标移到其后代元素上时会触发,意味着支持冒泡</td>
+</tr>
+<tr>
+<td>onmouseout</td>
+<td>鼠标从某元素移开。支持冒泡</td>
+</tr>
+<tr>
+<td>onmouseup</td>
+<td>鼠标按键被松开</td>
+</tr>
+</tbody></table>
+<h4 id="键盘事件"><a href="#键盘事件" class="headerlink" title="键盘事件"></a>键盘事件</h4><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>onkeydown</td>
+<td>某个键盘按键被按下</td>
+</tr>
+<tr>
+<td>onkeypress</td>
+<td>某个键盘按键被按下并松开</td>
+</tr>
+<tr>
+<td>onkeyup</td>
+<td>某个键盘按键被松开</td>
+</tr>
+</tbody></table>
+<h4 id="框架-对象事件"><a href="#框架-对象事件" class="headerlink" title="框架&#x2F;对象事件"></a>框架&#x2F;对象事件</h4><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>onabort</td>
+<td>图像的加载被中断。( <code>&lt;object&gt;)</code></td>
+</tr>
+<tr>
+<td>onbeforeunload</td>
+<td>该事件在即将离开页面（刷新或关闭）时触发 onerror 在加载文档或图像时发生错误。 ( <object>, <body>和 <frameset>)</td>
+</tr>
+<tr>
+<td>onhashchange</td>
+<td>该事件在当前 URL 的锚部分发生修改时触发</td>
+</tr>
+<tr>
+<td>onload</td>
+<td>一张页面或一幅图像完成加载</td>
+</tr>
+<tr>
+<td>onpageshow</td>
+<td>该事件在用户访问页面时触发</td>
+</tr>
+<tr>
+<td>onpagehide</td>
+<td>该事件在用户离开当前网页跳转到另外一个页面时触发</td>
+</tr>
+<tr>
+<td>onresize</td>
+<td>窗口或框架被重新调整大小。(由window调用)</td>
+</tr>
+<tr>
+<td>onscroll</td>
+<td>当文档被滚动时发生的事件</td>
+</tr>
+<tr>
+<td>onunload</td>
+<td>用户退出页面。 (<code>&lt;body&gt; </code>和 <code>&lt;frameset&gt;)</code></td>
+</tr>
+</tbody></table>
+<h4 id="表单事件"><a href="#表单事件" class="headerlink" title="表单事件"></a>表单事件</h4><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>onblur</td>
+<td>元素失去焦点时触发</td>
+</tr>
+<tr>
+<td>onchange</td>
+<td>该事件在表单元素的内容改变时触发( <code>&lt;input&gt;</code>, <code>&lt;keygen&gt;</code>, <code>&lt;select&gt;</code>, 和 <code>&lt;textarea&gt;</code>)</td>
+</tr>
+<tr>
+<td>onfocus</td>
+<td>元素获取焦点时触发</td>
+</tr>
+<tr>
+<td>onfocusin</td>
+<td>元素即将获取焦点时触发</td>
+</tr>
+<tr>
+<td>onfocusout</td>
+<td>元素即将失去焦点时触发</td>
+</tr>
+<tr>
+<td>oninput</td>
+<td>元素获取用户输入时触发</td>
+</tr>
+<tr>
+<td>onreset</td>
+<td>表单重置时触发</td>
+</tr>
+<tr>
+<td>onsearch</td>
+<td>用户向搜索域输入文本时触发 ( <code>&lt;input=&quot;search&quot;&gt;</code>)</td>
+</tr>
+<tr>
+<td>onselect</td>
+<td>用户选取文本时触发 ( <code>&lt;input&gt;</code>和<code>&lt;textarea&gt;)</code></td>
+</tr>
+<tr>
+<td>onsubmit</td>
+<td>表单提交时触发</td>
+</tr>
+</tbody></table>
+<h4 id="剪贴板事件"><a href="#剪贴板事件" class="headerlink" title="剪贴板事件"></a>剪贴板事件</h4><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>oncopy</td>
+<td>该事件在用户拷贝元素内容时触发</td>
+</tr>
+<tr>
+<td>oncut</td>
+<td>该事件在用户剪切元素内容时触发</td>
+</tr>
+<tr>
+<td>onpaste</td>
+<td>该事件在用户粘贴元素内容时触发</td>
+</tr>
+</tbody></table>
+<h4 id="打印事件"><a href="#打印事件" class="headerlink" title="打印事件"></a>打印事件</h4><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>onafterprint</td>
+<td>该事件在页面已经开始打印，或者打印窗口已经关闭时触发</td>
+</tr>
+<tr>
+<td>onbeforeprint</td>
+<td>该事件在页面即将开始打印时触发</td>
+</tr>
+</tbody></table>
+<h4 id="拖动事件"><a href="#拖动事件" class="headerlink" title="拖动事件"></a>拖动事件</h4><table>
+<thead>
+<tr>
+<th>事件</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ondrag</td>
+<td>该事件在元素正在拖动时触发</td>
+</tr>
+<tr>
+<td>ondragend</td>
+<td>该事件在用户完成元素的拖动时触发</td>
+</tr>
+<tr>
+<td>ondragenter</td>
+<td>该事件在拖动的元素进入放置目标时触发</td>
+</tr>
+<tr>
+<td>ondragleave</td>
+<td>该事件在拖动元素离开放置目标时触发</td>
+</tr>
+<tr>
+<td>ondragover</td>
+<td>该事件在拖动元素在放置目标上时触发</td>
+</tr>
+<tr>
+<td>ondragstart</td>
+<td>该事件在用户开始拖动元素时触发</td>
+</tr>
+<tr>
+<td>ondrop</td>
+<td>该事件在拖动元素放置在目标区域时触发</td>
+</tr>
+</tbody></table>
+<h4 id="多媒体事件"><a href="#多媒体事件" class="headerlink" title="多媒体事件"></a>多媒体事件</h4><table>
+<thead>
+<tr>
+<th>事件</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>onabort</td>
+<td>事件在视频&#x2F;音频（audio&#x2F;video）终止加载时触发</td>
+</tr>
+<tr>
+<td>oncanplay</td>
+<td>事件在用户可以开始播放视频&#x2F;音频（audio&#x2F;video）时触发</td>
+</tr>
+<tr>
+<td>oncanplaythrough</td>
+<td>事件在视频&#x2F;音频（audio&#x2F;video）可以正常播放且无需停顿和缓冲时触发</td>
+</tr>
+<tr>
+<td>ondurationchange</td>
+<td>事件在视频&#x2F;音频（audio&#x2F;video）的时长发生变化时触发</td>
+</tr>
+<tr>
+<td>onemptied</td>
+<td>当期播放列表为空时触发</td>
+</tr>
+<tr>
+<td>onended</td>
+<td>事件在视频&#x2F;音频（audio&#x2F;video）播放结束时触发</td>
+</tr>
+<tr>
+<td>onerror</td>
+<td>事件在视频&#x2F;音频（audio&#x2F;video）数据加载期间发生错误时触发</td>
+</tr>
+<tr>
+<td>onloadeddata</td>
+<td>事件在浏览器加载视频&#x2F;音频（audio&#x2F;video）当前帧时触发触发</td>
+</tr>
+<tr>
+<td>onloadedmetadata</td>
+<td>事件在指定视频&#x2F;音频（audio&#x2F;video）的元数据加载后触发</td>
+</tr>
+<tr>
+<td>onloadstart</td>
+<td>事件在浏览器开始寻找指定视频&#x2F;音频（audio&#x2F;video）触发</td>
+</tr>
+<tr>
+<td>onpause</td>
+<td>事件在视频&#x2F;音频（audio&#x2F;video）暂停时触发</td>
+</tr>
+<tr>
+<td>onplay</td>
+<td>事件在视频&#x2F;音频（audio&#x2F;video）开始播放时触发</td>
+</tr>
+<tr>
+<td>onplaying</td>
+<td>事件在视频&#x2F;音频（audio&#x2F;video）暂停或者在缓冲后准备重新开始播放时触发</td>
+</tr>
+<tr>
+<td>onprogress</td>
+<td>事件在浏览器下载指定的视频&#x2F;音频（audio&#x2F;video）时触发</td>
+</tr>
+<tr>
+<td>onratechange</td>
+<td>事件在视频&#x2F;音频（audio&#x2F;video）的播放速度发送改变时触发</td>
+</tr>
+<tr>
+<td>onseeked</td>
+<td>事件在用户重新定位视频&#x2F;音频（audio&#x2F;video）的播放位置后触发</td>
+</tr>
+<tr>
+<td>onseeking</td>
+<td>事件在用户开始重新定位视频&#x2F;音频（audio&#x2F;video）时触发</td>
+</tr>
+<tr>
+<td>onstalled</td>
+<td>事件在浏览器获取媒体数据，但媒体数据不可用时触发</td>
+</tr>
+<tr>
+<td>onsuspend</td>
+<td>事件在浏览器读取媒体数据中止时触发</td>
+</tr>
+<tr>
+<td>ontimeupdate</td>
+<td>事件在当前的播放位置发送改变时触发</td>
+</tr>
+<tr>
+<td>onvolumechange</td>
+<td>事件在音量发生改变时触发</td>
+</tr>
+<tr>
+<td>onwaiting</td>
+<td>事件在视频由于要播放下一帧而需要缓冲时触发</td>
+</tr>
+</tbody></table>
+<h4 id="动画事件"><a href="#动画事件" class="headerlink" title="动画事件"></a>动画事件</h4><table>
+<thead>
+<tr>
+<th>事件</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>animationend</td>
+<td>该事件在 CSS 动画结束播放时触发</td>
+</tr>
+<tr>
+<td>animationiteration</td>
+<td>该事件在 CSS 动画重复播放时触发</td>
+</tr>
+<tr>
+<td>animationstart</td>
+<td>该事件在 CSS 动画开始播放时触发</td>
+</tr>
+</tbody></table>
+<h4 id="过渡事件"><a href="#过渡事件" class="headerlink" title="过渡事件"></a>过渡事件</h4><table>
+<thead>
+<tr>
+<th>事件</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>transitionend</td>
+<td>该事件在 CSS 完成过渡后触发</td>
+</tr>
+</tbody></table>
+<h4 id="其他事件"><a href="#其他事件" class="headerlink" title="其他事件"></a>其他事件</h4><table>
+<thead>
+<tr>
+<th>事件</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>onmessage</td>
+<td>该事件通过或者从对象(WebSocket, Web Worker, Event Source 或者子 frame 或父窗口)接收到消息时触发</td>
+</tr>
+<tr>
+<td>onmousewheel</td>
+<td>已废弃。 使用 onwheel事件替代</td>
+</tr>
+<tr>
+<td>ononline</td>
+<td>该事件在浏览器开始在线工作时触发</td>
+</tr>
+<tr>
+<td>onoffline</td>
+<td>该事件在浏览器开始离线工作时触发</td>
+</tr>
+<tr>
+<td>onpopstate</td>
+<td>该事件在窗口的浏览历史（history 对象）发生改变时触发</td>
+</tr>
+<tr>
+<td>onshow</td>
+<td>该事件当 <code>&lt;menu&gt;</code> 元素在上下文菜单显示时触发 onstorage 该事件在 Web Storage(HTML 5 Web 存储)更新时触发</td>
+</tr>
+<tr>
+<td>ontoggle</td>
+<td>该事件在用户打开或关闭 <code>&lt;details&gt;</code>元素时触发</td>
+</tr>
+<tr>
+<td>onwheel</td>
+<td>该事件在鼠标滚轮在元素上下滚动时触发</td>
+</tr>
+<tr>
+<td>DOMMouseScroll</td>
+<td>火狐(firefox)支持的绑定鼠标滚轮的事件，并且该事件必须要通过addEventListener()函数来绑定事件</td>
+</tr>
+<tr>
+<td>DOMContentLoaded</td>
+<td>监听文档DOM元素的内容是否加载完成，比onload事件要监听的东西更少，DOM元素加载完毕后就会执行该事件,通过addEventListener()函数来绑定事件</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="DOM查询"><a href="#DOM查询" class="headerlink" title="DOM查询"></a>DOM查询</h3><h4 id="获取DOM节点"><a href="#获取DOM节点" class="headerlink" title="获取DOM节点"></a>获取DOM节点</h4><ul>
+<li><code>getElementById()</code> 通过ID获取元素节点，返回一个普通对象 <ul>
+<li><strong>注意:</strong> ID其实可以不用获取而直接使用,因为ID是具有唯一性的,但是不推荐不获取就直接使用ID，因为以后会很难区分这个变量是哪里来的</li>
+</ul>
+</li>
+<li><code>getElementsByTagName()</code>  可以根据标签名来获取一组元素节点对象，这个方法会给我们返回一个类数组对象，所有查询到的元素都会封装到对象中，即使查询到的元素只有一个，也会封装到数组中返回</li>
+<li><code>getElementsByClassName()</code> 方法通过类名获取元素节点(IE8及以下版本不支持),返回一个类数组对象</li>
+<li><code>getElementsByName()</code> 方法通过name属性获取元素节点，这个方法主要是获取表单项，返回一个类数组对象</li>
+<li><code>quertSelector()</code> 方法需要一个选择器的字符串作为参数,可以根据一个CSS选择器来查询一个元素节点对象，语法和CSS语法一样，可以多个选择器一起使用，该方法在IE8也可用<ul>
+<li>**注意:**使用该方法总会返回唯一的一个元素，如果满足条件的元素有多个，也只会返回第一个找到的</li>
+</ul>
+</li>
+<li><code>quertSelectorAll()</code> 方法用法同quertSelector()方法相同<ul>
+<li>**注意:**使用该方法就返回一个类数组对象，类数组对象里包含的所有符号要求的元素对象,即使符合条件的元素只有一个，也会返回类数组</li>
+</ul>
+</li>
+</ul>
+<h4 id="获取属性节点"><a href="#获取属性节点" class="headerlink" title="获取属性节点"></a>获取属性节点</h4><pre><code class="hljs">- 读取元素的属性节点,使用 元素.属性名 或 元素[属性名] 
+- 修改元素的属性节点,使用 元素.属性名=新值 或 元素[属性名]=新值 
+    - **注意:** 读取元素的class属性时必须用className来代替class关键字
+</code></pre>
+<h4 id="获取文本节点"><a href="#获取文本节点" class="headerlink" title="获取文本节点"></a>获取文本节点</h4><ul>
+<li><code>innerHTML</code> 属性可以获取双标签元素内部的html代码，包括子标签,这个属性对于单标签元素(如表单标签)没有意义，返回一个字符串 </li>
+<li><code>InnerText</code> 属性可以获取双标签元素内部的文本内容，它和InnerHTML属性类似，但会自动将HTML标签去除，返回一个字符串 </li>
+<li><code>value</code>属性可以获取单标签元素(如表单标签)内部的内容，同时要向单标签元素写入内容也必须使用value属性，返回一个字符串 </li>
+<li><code>nodeValue</code> 属性通过获取标签内的文本节点的内容来获取元素内部的文本内容(因为文本节点实际是一个标签的子节点，所以需要先找到文本节点，返回一个字符串</li>
+</ul>
+<h4 id="获取元素子节点"><a href="#获取元素子节点" class="headerlink" title="获取元素子节点"></a>获取元素子节点</h4><ul>
+<li><code>childNodes</code>属性获取元素子节点，该属性会获取包括文本节点的所有子节点，返回一个类数组对象 </li>
+<li><code>children</code> 属性可以获取当前元素的所有子元素，推荐用这个属性，返回一个类数组对象，而且是动态获取</li>
+<li><code>firstChild</code> 属性表示当前节点的第一个子节点，也包括空白文本，返回一个普通对象</li>
+<li><code>firstElementChild</code> 属性获取第一个子元素，返回一个普通对象，但是不兼容IE8，不推荐使用</li>
+<li><code>getElementsByTagName()</code> 方法获取当前节点下一组元素节点，返回一个类数组对象</li>
+<li>注：<ul>
+<li>参数值 “ * “ 返回元素的所有子元素</li>
+<li>document对象调用该方法，相当于获取整个文档中的元素节点</li>
+</ul>
+</li>
+</ul>
+<h4 id="获取父和兄弟节点"><a href="#获取父和兄弟节点" class="headerlink" title="获取父和兄弟节点"></a>获取父和兄弟节点</h4><ul>
+<li><code>parentElement</code> 属性获取当前节点的父元素(只在IE中可用) </li>
+<li><code>parentNode</code> 属性获取当前节点的父节点,这是W3C标准的,推荐使用 </li>
+<li><code>offsetParent</code>属性获取到离当前元素最近的开启了定位(除去默认的static)的祖先元素，如果所以的祖先元素都没有开启定位，则会返回body </li>
+<li><code>previousSibling</code> 属性获取当前节点的前一个兄弟节点<ul>
+<li>**注意:**可能获取空白文本，如果两个元素中间有空白就会获取空白文本节点</li>
+</ul>
+</li>
+<li><code>previosElementSibling</code> 属性获取前一个元素，IE8不支持 </li>
+<li><code>nextSibiling</code> 属性表示当前节点的后一个兄弟节点 </li>
+<li><code>nextElementSibling</code> 获取后一个元素，IE8不支持</li>
+</ul>
+<h4 id="获取元素节点的内容"><a href="#获取元素节点的内容" class="headerlink" title="获取元素节点的内容"></a>获取元素节点的内容</h4><ul>
+<li><code>innerHTML</code>和<code>innerText</code> 属性<ul>
+<li>这两个属性并没有在DOM标准定义，但是大部分浏览器都支持这两个属性</li>
+<li>两个属性作用类似，都可以获取到标签内部的内容，<ul>
+<li>不同是innerHTML会获取到html标签，而innerText会自动去除标签</li>
+</ul>
+</li>
+<li>如果使用这两个属性来设置标签内部的内容时，没有任何区别的</li>
+</ul>
+</li>
+<li><code>nodeValue</code> 属性设置或返回指定节点的节点值</li>
+<li><strong>注</strong>：如果您希望返回元素的文本，请记住文本始终位于文本节点中，并且您必须返回文本节点的值<br>  element.childNodes[0].nodeValue</li>
+</ul>
+<h4 id="document对象的其他的属性和方法"><a href="#document对象的其他的属性和方法" class="headerlink" title="document对象的其他的属性和方法"></a>document对象的其他的属性和方法</h4><ul>
+<li><code>document.all</code> 获取页面中的所有元素，相当于document.getElementsByTagName(“*”);</li>
+<li><code>document.documentElement</code> 获取页面中html根元素</li>
+<li><code>document.body</code> 获取页面中的body元素</li>
+</ul>
+<h3 id="DOM修改"><a href="#DOM修改" class="headerlink" title="DOM修改"></a>DOM修改</h3><h4 id="创建元素节点"><a href="#创建元素节点" class="headerlink" title="创建元素节点"></a>创建元素节点</h4><ul>
+<li><p><code>document.createElement()</code> 方法可以根据标签名创建一个元素节点对象</p>
+<ul>
+<li>它需要一个标签名作为参数，将会根据该标签名创建元素节点对象，并将创建好的对象作为返回值返回<br>  var div&#x3D;document.createElement(“div”);</li>
+</ul>
+</li>
+<li><p><code>document.createTextNode()</code> 可以根据文本内容创建一个文本节点对象</p>
+<ul>
+<li>需要一个文本内容作为参数，将会根据该内容创建文本节点，并将新节点返回<br>  var divText &#x3D; doucment.createTextNote(“adc”);</li>
+</ul>
+</li>
+</ul>
+<h4 id="添加元素节点"><a href="#添加元素节点" class="headerlink" title="添加元素节点"></a>添加元素节点</h4><ul>
+<li><code>父节点.appendChild()</code> 向父节点中添加指定的子节点<ul>
+<li>要添加子节点之前必须要先有这个子节点，没有就要先创建，并且新加的子节点会自动添加到所有子节点的最后面</li>
+</ul>
+</li>
+<li><code>父节点.insertBefore()</code> 将一个新的节点插入到旧节点的前边<ul>
+<li>该方法由父节点调用,传入两个参数(新节点和旧节点),第一个参数必填，第二个参数可选<br>  父节点.insertBefore(新节点, 旧节点);</li>
+<li>要添加子节点之前必须要先有这个子节点，没有就要先创建，并且如果没有传入第二个参数会自动添加到所有子节点的最后面 </li>
+<li>如果子节点不是新创建而是从原有父级节点上调用的，那么在用insertBefore()方法时会先将原有父级节点上的该子节点删除</li>
+</ul>
+</li>
+</ul>
+<h4 id="替换元素节点"><a href="#替换元素节点" class="headerlink" title="替换元素节点"></a>替换元素节点</h4><ul>
+<li><code>父节点.replaceChild()</code> 使用一个新的节点去替换旧节点<ul>
+<li>要替换子节点之前必须要先有这个新的子节点，没有就要先创建<br>  父节点.replaceChild(新节点,旧节点)</li>
+</ul>
+</li>
+</ul>
+<h4 id="删除元素节点"><a href="#删除元素节点" class="headerlink" title="删除元素节点"></a>删除元素节点</h4><ul>
+<li><code>父节点.removeChild()</code><ul>
+<li>删除指定的子节点</li>
+<li>推荐方式：<code>子节点.parentNode.removeChild(子节点)</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="元素样式"><a href="#元素样式" class="headerlink" title="元素样式"></a>元素样式</h3><h4 id="修改元素样式"><a href="#修改元素样式" class="headerlink" title="修改元素样式"></a>修改元素样式</h4><ul>
+<li>通过<code>style</code>属性修改元素样式<ul>
+<li><p>语法：元素.style.样式名 &#x3D; 样式值	<br>  <strong>注：</strong></p>
+</li>
+<li><p>通过style属性设置的样式都是<strong>内联样式</strong>，而内联样式有较高的优先级，所以通过JS修改的样式往往会立即显示</p>
+</li>
+<li><p>但是如果在样式中写了!important，则此时样式会有最高的优先级，即使通过JS也不能覆盖该样式，此时将会导致JS修改样式失效</p>
+</li>
+<li><p>如果CSS的样式名中含有 - ，这种名称在JS中是不合法的比如background-color，需要将这种样式名修改为驼峰命名法，去掉 - ，然后将 - 后的字母大写，如background-color写作backgroundColor，border-top-width写作borderTopWidth</p>
+</li>
+<li><p>通过JS的style属性设置和读取的都是内联样式，无法读取CSS样式表中的样式(外部样式和嵌套样式)</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="读取元素样式"><a href="#读取元素样式" class="headerlink" title="读取元素样式"></a>读取元素样式</h4><ul>
+<li><p><code>元素.currentStyle.样式名</code></p>
+<ul>
+<li>它可以用来读取当前元素正在显示的样式，如果当前元素没有设置该样式，则获取它的默认值，如：width返回auto</li>
+<li>注：currentStyle<strong>只有IE浏览器支持，其他的浏览器都不支持</strong><br>  #box1{<br>  width: 100px;<br>  height: 100px;<br>  }<br><br>  var box1 &#x3D; document.getElementById(“box1”); &#x2F;&#x2F;获取box1元素<br>  alert(box1.currentStyle.width);				&#x2F;&#x2F;100px<br>  alert(box1.currentStyle.backgroundColor);	&#x2F;&#x2F;transparent</li>
+</ul>
+</li>
+<li><p><code>getComputedStyle()</code></p>
+<ul>
+<li>获取元素当前的样式，这个方法是window的方法，可以直接使用，但是该方法<strong>不支持IE8及以下的浏览器</strong></li>
+<li>需要两个参数<ul>
+<li>第一个：要获取样式的元素</li>
+<li>第二个：可以传递一个伪元素，一般都传null</li>
+</ul>
+</li>
+<li>该方法会返回一个对象，对象中封装了当前元素对应的样式，可以通过<strong>对象.样式名</strong>来读取样式，如果获取的样式没有设置，则会获取到真实的值，而不是默认值，比如：没有设置width，它不会获取到auto，而是一个长度<br>  #box1 {<br>      width: 100px;<br>      height: 200px;<br>      background-color: #bfa;<br>  }<br><br>  var box1 &#x3D; document.getElementById(“box1”);<br>  var objBox1 &#x3D; getComputedStyle(box1, null);<br>  alert(objBox1.width);	&#x2F;&#x2F;100px</li>
+</ul>
+</li>
+<li><p><strong>注意:</strong> 通过currentStyle属性和getComputedStyle()方法读取到的样式都是只读的，不能修改，如果要修改必须通过style属性</p>
+</li>
+<li><p><strong>二者的兼容写法</strong><br>  function getStyle(obj , name){<br>      &#x2F;*<br>          参数:obj 要获取样式的元素<br>              name 要获取的样式名<br>      *&#x2F;<br>      if(window.getComputedStyle){ &#x2F;&#x2F;这里的getComputedStyle函数实际上是一个对象，如果有则返回true，<br>                  而这里使用window对象调用，是在全局作用域中寻找是否含有这个对象没有则返回false（相当于ie没有该对象），<br>                  而如果不通过window对象调用的话，在局部作用域中调用会找不到这个对象，返回一个undefined<br>          &#x2F;&#x2F;正常浏览器的方式，具有getComputedStyle()方法<br>          return getComputedStyle(obj , null)[name];<br>      }<br>      else{<br>          &#x2F;&#x2F;IE8的方式，没有getComputedStyle()方法<br>          return obj.currentStyle[name];<br>      }<br>      &#x2F;&#x2F;当然if的对象也可以反过来，但是如果判断obj.currentStyle有问题在于IE8以上的IE浏览器两种方法都有，<br>          这样它就会优先使用第一个方法，但是我们推荐优先使用getComputedStyle()<br><br>      &#x2F;&#x2F;简洁写法，三目运算符<br>      &#x2F;&#x2F;return window.getComputedStyle?getComputedStyle(obj , null)[name]:obj.currentStyle[name];<br><br>  }</p>
+</li>
+</ul>
+<h4 id="获取特殊样式"><a href="#获取特殊样式" class="headerlink" title="获取特殊样式"></a>获取特殊样式</h4><ul>
+<li><p><strong>注: 以下获取的样式都是只读的,不能够修改</strong></p>
+</li>
+<li><p><code>clientWidth</code> 与 <code>clientHeight</code></p>
+<ul>
+<li>这两个属性可以获取元素的可见宽度和高度</li>
+<li>这些属性都是不带px的，返回都是一个number类型，可以直接进行计算</li>
+<li>会获取元素宽度和高度，包括内容区和内边距</li>
+</ul>
+</li>
+<li><p><code>offsetWidth</code> 与 <code>offsetHeight</code></p>
+<ul>
+<li>获取元素的整个宽度和高度(内容区，内边距和边框)，返回值也是number类型</li>
+</ul>
+</li>
+<li><p><code>offsetParent</code></p>
+<ul>
+<li>可以用来获取当前元素的定位父元素</li>
+<li>会获取到离当前元素最近的开启了定位的祖先元素，如果所有的祖先元素都没有开启定位，则返回body</li>
+</ul>
+</li>
+<li><p><code>offsetLeft</code> 与 <code>offsetTop</code></p>
+<ul>
+<li>获取当前元素相对于其定位父元素的水平偏移量和垂直偏移量</li>
+<li><strong>注意：</strong>偏移量的原点是父元素的左上角(left top)，和背景图片的原点相同</li>
+</ul>
+</li>
+<li><p><code>window.innerWidth</code> 与 <code>window.innerHeight</code></p>
+<ul>
+<li>可以获取window窗口的内部宽高</li>
+<li><strong>注意：</strong>不包括页面的导航栏以及页面滚动条和控制台</li>
+</ul>
+</li>
+<li><p><code>scrollWidth</code> 与 <code>scrollHeight</code></p>
+<ul>
+<li>可以获取元素整个滚动区域的宽度和高度，如果没有隐藏的部分则等于clientWidth和clientHeight</li>
+</ul>
+</li>
+<li><p><code>scrollLeft</code> 与 <code>scrollTop</code></p>
+<ul>
+<li>可以获取水平和垂直滚动条滚动的距离<br>  当满足 scrollHeight - scrollTop &#x3D;&#x3D; clientHeight，说明垂直滚动条滚动到底了（实际高度 - 滚动高度 &#x3D;&#x3D; 可视高度）<br>  当满足 scrollWidth - scrollLeft &#x3D;&#x3D; clientWidth，说明水平滚动条滚动到底</li>
+</ul>
+</li>
+<li><p>实例<br>  <!DOCTYPE html><br>  <html lang="en"><br>  <head><br>      <meta charset="UTF-8"><br>      <meta name="viewport" content="width=device-width, initial-scale=1.0"><br>      <title>Document</title><br>      <script><br>          window.onload = function () {<br>              var info = document.getElementById("info");<br>              var input = document.getElementsByTagName("input");<br>              info.onscroll = function () {<br>                  if (info.scrollHeight - Math.round(info.scrollTop) == info.clientHeight) {	//判断滚动条是否到底<br>                      input[0].disabled = false;	//checkbox变为可选项<br><br>                      input[0].onclick = function () {	//勾选checkbox时<br>                          if (input[0].checked == true) {<br>                              input[1].disabled = false;<br>                          }<br>                          else{<br>                              input[1].disabled = true;<br>                          }<br>                      }<br>                  }<br>              }<br>          }<br>      </script><br><br>      <style><br>          #info{<br>              width: 200px;<br>              height: 300px;<br>              background-color: #bbffaa;<br>              overflow: auto;<br>          }<br>      </style><br>  </head><br>  <body><br>      <div id="box"><br>          <p id="info">亲爱的用户，请仔细阅读以下协议，如果你不仔细阅读你就别注册<br>              </p><br>              <input type="checkbox" name="c" id="check" disabled="disabled">我已阅读<br>              <input type="button" value="注册" disabled="disabled" ><br>      </div><br>  </body><br>  </html></p>
+</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/DOM/" class="category-chain-item">DOM</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/javaScript/" class="print-no-link">#javaScript</a>
+      
+        <a href="/tags/DOM/" class="print-no-link">#DOM</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>DOM介绍</div>
+      <div>http://example.com/2021/04/27/DOM/DOM/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sukksa</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年4月27日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/04/27/DOM/%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1/" title="事件对象">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">事件对象</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/04/27/javaScript/%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%96%B9%E6%B3%95/" title="字符串方法">
+                        <span class="hidden-mobile">字符串方法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

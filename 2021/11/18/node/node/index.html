@@ -1,0 +1,709 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sukksa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="node简介Node是对ES标准一个实现，Node也是一个JS引擎，通过Node可以使js代码在服务器端执行，Node仅仅对ES标准进行了实现，所以在Node中不包含DOM 和 BOM">
+<meta property="og:type" content="article">
+<meta property="og:title" content="node">
+<meta property="og:url" content="http://example.com/2021/11/18/node/node/index.html">
+<meta property="og:site_name" content="sukksa blog">
+<meta property="og:description" content="node简介Node是对ES标准一个实现，Node也是一个JS引擎，通过Node可以使js代码在服务器端执行，Node仅仅对ES标准进行了实现，所以在Node中不包含DOM 和 BOM">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-18T10:18:41.000Z">
+<meta property="article:modified_time" content="2022-11-03T08:23:29.975Z">
+<meta property="article:author" content="sukksa">
+<meta property="article:tag" content="node">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>node - sukksa blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="node"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-11-18 19:18" pubdate>
+          2021年11月18日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          16 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">node</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="node简介"><a href="#node简介" class="headerlink" title="node简介"></a>node简介</h2><p>Node是对ES标准一个实现，Node也是一个JS引擎，通过Node可以使js代码在服务器端执行，Node仅仅对ES标准进行了实现，所以在Node中不包含DOM 和 BOM</p>
+<span id="more"></span>
+<h2 id="node的模块化"><a href="#node的模块化" class="headerlink" title="node的模块化"></a>node的模块化</h2><p>在Node中，一个js文件就是一个模块</p>
+<p>每一个js文件中的js代码都是独立运行在一个函数中而不是全局作用域，所以一个模块的中的变量和函数在其他模块中无法访问</p>
+<h3 id="CommonJS"><a href="#CommonJS" class="headerlink" title="CommonJS"></a>CommonJS</h3><p>模块就是一个js文件，在模块内部任何变量或其他对象都是私有的，不会暴露给外部模块。</p>
+<p>在CommonJS模块化规范中，在模块内部定义了一个<code>module</code>对象，<code>module</code>对象内部存储了当前模块的基本信息，同时<code>module</code>对象中有一个属性名为<code>exports</code>，<code>exports</code>用来指定需要向外部暴露的内容。只需要将需要暴露的内容设置为<code>exports</code>或<code>exports</code>的属性，其他模块即可通过<code>require</code>来获取这些暴露的内容。</p>
+<h4 id="加载模块"><a href="#加载模块" class="headerlink" title="加载模块"></a>加载模块</h4><p>使用 <code>require()</code> 方法，可以加载需要的内置模块、用户自定义模块、第三方模块进行使用。</p>
+<p><strong>注意</strong>：使用 <code>require()</code> 方法加载其它模块时，会执行被加载模块中的代码。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// 加载内置 fs 模块</span><br><span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;fs&#x27;</span>)<br><br><span class="hljs-comment">// 加载自定义模块</span><br><span class="hljs-keyword">const</span> m = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./myModule.js&#x27;</span>)<br><br><span class="hljs-comment">// 加载第三方模块</span><br><span class="hljs-keyword">const</span> moment = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;moment&#x27;</span>)<br><br><span class="hljs-comment">// 通过解构赋值按需加载模块</span><br><span class="hljs-keyword">const</span> &#123; a, b &#125; = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./myModule.js&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<h4 id="module-对象"><a href="#module-对象" class="headerlink" title="module 对象"></a>module 对象</h4><p>在每个 .js 自定义模块中都有一个 module 对象，它里面存储了和当前模块有关的信息，打印如下</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-variable language_">module</span>)<br><br><span class="hljs-comment">// output</span><br><span class="hljs-title class_">Module</span> &#123;<br>  <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;.&#x27;</span>,<br>  <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;D:\\study\\nodejs\\moudle&#x27;</span>,<br>  <span class="hljs-attr">exports</span>: &#123;&#125;,<br>  <span class="hljs-attr">parent</span>: <span class="hljs-literal">null</span>,<br>  <span class="hljs-attr">filename</span>: <span class="hljs-string">&#x27;D:\\study\\nodejs\\moudle\\myMoudle.js&#x27;</span>,<br>  <span class="hljs-attr">loaded</span>: <span class="hljs-literal">false</span>,<br>  <span class="hljs-attr">children</span>: [],<br>  <span class="hljs-attr">paths</span>: [<br>    <span class="hljs-string">&#x27;D:\\study\\nodejs\\moudle\\node_modules&#x27;</span>,<br>    <span class="hljs-string">&#x27;D:\\study\\nodejs\\node_modules&#x27;</span>,<br>    <span class="hljs-string">&#x27;D:\\study\\node_modules&#x27;</span>,<br>    <span class="hljs-string">&#x27;D:\\node_modules&#x27;</span><br>  ]<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h4 id="module-exports对象"><a href="#module-exports对象" class="headerlink" title="module.exports对象"></a>module.exports对象</h4><p>在自定义模块中，可以使用 <code>module.exports</code> 对象，将模块内的成员共享出去，供外界使用。</p>
+<p>外界用 <code>require()</code> 方法 导入自定义模块时，得到的就是 <code>module.exports</code> 所指向的对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> a = <span class="hljs-number">10</span><br><span class="hljs-keyword">const</span> b = <span class="hljs-number">20</span><br><span class="hljs-keyword">const</span> obj = &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;孙悟空&quot;</span> &#125;<br><br><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span>.<span class="hljs-property">a</span> = a<br><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span>.<span class="hljs-property">b</span> = b<br><br><span class="hljs-comment">// const &#123;a, b&#125; = require(&quot;./m.js&quot;)</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> a = <span class="hljs-number">10</span><br><span class="hljs-keyword">const</span> b = <span class="hljs-number">20</span><br><span class="hljs-keyword">const</span> obj = &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;孙悟空&quot;</span> &#125;<br><br><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = &#123; a, b, obj&#125;<br><br><span class="hljs-comment">// const &#123;a, b, obj&#125; = require(&quot;./m.js&quot;)</span><br></code></pre></td></tr></table></figure>
+
+<p>默认情况下，Node.js会将以下内容视为CommonJS模块：</p>
+<ol>
+<li>使用<code>.cjs</code>为扩展名的文件</li>
+<li>当前的<code>package.json</code>的<code>type</code>属性为<code>commonjs</code>时，扩展名为<code>.js</code>的文件</li>
+<li>当前的<code>package.json</code>不包含<code>type</code>属性时，扩展名为<code>.js</code>的文件</li>
+<li>文件的扩展名是<code>mjs、cjs、json、node、js</code>以外的值时（<code>type</code>不是<code>module</code>时）</li>
+</ol>
+<h4 id="exports-对象"><a href="#exports-对象" class="headerlink" title="exports 对象"></a>exports 对象</h4><p>由于 <code>module.exports</code> 单词写起来比较复杂，为了简化向外共享成员的代码，Node 提供了 <code>exports</code> 对象。</p>
+<p> 默认情况 下 ， <code>exports</code> 和 <code>module.exports</code> 指向同一个对象 。最终共享的结果，还是以 <code>module.exports</code> 指向的对象为准</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> === <span class="hljs-built_in">exports</span>) <span class="hljs-comment">// true</span><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs stylus">const <span class="hljs-selector-tag">a</span> = <span class="hljs-number">10</span><br>const <span class="hljs-selector-tag">b</span> = <span class="hljs-number">20</span><br>const obj = &#123; name: <span class="hljs-string">&quot;孙悟空&quot;</span> &#125;<br><br>exports<span class="hljs-selector-class">.a</span> = <span class="hljs-selector-tag">a</span><br>exports<span class="hljs-selector-class">.b</span> = <span class="hljs-selector-tag">b</span><br><br><span class="hljs-comment">// const &#123;a, b&#125; = require(&quot;./m.js&quot;)</span><br></code></pre></td></tr></table></figure>
+
+<h4 id="exports-和-module-exports-的使用误区"><a href="#exports-和-module-exports-的使用误区" class="headerlink" title="exports 和 module.exports 的使用误区"></a>exports 和 module.exports 的使用误区</h4><p>时刻谨记，<code>require()</code> 模块时，得到的永远是 <code>module.exports</code> 指向的对象</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-built_in">exports</span>.<span class="hljs-property">obj</span> = &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;孙悟空&#x27;</span> &#125;<br><br><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = &#123;<br>  <span class="hljs-attr">a</span>: <span class="hljs-number">10</span>,<br>  <span class="hljs-attr">b</span>: <span class="hljs-number">20</span>,<br>&#125;<br><br><span class="hljs-comment">// const m = require(&quot;./m.js&quot;)</span><br><span class="hljs-comment">// console.log(m) // &#123; a: 10, b: 20 &#125;</span><br></code></pre></td></tr></table></figure>
+
+<p> <strong>注意：</strong>为了防止混乱，建议不要在同一个模块中同时使用 <code>exports</code> 和 <code>module.exports</code></p>
+<h4 id="文件作为模块"><a href="#文件作为模块" class="headerlink" title="文件作为模块"></a>文件作为模块</h4><p>当我们加载一个自定义的文件模块时，模块的路径必须以<code>/、./</code>或<code>../</code>开头。如果不以这些开头，node会认为你要加载的是核心模块或<code>node_modules</code>中的模块。</p>
+<p>当我们要加载的模块是一个文件模块时，CommonJS规范会先去寻找该文件，比如：<code>require(&quot;./m1&quot;)</code>时，会首先寻找名为m1的文件。如果这个文件没有找到，它会自动为文件添加扩展名然后再查询。扩展名的顺序为：<code>js、json、node</code>。</p>
+<p>还是上边的例子，如果没有找到m1，则会按照顺序搜索<code>m1.js、m1.json、m1.node</code>哪个先找到则返回哪个，如果都没有找到则报错。</p>
+<h4 id="文件夹作为模块"><a href="#文件夹作为模块" class="headerlink" title="文件夹作为模块"></a>文件夹作为模块</h4><p>当我们使用一个文件夹作为模块时，文件夹中必须有一个模块的主文件。如果文件夹中含有<code>package.json</code>文件且文件中设置<code>main</code>属性，则<code>main</code>属性指定的文件会成为主文件，导入模块时就是导入该文件。如果没有<code>package.json</code>，则node会按照<code>index.js</code>、<code>index.node</code>的顺序寻找主文件。</p>
+<h4 id="Node-modules"><a href="#Node-modules" class="headerlink" title="Node_modules"></a>Node_modules</h4><p>如果我们加载的模块没有以<code>/、./</code>或<code>../</code>开头，且要加载的模块不是核心模块，node会自动去node_modules目录下去加载模块。</p>
+<p>node会先去当前目录下的node_modules下去寻找模块，找到则使用，没找到则继续去上一层目录中寻找，以此类推，知道找到根目录下的node_modules为止。</p>
+<p>比如，当前项目的目录为：<code>&#39;C:\Users\lilichao\Desktop\Node-Course\myProject\node_modules&#39;</code>，则模块查找顺序依次为：</p>
+<figure class="highlight moonscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs moonscript">‘<span class="hljs-name">C</span>:\Users\lilichao\Desktop\Node-Course\node_modules’,<br>‘<span class="hljs-name">C</span>:\Users\lilichao\Desktop\node_modules’,<br>‘<span class="hljs-name">C</span>:\Users\lilichao\node_modules’,<br>‘<span class="hljs-name">C</span>:\Users\node_modules’,<br>‘<span class="hljs-name">C</span>:\node_modules’<br></code></pre></td></tr></table></figure>
+
+<h4 id="模块的包装"><a href="#模块的包装" class="headerlink" title="模块的包装"></a>模块的包装</h4><p>每一个CommonJS模块在执行时，外层都会被套上一个函数：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs js">(<span class="hljs-keyword">function</span>(<span class="hljs-params"><span class="hljs-built_in">exports</span>, <span class="hljs-built_in">require</span>, <span class="hljs-variable language_">module</span>, __filename, __dirname</span>) &#123;<br>	<span class="hljs-comment">// 模块代码会被放到这里</span><br>&#125;)<br></code></pre></td></tr></table></figure>
+
+<p>所以我们之所以能在CommonJS模块中使用<code>exports</code>、<code>require</code>并不是因为它们是全局变量。它们实际上以参数的形式传递进模块的。</p>
+<p><code>exports</code>，用来设置模块向外部暴露的内容</p>
+<p><code>require</code>，用来引入模块的方法</p>
+<p><code>module</code>，当前模块的引用</p>
+<p><code>__filename</code>，模块的路径</p>
+<p><code>__dirname</code>，模块所在目录的路径</p>
+<h3 id="ES模块化"><a href="#ES模块化" class="headerlink" title="ES模块化"></a>ES模块化</h3><p>2015年随着ES6标准的发布，ES的内置模块化系统也应运而生，并且在Node.js中同样也支持ES标准的模块化。</p>
+<p>需要注意的是，Node.js默认并不支持ES模块化，如果需要使用可以采用两种方式。</p>
+<p>方式一，直接将所有的<code>js</code>文件修改为<code>mjs</code>扩展名。</p>
+<p>方式二，修改<code>package.json</code>中type属性为<code>module</code>。</p>
+<h4 id="导出"><a href="#导出" class="headerlink" title="导出"></a>导出</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// 导出变量（命名导出）</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">let</span> name1, name2, …, nameN; <br><span class="hljs-keyword">export</span> <span class="hljs-keyword">let</span> name1 = …, name2 = …, …, nameN; <br><br><span class="hljs-comment">// 导出函数（命名导出）</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">functionName</span>(<span class="hljs-params"></span>)&#123;...&#125;<br><br><span class="hljs-comment">// 导出类（命名导出）</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ClassName</span> &#123;...&#125;<br><br><span class="hljs-comment">// 导出一组</span><br><span class="hljs-keyword">export</span> &#123; name1, name2, …, nameN &#125;<br><br><span class="hljs-comment">// 重命名导出</span><br><span class="hljs-keyword">export</span> &#123; variable1 <span class="hljs-keyword">as</span> name1, variable2 <span class="hljs-keyword">as</span> name2, …, nameN &#125;<br><br><span class="hljs-comment">// 解构赋值后导出</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> &#123; name1, <span class="hljs-attr">name2</span>: bar &#125; = o<br><br><span class="hljs-comment">// 默认导出</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> expression<br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">…</span>) &#123; … &#125; <span class="hljs-comment">// also class, function*</span><br><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">name1</span>(<span class="hljs-params">…</span>) &#123; … &#125; <span class="hljs-comment">// also class, function*</span><br><span class="hljs-keyword">export</span> &#123; name1 <span class="hljs-keyword">as</span> <span class="hljs-keyword">default</span>, … &#125;;<br><br><span class="hljs-comment">// 聚合模块</span><br><span class="hljs-keyword">export</span> * <span class="hljs-keyword">from</span> …; <span class="hljs-comment">// 将其他模块中的全部内容导出（除了default）</span><br><span class="hljs-keyword">export</span> * <span class="hljs-keyword">as</span> name1 <span class="hljs-keyword">from</span> …; <span class="hljs-comment">// ECMAScript® 2O20 将其他模块中的全部内容以指定别名导出</span><br><span class="hljs-keyword">export</span> &#123; name1, name2, …, nameN &#125; <span class="hljs-keyword">from</span> …; <span class="hljs-comment">// 将其他模块中的指定内容导出</span><br><span class="hljs-keyword">export</span> &#123; import1 <span class="hljs-keyword">as</span> name1, import2 <span class="hljs-keyword">as</span> name2, …, nameN &#125; <span class="hljs-keyword">from</span> …; <span class="hljs-comment">// 将其他模块中的指定内容重命名导出</span><br><span class="hljs-keyword">export</span> &#123; <span class="hljs-keyword">default</span>, … &#125; <span class="hljs-keyword">from</span> …; <br></code></pre></td></tr></table></figure>
+
+<h4 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h4><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs clean"><span class="hljs-comment">// 引入默认导出</span><br><span class="hljs-keyword">import</span> defaultExport <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;module-name&quot;</span><br><br><span class="hljs-comment">// 将所有模块导入到指定命名空间中</span><br><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> name <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;module-name&quot;</span><br><br><span class="hljs-comment">// 引入模块中的指定内容</span><br><span class="hljs-keyword">import</span> &#123; export1 &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;module-name&quot;</span><br><span class="hljs-keyword">import</span> &#123; export1 , export2 &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;module-name&quot;</span><br><br><span class="hljs-comment">// 以指定别名引入模块中的指定内容</span><br><span class="hljs-keyword">import</span> &#123; export1 <span class="hljs-keyword">as</span> alias1 &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;module-name&quot;</span><br><span class="hljs-keyword">import</span> &#123; export1 , export2 <span class="hljs-keyword">as</span> alias2 , [...] &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;module-name&quot;</span><br><br><span class="hljs-comment">// 引入默认和其他内容</span><br><span class="hljs-keyword">import</span> defaultExport, &#123; export1 [ , [...] ] &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;module-name&quot;</span><br><span class="hljs-keyword">import</span> defaultExport, * <span class="hljs-keyword">as</span> name <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;module-name&quot;</span><br><br><span class="hljs-comment">// 引入模块</span><br><span class="hljs-keyword">import</span> <span class="hljs-string">&quot;module-name&quot;</span><br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/node/" class="category-chain-item">node</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/node/" class="print-no-link">#node</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>node</div>
+      <div>http://example.com/2021/11/18/node/node/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sukksa</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年11月18日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/11/22/Ajax/%E5%8E%9F%E7%94%9FAjax/" title="原生Ajax">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">原生Ajax</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/11/15/less/less/" title="less">
+                        <span class="hidden-mobile">less</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

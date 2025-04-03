@@ -1,0 +1,877 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sukksa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="字符串的扩展字符的 Unicode 表示法JavaScript 允许采用\uxxxx形式表示一个字符，其中xxxx表示字符的 Unicode 码点。     &#39;\u0061&#39;     &#x2F;&#x2F; &quot;a&quot;  但是，这种表示法只限于码点在\u0000~\uFFFF之间的字符。超出这个范围的字符，必须用两个双字节的形式表示">
+<meta property="og:type" content="article">
+<meta property="og:title" content="字符串的扩展">
+<meta property="og:url" content="http://example.com/2022/07/26/ES6/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%89%A9%E5%B1%95/index.html">
+<meta property="og:site_name" content="sukksa blog">
+<meta property="og:description" content="字符串的扩展字符的 Unicode 表示法JavaScript 允许采用\uxxxx形式表示一个字符，其中xxxx表示字符的 Unicode 码点。     &#39;\u0061&#39;     &#x2F;&#x2F; &quot;a&quot;  但是，这种表示法只限于码点在\u0000~\uFFFF之间的字符。超出这个范围的字符，必须用两个双字节的形式表示">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-26T12:19:08.000Z">
+<meta property="article:modified_time" content="2022-10-06T16:23:20.869Z">
+<meta property="article:author" content="sukksa">
+<meta property="article:tag" content="ES6">
+<meta property="article:tag" content="javaScript">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>字符串的扩展 - sukksa blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="字符串的扩展"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-07-26 21:19" pubdate>
+          2022年7月26日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          37 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">字符串的扩展</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="字符串的扩展"><a href="#字符串的扩展" class="headerlink" title="字符串的扩展"></a>字符串的扩展</h1><h2 id="字符的-Unicode-表示法"><a href="#字符的-Unicode-表示法" class="headerlink" title="字符的 Unicode 表示法"></a>字符的 Unicode 表示法</h2><p>JavaScript 允许采用<code>\uxxxx</code>形式表示一个字符，其中<code>xxxx</code>表示字符的 Unicode 码点。</p>
+<pre><code class="hljs">    &#39;\u0061&#39;
+    // &quot;a&quot;
+</code></pre>
+<p>但是，这种表示法只限于码点在<code>\u0000~\uFFFF</code>之间的字符。超出这个范围的字符，必须用两个双字节的形式表示</p>
+<span id="more"></span>
+
+
+<p>ES6 对这一点做出了改进，只要将码点放入大括号，就能正确解读该字符</p>
+<pre><code class="hljs">    &#39;\u&#123;20BB7&#125;&#39;
+    // &quot;𠮷&quot;
+
+    &#39;\u&#123;41&#125;\u&#123;42&#125;\u&#123;43&#125;&#39;
+    // &quot;ABC&quot;
+
+    let hello = 123
+    hello // 123
+
+    &#39;\u&#123;1F680&#125;&#39; === &#39;\uD83D\uDE80&#39;
+    // true
+</code></pre>
+<p>上面代码中，最后一个例子表明，大括号表示法与四字节的 UTF-16 编码是等价的。</p>
+<p>有了这种表示法之后，JavaScript 共有 6 种方法可以表示一个字符</p>
+<pre><code class="hljs">    &#39;z&#39; === &#39;z&#39; // true
+    &#39;\172&#39; === &#39;z&#39; // true
+    &#39;\x7A&#39; === &#39;z&#39; // true
+    &#39;\u007A&#39; === &#39;z&#39; // true
+    &#39;\u&#123;7A&#125;&#39; === &#39;z&#39; // true
+</code></pre>
+<h2 id="codePointAt"><a href="#codePointAt" class="headerlink" title="codePointAt()"></a>codePointAt()</h2><p>JavaScript 内部，字符以 UTF-16 的格式储存，每个字符固定为2个字节。对于那些需要4个字节储存的字符(Unicode 码点大于<code>0xFFFF</code>的字符)，JavaScript 会认为它们是两个字符</p>
+<pre><code class="hljs">    var s = &#39;𠮷&#39;
+
+    s.length // 2
+    s.charAt(0) // &#39;&#39;
+    s.charAt(1) // &#39;&#39;
+    s.charCodeAt(0) // 55362
+    s.charCodeAt(1) // 57271
+</code></pre>
+<p>上面代码中，汉字“𠮷”(注意，这个字不是“吉祥”的“吉”)的码点是<code>0x20BB7</code>，UTF-16 编码为<code>0xD842 0xDFB7</code>(十进制为<code>55362 57271</code>)，需要4个字节储存。对于这种4个字节的字符，JavaScript 不能正确处理，字符串长度会误判为2，而且<code>charAt</code>方法无法读取整个字符，<code>charCodeAt</code>方法只能分别返回前两个字节和后两个字节的值</p>
+<p>ES6 提供了<code>codePointAt</code>方法，能够正确处理 4 个字节储存的字符，返回一个字符的码点。</p>
+<pre><code class="hljs">    let s = &#39;𠮷a&#39;
+
+    s.codePointAt(0) // 134071
+    s.codePointAt(1) // 57271
+
+    s.codePointAt(2) // 97
+</code></pre>
+<p><code>codePointAt</code>方法的参数，是字符在字符串中的位置(从 0 开始)。上面代码中，JavaScript 将“<code>𠮷 a</code>”视为三个字符，<code>codePointAt</code> 方法在第一个字符上，正确地识别了“𠮷”，返回了它的十进制码点 <code>134071</code>(即十六进制的<code>20BB7</code>)。在第二个字符(即“𠮷”的后两个字节)和第三个字符“a”上，<code>codePointAt</code>方法的结果与<code>charCodeAt</code>方法相同。 </p>
+<p>总之，<code>codePointAt</code>方法会正确返回 32 位的 UTF-16 字符的码点。对于那些两个字节储存的常规字符，它的返回结果与charCodeAt方法相同。 </p>
+<p><code>codePointAt</code>方法返回的是码点的十进制值，如果想要十六进制的值，可以使用<code>toString</code>方法转换一下。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs stylus">let s = <span class="hljs-string">&#x27;𠮷a&#x27;</span><br><br>s<span class="hljs-selector-class">.codePointAt</span>(<span class="hljs-number">0</span>)<span class="hljs-selector-class">.toString</span>(<span class="hljs-number">16</span>) <span class="hljs-comment">// &quot;20bb7&quot;</span><br>s<span class="hljs-selector-class">.codePointAt</span>(<span class="hljs-number">2</span>)<span class="hljs-selector-class">.toString</span>(<span class="hljs-number">16</span>) <span class="hljs-comment">// &quot;61&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>您可能注意到了，<code>codePointAt</code>方法的参数，仍然是不正确的。比如，上面代码中，字符a在字符串s的正确位置序号应该是 1，但是必须向<code>codePointAt</code>方法传入 2。解决这个问题的一个办法是使用<code>for...of</code>循环，因为它会正确识别 32 位的 UTF-16 字符</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> s = <span class="hljs-string">&#x27;𠮷a&#x27;</span><br><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> ch <span class="hljs-keyword">of</span> s) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(ch.<span class="hljs-title function_">codePointAt</span>(<span class="hljs-number">0</span>).<span class="hljs-title function_">toString</span>(<span class="hljs-number">16</span>))<br>&#125;<br><span class="hljs-comment">// 20bb7</span><br><span class="hljs-comment">// 6</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="String-fromCodePoint"><a href="#String-fromCodePoint" class="headerlink" title="String.fromCodePoint()"></a>String.fromCodePoint()</h2><p>ES5 提供<code>String.fromCharCode</code>方法，用于从码点返回对应字符，但是这个方法不能识别 32 位的 UTF-16 字符(Unicode 编号大于<code>0xFFFF</code>)。</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs arcade">String.<span class="hljs-built_in">fromCharCode</span>(<span class="hljs-number">0x20bb7</span>)<br><span class="hljs-comment">// &quot;ஷ&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>String.fromCharCode</code>不能识别大于<code>0xFFFF</code>的码点，所以<code>0x20BB7</code>就发生了溢出，最高位2被舍弃了，最后返回码点<code>U+0BB7</code>对应的字符，而不是码点<code>U+20BB7</code>对应的字符。 </p>
+<p>ES6 提供了<code>String.fromCodePoint</code>方法，可以识别大于<code>0xFFFF</code>的字符，弥补了<code>String.fromCharCode</code>方法的不足。在作用上，正好与<code>codePointAt</code>方法相反。</p>
+<figure class="highlight wren"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs wren"><span class="hljs-title class_">String</span>.<span class="hljs-property">fromCodePoint</span>(<span class="hljs-number">0x20bb7</span>)<br><span class="hljs-comment">// &quot;𠮷&quot;</span><br><span class="hljs-title class_">String</span>.<span class="hljs-property">fromCodePoint</span>(<span class="hljs-number">0x78</span>, <span class="hljs-number">0x1f680</span>, <span class="hljs-number">0x79</span>) <span class="hljs-operator">==</span><span class="hljs-operator">=</span> <span class="hljs-string">&quot;x<span class="hljs-char escape_">\uD83D</span><span class="hljs-char escape_">\uDE80</span>y&quot;</span><br><span class="hljs-comment">// true</span><br></code></pre></td></tr></table></figure>
+
+<p>上面代码中，如果<code>String.fromCodePoint</code>方法有多个参数，则它们会被合并成一个字符串返回。 </p>
+<p>注意，<code>fromCodePoint</code>方法定义在<code>String</code>对象上，而<code>codePointAt</code>方法定义在字符串的实例对象上</p>
+<h2 id="字符串的遍历器接口"><a href="#字符串的遍历器接口" class="headerlink" title="字符串的遍历器接口"></a>字符串的遍历器接口</h2><p>ES6 为字符串添加了遍历器接口，使得字符串可以被<code>for...of</code>循环遍历。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-keyword">for</span> (let codePoint of <span class="hljs-string">&#x27;foo&#x27;</span>) &#123;<br>    console.log(codePoint)<br>&#125;<br><span class="hljs-regexp">//</span> <span class="hljs-string">&quot;f&quot;</span><br><span class="hljs-regexp">//</span> <span class="hljs-string">&quot;o&quot;</span><br><span class="hljs-regexp">//</span> <span class="hljs-string">&quot;o&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>除了遍历字符串，这个遍历器最大的优点是可以识别大于<code>0xFFFF</code>的码点，传统的<code>for</code>循环无法识别这样的码点</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs arcade">let <span class="hljs-built_in">text</span> = String.<span class="hljs-built_in">fromCodePoint</span>(<span class="hljs-number">0x20bb7</span>)<br><br><span class="hljs-keyword">for</span> (let i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-built_in">text</span>.<span class="hljs-built_in">length</span>; i++) &#123;<br>    <span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(<span class="hljs-built_in">text</span>[i])<br>&#125;<br><span class="hljs-comment">// &quot; &quot;</span><br><span class="hljs-comment">// &quot; &quot;</span><br><br><span class="hljs-keyword">for</span> (let i <span class="hljs-keyword">of</span> <span class="hljs-built_in">text</span>) &#123;<br>    <span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(i)<br>&#125;<br><span class="hljs-comment">// &quot;𠮷&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>上面代码中，字符串<code>text</code>只有一个字符，但是<code>for</code>循环会认为它包含两个字符(都不可打印)，而<code>for...of</code>循环会正确识别出这一个字符</p>
+<h2 id="includes-startsWith-endsWith"><a href="#includes-startsWith-endsWith" class="headerlink" title="includes(), startsWith(), endsWith()"></a>includes(), startsWith(), endsWith()</h2><p>传统上，JavaScript 只有<code>indexOf</code>方法，可以用来确定一个字符串是否包含在另一个字符串中。<br>ES6 又提供了三种新方法。 </p>
+<ul>
+<li><p><code>includes()</code>: 返回布尔值，表示是否找到了参数字符串。 </p>
+</li>
+<li><p><code>startsWith()</code>: 返回布尔值，表示参数字符串是否在原字符串的头部。 </p>
+</li>
+<li><p><code>endsWith()</code>: 返回布尔值，表示参数字符串是否在原字符串的尾部</p>
+  <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs stylus">let s = <span class="hljs-string">&#x27;Hello world!&#x27;</span><br><br>s<span class="hljs-selector-class">.startsWith</span>(<span class="hljs-string">&#x27;Hello&#x27;</span>) <span class="hljs-comment">// true</span><br>s<span class="hljs-selector-class">.endsWith</span>(<span class="hljs-string">&#x27;!&#x27;</span>) <span class="hljs-comment">// true</span><br>s<span class="hljs-selector-class">.includes</span>(<span class="hljs-string">&#x27;o&#x27;</span>) <span class="hljs-comment">// true</span><br></code></pre></td></tr></table></figure></li>
+</ul>
+<p>这三个方法都支持第二个参数，表示开始搜索的位置</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs stylus">let s = <span class="hljs-string">&#x27;Hello world!&#x27;</span><br><br>s<span class="hljs-selector-class">.startsWith</span>(<span class="hljs-string">&#x27;world&#x27;</span>, <span class="hljs-number">6</span>) <span class="hljs-comment">// true</span><br>s<span class="hljs-selector-class">.endsWith</span>(<span class="hljs-string">&#x27;Hello&#x27;</span>, <span class="hljs-number">5</span>) <span class="hljs-comment">// true</span><br>s<span class="hljs-selector-class">.includes</span>(<span class="hljs-string">&#x27;Hello&#x27;</span>, <span class="hljs-number">6</span>) <span class="hljs-comment">// false</span><br></code></pre></td></tr></table></figure>
+
+<p>上面代码表示，使用第二个参数n时，<code>endsWith</code>的行为与其他两个方法有所不同。它针对前<code>n</code>个字符，而其他两个方法针对从第<code>n</code>个位置直到字符串结束</p>
+<h2 id="repeat"><a href="#repeat" class="headerlink" title="repeat()"></a>repeat()</h2><p><code>repeat</code>方法返回一个新字符串，表示将原字符串重复<code>n</code>次。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-string">&#x27;x&#x27;</span>.repeat(<span class="hljs-number">3</span>) <span class="hljs-regexp">//</span> <span class="hljs-string">&quot;xxx&quot;</span><br><span class="hljs-string">&#x27;hello&#x27;</span>.repeat(<span class="hljs-number">2</span>) <span class="hljs-regexp">//</span> <span class="hljs-string">&quot;hellohello&quot;</span><br><span class="hljs-string">&#x27;na&#x27;</span>.repeat(<span class="hljs-number">0</span>) <span class="hljs-regexp">//</span> <span class="hljs-string">&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>参数如果是小数，会被取整。</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli"><span class="hljs-string">&quot;na&quot;</span><span class="hljs-string">.repeat</span><span class="hljs-params">(2.9)</span> <span class="hljs-string">//</span> <span class="hljs-string">&quot;nana&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>如果<code>repeat</code>的参数是负数或者<code>Infinity</code>，会报错</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs pgsql"><span class="hljs-string">&#x27;na&#x27;</span>.repeat(<span class="hljs-keyword">Infinity</span>)<br>// RangeError<br><span class="hljs-string">&#x27;na&#x27;</span>.repeat(<span class="hljs-number">-1</span>)<br>// RangeError<br></code></pre></td></tr></table></figure>
+
+<p>但是，如果参数是 0 到-1 之间的小数，则等同于 0，这是因为会先进行取整运算。0 到-1 之间的小数，取整以后等于-0，<code>repeat</code>视同为 0</p>
+<figure class="highlight jboss-cli"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs jboss-cli"><span class="hljs-string">&quot;na&quot;</span><span class="hljs-string">.repeat</span><span class="hljs-params">(-0.9)</span> <span class="hljs-string">//</span> <span class="hljs-string">&quot;&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>参数NaN等同于 0。 </p>
+<figure class="highlight gml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gml"><span class="hljs-string">&quot;na&quot;</span>.<span class="hljs-keyword">repeat</span>(<span class="hljs-symbol">NaN</span>) <span class="hljs-comment">// &quot;&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>如果<code>repeat</code>的参数是字符串，则会先转换成数字。 </p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-string">&quot;na&quot;</span>.repeat(<span class="hljs-string">&quot;na&quot;</span>) <span class="hljs-regexp">//</span> <span class="hljs-string">&quot;&quot;</span><br><span class="hljs-string">&quot;na&quot;</span>.repeat(<span class="hljs-string">&quot;3&quot;</span>) <span class="hljs-regexp">//</span> <span class="hljs-string">&quot;nanana&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="padStart-，padEnd"><a href="#padStart-，padEnd" class="headerlink" title="padStart()，padEnd()"></a>padStart()，padEnd()</h2><p>ES2017 引入了字符串补全长度的功能。如果某个字符串不够指定长度，会在头部或尾部补全。<br><code>padStart()</code>用于头部补全，<code>padEnd()</code>用于尾部补全</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-string">&quot;x&quot;</span>.padStart(<span class="hljs-number">5</span>, <span class="hljs-string">&quot;ab&quot;</span>) <span class="hljs-regexp">//</span> <span class="hljs-string">&#x27;ababx&#x27;</span><br><span class="hljs-string">&quot;x&quot;</span>.padStart(<span class="hljs-number">4</span>, <span class="hljs-string">&quot;ab&quot;</span>) <span class="hljs-regexp">//</span> <span class="hljs-string">&#x27;abax&#x27;</span><br><br><span class="hljs-string">&quot;x&quot;</span>.padEnd(<span class="hljs-number">5</span>, <span class="hljs-string">&quot;ab&quot;</span>) <span class="hljs-regexp">//</span> <span class="hljs-string">&#x27;xabab&#x27;</span><br><span class="hljs-string">&quot;x&quot;</span>.padEnd(<span class="hljs-number">4</span>, <span class="hljs-string">&quot;ab&quot;</span>) <span class="hljs-regexp">//</span> <span class="hljs-string">&#x27;xaba&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>padStart</code>和<code>padEnd</code>一共接受两个参数，第一个参数用来指定字符串的最小长度，第二个参数是用来补全的字符串。</p>
+<p>如果原字符串的长度，等于或大于指定的最小长度，则返回原字符串</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-string">&#x27;xxx&#x27;</span>.padStart(<span class="hljs-number">2</span>, <span class="hljs-string">&#x27;ab&#x27;</span>) <span class="hljs-regexp">//</span> <span class="hljs-string">&#x27;xxx&#x27;</span><br><span class="hljs-string">&#x27;xxx&#x27;</span>.padEnd(<span class="hljs-number">2</span>, <span class="hljs-string">&#x27;ab&#x27;</span>) <span class="hljs-regexp">//</span> <span class="hljs-string">&#x27;xxx&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>如果用来补全的字符串与原字符串，两者的长度之和超过了指定的最小长度，则会截去超出位数的补全字符串</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs 1c">&#x27;abc&#x27;.padStart<span class="hljs-punctuation">(</span><span class="hljs-number">10</span><span class="hljs-punctuation">,</span> &#x27;<span class="hljs-number">0123456789</span>&#x27;<span class="hljs-punctuation">)</span><br><span class="hljs-comment">// &#x27;0123456abc&#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p>如果省略第二个参数，默认使用空格补全长度</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-string">&#x27;x&#x27;</span>.padStart(<span class="hljs-number">4</span>) <span class="hljs-regexp">//</span> <span class="hljs-string">&#x27;   x&#x27;</span><br><span class="hljs-string">&#x27;x&#x27;</span>.padEnd(<span class="hljs-number">4</span>) <span class="hljs-regexp">//</span> <span class="hljs-string">&#x27;x   &#x27;</span><br></code></pre></td></tr></table></figure>
+
+<p><code>padStart</code>的常见用途是为数值补全指定位数。下面代码生成 10 位的数值字符串</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-string">&#x27;1&#x27;</span>.padStart(<span class="hljs-number">10</span>, <span class="hljs-string">&#x27;0&#x27;</span>) <span class="hljs-regexp">//</span> <span class="hljs-string">&quot;0000000001&quot;</span><br><span class="hljs-string">&#x27;12&#x27;</span>.padStart(<span class="hljs-number">10</span>, <span class="hljs-string">&#x27;0&#x27;</span>) <span class="hljs-regexp">//</span> <span class="hljs-string">&quot;0000000012&quot;</span><br><span class="hljs-string">&#x27;123456&#x27;</span>.padStart(<span class="hljs-number">10</span>, <span class="hljs-string">&#x27;0&#x27;</span>) <span class="hljs-regexp">//</span> <span class="hljs-string">&quot;0000123456&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>另一个用途是提示字符串格式。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-string">&#x27;12&#x27;</span>.padStart(<span class="hljs-number">10</span>, <span class="hljs-string">&#x27;YYYY-MM-DD&#x27;</span>) <span class="hljs-regexp">//</span> <span class="hljs-string">&quot;YYYY-MM-12&quot;</span><br><span class="hljs-string">&#x27;09-12&#x27;</span>.padStart(<span class="hljs-number">10</span>, <span class="hljs-string">&#x27;YYYY-MM-DD&#x27;</span>) <span class="hljs-regexp">//</span> <span class="hljs-string">&quot;YYYY-09-12&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="matchAll"><a href="#matchAll" class="headerlink" title="matchAll()"></a>matchAll()</h2><p><code>matchAll</code>方法返回一个正则表达式在当前字符串的所有匹配</p>
+<h2 id="模板字符串"><a href="#模板字符串" class="headerlink" title="模板字符串"></a>模板字符串</h2><p>传统的 JavaScript 语言，输出模板通常是这样写的(下面使用了 jQuery 的方法)。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs stylus">$(<span class="hljs-string">&#x27;#result&#x27;</span>)<span class="hljs-selector-class">.append</span>(<br>    <span class="hljs-string">&#x27;There are &lt;b&gt;&#x27;</span> +<br>        basket<span class="hljs-selector-class">.count</span> +<br>        <span class="hljs-string">&#x27;&lt;/b&gt; &#x27;</span> +<br>        <span class="hljs-string">&#x27;items in your basket, &#x27;</span> +<br>        <span class="hljs-string">&#x27;&lt;em&gt;&#x27;</span> +<br>        basket<span class="hljs-selector-class">.onSale</span> +<br>        <span class="hljs-string">&#x27;&lt;/em&gt; are on sale!&#x27;</span><br>)<br></code></pre></td></tr></table></figure>
+
+<p>上面这种写法相当繁琐不方便，ES6 引入了模板字符串解决这个问题。</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs vim">$(<span class="hljs-string">&#x27;#result&#x27;</span>).<span class="hljs-keyword">append</span>(`<br>    There are <span class="hljs-symbol">&lt;b&gt;</span>$&#123;basket.<span class="hljs-built_in">count</span>&#125;&lt;/<span class="hljs-keyword">b</span>&gt; <span class="hljs-built_in">items</span><br>    in your basket, <span class="hljs-symbol">&lt;em&gt;</span>$&#123;basket.onSale&#125;&lt;/<span class="hljs-keyword">em</span>&gt;<br>    are <span class="hljs-keyword">on</span> sale!<br>`)<br></code></pre></td></tr></table></figure>
+
+<p>模板字符串(template string)是增强版的字符串，用反引号(&#96;&#96;&#96;)标识。它可以当作普通字符串使用，也可以用来定义多行字符串，或者在字符串中嵌入变量</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs arcade">  <span class="hljs-comment">// 普通字符串</span><br>  ;<span class="hljs-string">`In JavaScript &#x27;\n&#x27; is a line-feed.`</span> <span class="hljs-comment">// 多行字符串</span><br>  <span class="hljs-string">`In JavaScript this is not legal.`</span><br><br>  <span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(<span class="hljs-string">`string text line 1 string text line 2`</span>)<br><br>  <span class="hljs-comment">// 字符串中嵌入变量</span><br>  let name = <span class="hljs-string">&#x27;Bob&#x27;</span>,<br>      <span class="hljs-built_in">time</span> = <span class="hljs-string">&#x27;today&#x27;</span><br>  ;<span class="hljs-string">`Hello <span class="hljs-subst">$&#123;name&#125;</span>, how are you <span class="hljs-subst">$&#123;<span class="hljs-built_in">time</span>&#125;</span>?`</span> <br><span class="hljs-comment">// Hello Bob, how are you today?</span><br></code></pre></td></tr></table></figure>
+
+<p>上面代码中的模板字符串，都是用反引号表示。如果在模板字符串中需要使用反引号，则前面要用反斜杠转义。</p>
+<figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs autohotkey">let greeting = `\`Yo\` World!`<br></code></pre></td></tr></table></figure>
+
+<p>如果使用模板字符串表示多行字符串，所有的空格和缩进都会被保留在输出之中。</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs gherkin">$(<span class="hljs-string">&quot;#list&quot;</span>).html(`<br><span class="hljs-variable">&lt;ul&gt;</span><br>  <span class="hljs-variable">&lt;li&gt;</span>first<span class="hljs-variable">&lt;/li&gt;</span><br>  <span class="hljs-variable">&lt;li&gt;</span>second<span class="hljs-variable">&lt;/li&gt;</span><br><span class="hljs-variable">&lt;/ul&gt;</span><br>`)<br></code></pre></td></tr></table></figure>
+
+<p>上面代码中，所有模板字符串的空格和换行，都是被保留的，比如<code>&lt;ul&gt;</code>标签前面会有一个换行。如果您不想要这个换行，可以使用<code>trim</code>方法消除它</p>
+<figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs gherkin">$(<span class="hljs-string">&quot;#list&quot;</span>).html(<br>  `<br><span class="hljs-variable">&lt;ul&gt;</span><br>  <span class="hljs-variable">&lt;li&gt;</span>first<span class="hljs-variable">&lt;/li&gt;</span><br>  <span class="hljs-variable">&lt;li&gt;</span>second<span class="hljs-variable">&lt;/li&gt;</span><br><span class="hljs-variable">&lt;/ul&gt;</span><br>`.trim()<br>)<br></code></pre></td></tr></table></figure>
+
+<p>模板字符串中嵌入变量，需要将变量名写在<code>$&#123;&#125;</code>之中。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">authorize</span>(<span class="hljs-params">user, action</span>) &#123;<br>    <span class="hljs-keyword">if</span> (!user.<span class="hljs-title function_">hasPrivilege</span>(action)) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<br>            <span class="hljs-comment">// 传统写法为</span><br>            <span class="hljs-comment">// &#x27;User &#x27;</span><br>            <span class="hljs-comment">// + user.name</span><br>            <span class="hljs-comment">// + &#x27; is not authorized to do &#x27;</span><br>            <span class="hljs-comment">// + action</span><br>            <span class="hljs-comment">// + &#x27;.&#x27;</span><br>            <span class="hljs-string">`User <span class="hljs-subst">$&#123;user.name&#125;</span> is not authorized to do <span class="hljs-subst">$&#123;action&#125;</span>.`</span><br>        )<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>大括号内部可以放入任意的 JavaScript 表达式，可以进行运算，以及引用对象属性。</p>
+<figure class="highlight gml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs gml">let <span class="hljs-variable language_">x</span> = <span class="hljs-number">1</span><br>let <span class="hljs-variable language_">y</span> = <span class="hljs-number">2</span><br><br>;`$&#123;<span class="hljs-variable language_">x</span>&#125; + $&#123;<span class="hljs-variable language_">y</span>&#125; = $&#123;<span class="hljs-variable language_">x</span> + <span class="hljs-variable language_">y</span>&#125;` <span class="hljs-comment">// &quot;1 + 2 = 3&quot;</span><br>`$&#123;<span class="hljs-variable language_">x</span>&#125; + $&#123;<span class="hljs-variable language_">y</span> * <span class="hljs-number">2</span>&#125; = $&#123;<span class="hljs-variable language_">x</span> + <span class="hljs-variable language_">y</span> * <span class="hljs-number">2</span>&#125;`<br><span class="hljs-comment">// &quot;1 + 4 = 5&quot;</span><br><br>let obj = &#123; <span class="hljs-variable language_">x</span>: <span class="hljs-number">1</span>, <span class="hljs-variable language_">y</span>: <span class="hljs-number">2</span> &#125;<br>;`$&#123;obj.<span class="hljs-variable language_">x</span> + obj.<span class="hljs-variable language_">y</span>&#125;`<br><span class="hljs-comment">// &quot;3&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>模板字符串之中还能调用函数。</p>
+<pre><code class="hljs">    function fn() &#123;
+        return &#39;Hello World&#39;
+    &#125;
+
+    ;`foo $&#123;fn()&#125; bar`
+    // foo Hello World bar
+</code></pre>
+<p>如果大括号中的值不是字符串，将按照一般的规则转为字符串。比如，大括号中是一个对象，将默认调用对象的<code>toString</code>方法</p>
+<p>如果模板字符串中的变量没有声明，将报错。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-comment">// 变量place没有声明</span><br><span class="hljs-keyword">let</span> msg = <span class="hljs-string">`Hello, <span class="hljs-subst">$&#123;place&#125;</span>`</span><br><span class="hljs-comment">// 报错</span><br></code></pre></td></tr></table></figure>
+
+<p>由于模板字符串的大括号内部，就是执行 JavaScript 代码，因此如果大括号内部是一个字符串，将会原样输出</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs arcade"><span class="hljs-string">`Hello <span class="hljs-subst">$&#123;<span class="hljs-string">&quot;World&quot;</span>&#125;</span>`</span><br><span class="hljs-comment">// &quot;Hello World&quot;</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="标签模板"><a href="#标签模板" class="headerlink" title="标签模板"></a>标签模板</h2><p>模板字符串的功能，不仅仅是上面这些。它可以紧跟在一个函数名后面，该函数将被调用来处理这个模板字符串。这被称为“标签模板”功能(tagged template)。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stylus">alert`<span class="hljs-number">123</span>`<br><span class="hljs-comment">// 等同于</span><br><span class="hljs-function"><span class="hljs-title">alert</span><span class="hljs-params">(<span class="hljs-number">123</span>)</span></span><br></code></pre></td></tr></table></figure>
+
+<p>标签模板其实不是模板，而是函数调用的一种特殊形式。“标签”指的就是函数，紧跟在后面的模板字符串就是它的参数。 </p>
+<p>但是，如果模板字符里面有变量，就不是简单的调用了，而是会将模板字符串先处理成多个参数，再调用函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> a = <span class="hljs-number">5</span><br><span class="hljs-keyword">let</span> b = <span class="hljs-number">10</span><br><br>tag<span class="hljs-string">`Hello <span class="hljs-subst">$&#123;a + b&#125;</span> world <span class="hljs-subst">$&#123;a * b&#125;</span>`</span><br><span class="hljs-comment">// 等同于</span><br><span class="hljs-title function_">tag</span>([<span class="hljs-string">&#x27;Hello &#x27;</span>, <span class="hljs-string">&#x27; world &#x27;</span>, <span class="hljs-string">&#x27;&#x27;</span>], <span class="hljs-number">15</span>, <span class="hljs-number">50</span>)<br></code></pre></td></tr></table></figure>
+
+<p>上面代码中，模板字符串前面有一个标识名tag，它是一个函数。整个表达式的返回值，就是tag函数处理模板字符串后的返回值。</p>
+<p>函数<code>tag</code>依次会接收到多个参数。</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs actionscript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">tag</span><span class="hljs-params">(stringArr, value1, value2)</span> &#123;<br>    <span class="hljs-comment">// ...</span><br>&#125;<br><br><span class="hljs-comment">// 等同于</span><br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">tag</span><span class="hljs-params">(stringArr, <span class="hljs-rest_arg">...values</span>)</span> &#123;<br>    <span class="hljs-comment">// ...</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>tag</code>函数的第一个参数是一个数组，该数组的成员是模板字符串中那些没有变量替换的部分，也就是说，变量替换只发生在数组的第一个成员与第二个成员之间、第二个成员与第三个成员之间，以此类推。 </p>
+<p><code>tag</code>函数的其他参数，都是模板字符串各个变量被替换后的值。由于本例中，模板字符串含有两个变量，因此<code>tag</code>会接受到<code>value1</code>和<code>value2</code>两个参数。</p>
+<p><code>tag</code>函数的第一个参数是一个数组，该数组的成员是模板字符串中那些没有变量替换的部分，也就是说，变量替换只发生在数组的第一个成员与第二个成员之间、第二个成员与第三个成员之间，以此类推。 </p>
+<p><code>tag</code>函数的其他参数，都是模板字符串各个变量被替换后的值。由于本例中，模板字符串含有两个变量，因此<code>tag</code>会接受到<code>value1</code>和<code>value2</code>两个参数。 </p>
+<p>tag函数所有参数的实际值如下。 </p>
+<ul>
+<li>第一个参数: [‘Hello ‘, ‘ world ‘, ‘’] </li>
+<li>第二个参数: 15 </li>
+<li>第三个参数: 50</li>
+</ul>
+<p>也就是说，tag函数实际上以下面的形式调用。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">tag</span><span class="hljs-params">([<span class="hljs-string">&quot;Hello &quot;</span>, <span class="hljs-string">&quot; world &quot;</span>, <span class="hljs-string">&quot;&quot;</span>], <span class="hljs-number">15</span>, <span class="hljs-number">50</span>)</span></span><br></code></pre></td></tr></table></figure>
+
+<p>我们可以按照需要编写<code>tag</code>函数的代码。下面是<code>tag</code>函数的一种写法，以及运行结果。</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs arcade">let a = <span class="hljs-number">5</span><br>let b = <span class="hljs-number">10</span><br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">tag</span>(<span class="hljs-params">s, v1, v2</span>) &#123;<br>    <span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(s[<span class="hljs-number">0</span>])<br>    <span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(s[<span class="hljs-number">1</span>])<br>    <span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(s[<span class="hljs-number">2</span>])<br>    <span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(v1)<br>    <span class="hljs-built_in">console</span>.<span class="hljs-built_in">log</span>(v2)<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;OK&#x27;</span><br>&#125;<br><br>tag<span class="hljs-string">`Hello <span class="hljs-subst">$&#123;a + b&#125;</span> world <span class="hljs-subst">$&#123;a * b&#125;</span>`</span><br><span class="hljs-comment">// &quot;Hello &quot;</span><br><span class="hljs-comment">// &quot; world &quot;</span><br><span class="hljs-comment">// &quot;&quot;</span><br><span class="hljs-comment">// 15</span><br><span class="hljs-comment">// 50</span><br><span class="hljs-comment">// &quot;OK&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>“标签模板”的一个重要应用，就是过滤 HTML 字符串，防止用户输入恶意内容。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">let</span> message = <span class="hljs-title class_">SaferHTML</span><span class="hljs-string">`&lt;p&gt;<span class="hljs-subst">$&#123;sender&#125;</span> has sent you a message.&lt;/p&gt;`</span><br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">SaferHTML</span>(<span class="hljs-params">templateData</span>) &#123;<br>    <span class="hljs-keyword">let</span> s = templateData[<span class="hljs-number">0</span>]<br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">1</span>; i &lt; <span class="hljs-variable language_">arguments</span>.<span class="hljs-property">length</span>; i++) &#123;<br>        <span class="hljs-keyword">let</span> arg = <span class="hljs-title class_">String</span>(<span class="hljs-variable language_">arguments</span>[i])<br><br>        <span class="hljs-comment">// Escape special characters in the substitution.</span><br>        s += arg<br>            .<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/&amp;/g</span>, <span class="hljs-string">&#x27;&amp;amp;&#x27;</span>)<br>            .<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/&lt;/g</span>, <span class="hljs-string">&#x27;&amp;lt;&#x27;</span>)<br>            .<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/&gt;/g</span>, <span class="hljs-string">&#x27;&amp;gt;&#x27;</span>)<br><br>        <span class="hljs-comment">// Don&#x27;t escape special characters in the template.</span><br>        s += templateData[i]<br>    &#125;<br>    <span class="hljs-keyword">return</span> s<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>sender</code>变量往往是用户提供的，经过<code>SaferHTML</code>函数处理，里面的特殊字符都会被转义。</p>
+<figure class="highlight dust"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs dust"><span class="language-xml">let sender = &#x27;<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript"><span class="hljs-title function_">alert</span>(<span class="hljs-string">&quot;abc&quot;</span>)</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>&#x27; // 恶意代码</span><br><span class="language-xml">let message = SaferHTML`<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>$</span><span class="hljs-template-variable">&#123;sender&#125;</span><span class="language-xml"> has sent you a message.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>`</span><br><span class="language-xml"></span><br><span class="language-xml">message</span><br><span class="language-xml">// <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-symbol">&amp;lt;</span>script<span class="hljs-symbol">&amp;gt;</span>alert(&quot;abc&quot;)<span class="hljs-symbol">&amp;lt;</span>/script<span class="hljs-symbol">&amp;gt;</span> has sent you a message.<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="String-raw"><a href="#String-raw" class="headerlink" title="String.raw()"></a>String.raw()</h2><p>ES6 还为原生的 String 对象，提供了一个<code>raw</code>方法。</p>
+<p><code>String.raw</code>方法，往往用来充当模板字符串的处理函数，返回一个斜杠都被转义(即斜杠前面再加一个斜杠)的字符串，对应于替换变量后的模板字符串</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-title class_">String</span>.<span class="hljs-property">raw</span><span class="hljs-string">`Hi\n<span class="hljs-subst">$&#123;<span class="hljs-number">2</span> + <span class="hljs-number">3</span>&#125;</span>!`</span><br><span class="hljs-comment">// 返回 &quot;Hi\\n5!&quot;</span><br><br><span class="hljs-title class_">String</span>.<span class="hljs-property">raw</span><span class="hljs-string">`Hi\u000A!`</span><br><span class="hljs-comment">// 返回 &quot;Hi\\u000A!&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p>如果原字符串的斜杠已经转义，那么<code>String.raw</code>会进行再次转义。</p>
+<pre><code class="hljs">    String.raw`Hi\\n`
+    // 返回 &quot;Hi\\\\n&quot;
+</code></pre>
+<p><code>String.raw</code>方法可以作为处理模板字符串的基本方法，它会将所有变量替换，而且对斜杠进行转义，方便下一步作为字符串来使用。 </p>
+<p><code>String.raw</code>方法也可以作为正常的函数使用。这时，它的第一个参数，应该是一个具有<code>raw</code>属性的对象，且<code>raw</code>属性的值应该是一个数组。</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs stylus">String<span class="hljs-selector-class">.raw</span>(&#123; raw: <span class="hljs-string">&#x27;test&#x27;</span> &#125;, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br><span class="hljs-comment">// &#x27;t0e1s2t&#x27;</span><br><br><span class="hljs-comment">// 等同于</span><br>String<span class="hljs-selector-class">.raw</span>(&#123; raw: <span class="hljs-selector-attr">[<span class="hljs-string">&#x27;t&#x27;</span>, <span class="hljs-string">&#x27;e&#x27;</span>, <span class="hljs-string">&#x27;s&#x27;</span>, <span class="hljs-string">&#x27;t&#x27;</span>]</span> &#125;, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>)<br></code></pre></td></tr></table></figure>
+
+
+<p>作为函数，<code>String.raw</code>的代码实现基本如下</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs actionscript">String.raw = <span class="hljs-keyword">function</span> <span class="hljs-params">(strings, <span class="hljs-rest_arg">...values</span>)</span> &#123;<br>    let output = <span class="hljs-string">&#x27;&#x27;</span><br>    let index<br>    <span class="hljs-keyword">for</span> (index = <span class="hljs-number">0</span>; index &lt; values.length; index++) &#123;<br>        output += strings.raw[index] + values[index]<br>    &#125;<br><br>    output += strings.raw[index]<br>    <span class="hljs-keyword">return</span> output<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="模板字符串的限制"><a href="#模板字符串的限制" class="headerlink" title="模板字符串的限制"></a>模板字符串的限制</h2><p>前面提到标签模板里面，可以内嵌其他语言。但是，模板字符串默认会将字符串转义，导致无法嵌入其他语言。</p>
+<p>举例来说，标签模板里面可以嵌入 LaTEX 语言。</p>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs fsharp"><span class="hljs-keyword">function</span> latex(strings) &#123;<br>    <span class="hljs-comment">// ...</span><br>&#125;<br><br><span class="hljs-keyword">let</span> document <span class="hljs-operator">=</span> latex`<br>    \<span class="hljs-keyword">newcommand</span>&#123;\<span class="hljs-keyword">fun</span>&#125;&#123;\<span class="hljs-keyword">textbf</span>&#123;Fun<span class="hljs-operator">!</span>&#125;&#125;  <span class="hljs-comment">// 正常工作</span><br>    \<span class="hljs-keyword">newcommand</span>&#123;\unicode&#125;&#123;\<span class="hljs-keyword">textbf</span>&#123;Unicode<span class="hljs-operator">!</span>&#125;&#125; <span class="hljs-comment">// 报错</span><br>    \<span class="hljs-keyword">newcommand</span>&#123;\xerxes&#125;&#123;\<span class="hljs-keyword">textbf</span>&#123;King<span class="hljs-operator">!</span>&#125;&#125; <span class="hljs-comment">// 报错</span><br><br>    Breve over the h goes \<span class="hljs-keyword">u</span>&#123;h&#125;ere <span class="hljs-comment">// 报错</span><br>    `<br></code></pre></td></tr></table></figure>
+
+<p>上面代码中，变量<code>document</code>内嵌的模板字符串，对于 LaTEX 语言来说完全是合法的，但是 JavaScript 引擎会报错。原因就在于字符串的转义。 </p>
+<p>模板字符串会将<code>\u00FF</code>和<code>\u&#123;42&#125;</code>当作 Unicode 字符进行转义，所以解析<code>\unicode</code>时报错；而<code>\x56</code>会被当作十六进制字符串转义，所以<code>\xerxes</code>会报错。<br>也就是说，<code>\u</code>和<code>\x</code>在 LaTEX 里面有特殊含义，但是 JavaScript 将它们转义了。 </p>
+<p>为了解决这个问题，ES2018 放松了对标签模板里面的字符串转义的限制。如果遇到不合法的字符串转义，就返回<code>undefined</code>，而不是报错，并且从<code>raw</code>属性上面可以得到原始字符串。</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs arcade"><span class="hljs-keyword">function</span> <span class="hljs-title function_">tag</span>(<span class="hljs-params">strs</span>) &#123;<br>    strs[<span class="hljs-number">0</span>] === <span class="hljs-literal">undefined</span><br>    strs.raw[<span class="hljs-number">0</span>] === <span class="hljs-string">&#x27;\\unicode and \\u&#123;55&#125;&#x27;</span><br>&#125;<br>tag<span class="hljs-string">`\unicode and \u&#123;55&#125;`</span><br></code></pre></td></tr></table></figure>
+
+<p>上面代码中，模板字符串原本是应该报错的，但是由于放松了对字符串转义的限制，所以不报错了，JavaScript 引擎将第一个字符设置为<code>undefined</code>，但是raw属性依然可以得到原始字符串，因此<code>tag</code>函数还是可以对原字符串进行处理。 </p>
+<p>注意，这种对字符串转义的放松，只在标签模板解析字符串时生效，不是标签模板的场合，依然会报错</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs vim"><span class="hljs-keyword">let</span> <span class="hljs-keyword">bad</span> = `<span class="hljs-keyword">bad</span> <span class="hljs-built_in">escape</span> sequence: \unicode` // 报错<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/ES6/" class="category-chain-item">ES6</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/ES6/" class="print-no-link">#ES6</a>
+      
+        <a href="/tags/javaScript/" class="print-no-link">#javaScript</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>字符串的扩展</div>
+      <div>http://example.com/2022/07/26/ES6/字符串的扩展/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sukksa</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年7月26日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/07/29/vue/Vue%E5%AE%9E%E4%BE%8B%E5%AF%B9%E8%B1%A1/" title="Vue实例对象">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Vue实例对象</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/07/23/ES6/Moudle%20%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%AE%9E%E7%8E%B0/" title="Module 的加载实现">
+                        <span class="hidden-mobile">Module 的加载实现</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

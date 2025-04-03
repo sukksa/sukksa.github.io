@@ -1,0 +1,866 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="sukksa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="函数（Function） 函数也是一个对象，也具有普通对象的功能 函数中可以封装一些代码，在需要的时候可以去调用函数来执行这些代码 使用typeof检查一个函数时会返回function">
+<meta property="og:type" content="article">
+<meta property="og:title" content="函数">
+<meta property="og:url" content="http://example.com/2021/10/15/javaScript/%E5%87%BD%E6%95%B0/index.html">
+<meta property="og:site_name" content="sukksa blog">
+<meta property="og:description" content="函数（Function） 函数也是一个对象，也具有普通对象的功能 函数中可以封装一些代码，在需要的时候可以去调用函数来执行这些代码 使用typeof检查一个函数时会返回function">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-15T14:17:45.000Z">
+<meta property="article:modified_time" content="2021-11-06T08:53:13.781Z">
+<meta property="article:author" content="sukksa">
+<meta property="article:tag" content="javaScript">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>函数 - sukksa blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="函数"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-10-15 23:17" pubdate>
+          2021年10月15日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          28 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">函数</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="函数（Function）"><a href="#函数（Function）" class="headerlink" title="函数（Function）"></a>函数（Function）</h1><ul>
+<li>函数也是一个对象，也具有普通对象的功能</li>
+<li>函数中可以封装一些代码，在需要的时候可以去调用函数来执行这些代码</li>
+<li>使用typeof检查一个函数时会返回function</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="创建函数"><a href="#创建函数" class="headerlink" title="创建函数"></a>创建函数</h2><ul>
+<li><p>函数声明<br>  function 函数名([形参1,形参2…形参N]){<br>      语句…<br>  }<br><br>  function fun() {<br>      consloe.log(“hellow”);<br>  }</p>
+</li>
+<li><p>函数表达式<br>  var 函数名 &#x3D; function([形参1,形参2…形参N]){<br>      语句…<br>  };<br><br>  var fun &#x3D; function() {<br>      consloe.log(“hellow”);<br>  }</p>
+</li>
+</ul>
+<h2 id="调用函数"><a href="#调用函数" class="headerlink" title="调用函数"></a>调用函数</h2><ul>
+<li><p>语法：<br>  函数对象([实参1,实参2…实参N]);<br>  fun(); sum(); alert(); Number(); parseInt();<br>  &#x2F;&#x2F;fun() 直接调用<br>  &#x2F;&#x2F;obj.fun() 通过对象调用<br>  &#x2F;&#x2F;new fun() new调用<br>  &#x2F;&#x2F;fun.call(obj) fun.apply(obj) 临时让fun成为obj的方法进行调用 obj.fun()<br>      var obj &#x3D;{};<br>      funcation fun() {<br>          this.name &#x3D; “123”;<br>      }<br>      &#x2F;&#x2F;obj.fun() 错误，obj中没有fun这个方法<br>      fun.call(obj)<br>      console.log(obj.name) &#x2F;&#x2F; 123</p>
+</li>
+<li><p>当我们调用函数时，函数中封装的代码会按照编写的顺序执行</p>
+</li>
+</ul>
+<h2 id="形参和实参"><a href="#形参和实参" class="headerlink" title="形参和实参"></a>形参和实参</h2><ul>
+<li>形参：形式参数<ul>
+<li>定义函数时，可以在()中定义一个或多个形参，形参之间使用 , 隔开</li>
+<li>定义形参就相当于在函数内声明了对应的变量但是并不赋值，</li>
+<li>形参会在调用时才赋值。</li>
+</ul>
+</li>
+<li>实参：实际参数<ul>
+<li>调用函数时，可以在()传递实参，传递的实参会赋值给对应的形参,</li>
+<li>调用函数时JS解析器不会检查实参的类型和个数，可以传递任意数据类型的值。</li>
+<li>如果实参的数量大于形参，多余实参将不会赋值，</li>
+<li>如果实参的数量小于形参，则没有对应实参的形参将会赋值undefined</li>
+</ul>
+</li>
+</ul>
+<h2 id="返回值-return"><a href="#返回值-return" class="headerlink" title="返回值 return"></a>返回值 return</h2><p>可以使用 return 来设置函数的返回值<br>语法：<br>        return 值;</p>
+<pre><code class="hljs">    return a;
+</code></pre>
+<ul>
+<li>return后的值将会会作为函数的执行结果返回，可以定义一个变量，来接收该结果</li>
+<li>在函数中return后的语句都不会执行</li>
+<li>如果return语句后不跟任何值就相当于返回一个undefined， 如果函数中不写return，则也会返回undefined</li>
+</ul>
+<h2 id="立即执行函数-IIFE"><a href="#立即执行函数-IIFE" class="headerlink" title="立即执行函数(IIFE)"></a>立即执行函数(IIFE)</h2><ul>
+<li><p>函数定义完，立即被调用，这种函数叫做立即执行函数，匿名函数直接调用</p>
+</li>
+<li><p>立即执行函数往往只会执行一次</p>
+</li>
+<li><p>作用：隐藏实现，不会污染外部命名空间，编写js模块<br>  语法：</p>
+<pre><code class="hljs">  (function([形参1,形参2...形参N])&#123;
+      语句...
+  &#125;)([实参1,实参2...实参N]);
+
+  (function()&#123;
+      consloe.log(&quot;hellow&quot;);
+  &#125;)();
+
+  (function(a,b)&#123;
+      console.log(&quot;a = &quot;+a);
+      console.log(&quot;b = &quot;+b);
+  &#125;)(123,456);
+</code></pre>
+</li>
+</ul>
+<h2 id="函数的声明提前"><a href="#函数的声明提前" class="headerlink" title="函数的声明提前"></a>函数的声明提前</h2><pre><code class="hljs">- 使用函数声明形式创建的函数 function 函数()&#123;&#125;
+- 它会在所有的代码执行之前就被创建，所以我们可以在函数声明前来调用函数
+- 使用函数表达式创建的函数，不会被声明提前，所以不能在声明前调用
+</code></pre>
+<h2 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h2><ul>
+<li>作用域指一个变量的作用的范围</li>
+</ul>
+<h3 id="全局作用域"><a href="#全局作用域" class="headerlink" title="全局作用域"></a>全局作用域</h3><pre><code class="hljs">- 直接编写在script标签中的JS代码，都在全局作用域
+- 全局作用域在页面打开时创建，在页面关闭时销毁
+- 在全局作用域中有一个全局对象window，它代表的是一个浏览器的窗口，它由浏览器创建我们可以直接使用
+
+- 在全局作用域中：
+ 创建的变量都会作为window对象的属性保存
+创建的函数都会作为window对象的方法保存
+
+- 全局作用域中的变量都是全局变量，在页面的任意的部分都可以访问的到
+</code></pre>
+<h3 id="函数作用域"><a href="#函数作用域" class="headerlink" title="函数作用域"></a>函数作用域</h3><pre><code class="hljs">- 函数作用域是在function字样里的作用域,调用函数时创建函数作用域，函数执行完毕以后，函数作用域销毁 
+- 每调用一次函数就会创建一个新的函数作用域，它们之间互相独立的 
+
+- 当在函数作用域操作一个变量时，它会先在自身作用域中寻找，如果没有，再在离得最近的一级作用域，直到找到全局变量，如果全局作用域中没有找到，就会报错 
+
+- 如果想直接在函数作用域中用全局的变量,使用window.a来调用(前提是用var或者直接写来声明的变量) 
+
+- 在函数作用域中也有声明提前的特性，使用变量声明关键字声明的变量，会在函数中所有的代码执行之前被声明，这个变量是在函数作用域中被声明的，同理在函数中声明的函数也是一样 
+
+- 有参的函数在调用的时候不传入实参,形参的值是undefined，因为在定义形参的时候相当于在函数内部用var声明了一个变量，没有赋值的变量一律为undefined，即使全局变量中有一样的变量也会用内部没有赋值的变量
+</code></pre>
+<h2 id="关键字-this"><a href="#关键字-this" class="headerlink" title="关键字 this"></a>关键字 this</h2><ul>
+<li>解析器在调用函数每次都会向函数内部传递进一个隐含的参数这个隐含的参数就是this</li>
+<li>this指向的是一个对象，这个对象我们称为函数执行的上下文对象<ul>
+<li>根据函数的调用方式的不同，this会指向不同的对象<ol>
+<li><p>以函数的形式调用时，this永远都是window<br> var name &#x3D; “abc”;<br><br> function fun(){<br>     console.log(this.name);&#x2F;&#x2F;此时this.name指向全局作用域的window.name<br> }<br><br> fun();
+ </p>
+</li>
+<li><p>以方法的形式调用时，this就是调用方法的那个对象<br> function fun(){<br>         console.log(this.name);&#x2F;&#x2F;此时的this.name指向的是定义的obj对象中的name属性<br>     }<br><br> var obj &#x3D; {<br>             name:”abc”,<br>             sayName:fun<br>         };<br><br> obj.sayname();
+ </p>
+</li>
+<li><p>以构造函数的形式调用时，this就是新创建的那个对象<br> function Person(name , age , gender){<br>     this.name &#x3D; name;<br>     this.age &#x3D; age;<br>     this.gender &#x3D; gender;<br>     this.sayName &#x3D; function(){<br>         console.log(this.name); &#x2F;&#x2F;this指向的都是Person类中的属性<br>     };<br> }</p>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h2><ul>
+<li>构造函数就是一个普通的函数，创建方式和普通函数没有区别,<ul>
+<li><p>不同的是构造函数习惯上首字母大写</p>
+</li>
+<li><p>构造函数和普通函数的区别就是调用方式的不同<br>  普通函数是直接调用，而构造函数需要使用new关键字来调用</p>
+</li>
+<li><p>构造函数的执行流程：<br>  1.立刻创建一个新的对象<br>  2.将新建的对象设置为函数中this,在构造函数中可以使用this来引用新建的对象<br>  3.逐行执行函数中的代码<br>  4.将新建的对象作为返回值返回</p>
+</li>
+<li><p>使用同一个构造函数创建的对象，我们称为一类对象，也将一个构造函数称为一个类。<br>  我们将通过一个构造函数创建的对象，称为是该类的实例</p>
+<pre><code class="hljs">  function Person(name , age , gender)&#123;
+          this.name = name;
+          this.age = age;
+          this.gender = gender;
+          this.sayName = function()&#123;
+              console.log(this.name); 
+          &#125;;
+      &#125;
+
+  var p1 = new Person(&quot;张三&quot;, 18, &quot;男&quot;); //此时的person是以构造函数的形式赋值给p1变量
+  var p2 = Person(&quot;李四&quot;, 18, &quot;男&quot;); //此时的person是以普通函数的形式赋值给p1变量
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h2><ul>
+<li><p>当函数可以记住并访问所在的词法作用域时， 就产生了闭包， 即使函数是在当前词法作用域之外执行。<br>  通俗来说当一个嵌套的内部(子)函数引用了嵌套的外部(父)函数的变量(函数)时, 就产生了闭包<br>  （函数嵌套，内部函数引用外部函数的变量）<br>  function foo() {<br>      var a &#x3D; 2;<br><br>      function bar() {<br>          console.log(a);<br>      }<br>      return bar;<br>  }<br>  var baz &#x3D; foo();<br>  baz(); &#x2F;&#x2F;2</p>
+<ul>
+<li>在上述代码中，函数 bar() 的词法作用域能够访问 foo() 的内部作用域（foo()内部嵌套了bar()函数）。将 bar() 函数本身当作一个值类型进行传递，使得bar()能够在它的词法作用域外部进行调用</li>
+<li>我们都知道在函数执行完毕后就，将由垃圾回收机制释放掉foo()函数所占用的内存，但是 var baz &#x3D; foo() 这行代码中，bar()函数一直处于执行状态，而foo()函数内部作用域任然在被bar()函数使用（bar()打印变量a的值），拜 bar() 所声明的位置所赐， 它拥有涵盖 foo() 内部作用域的闭包， 使得该作用域能够一直存活， 以供 bar() 在之后任何时间进行引用。</li>
+<li>bar() 依然持有对该作用域的引用， 而这个引用就叫作闭包。</li>
+</ul>
+</li>
+<li><p>循环与闭包<br>  正常情况下，我们对这段代码行为的预期是分别输出数字 1~5，每秒一次， 每次一个。但实际上， 这段代码在运行时会以每秒一次的频率输出五次 6。<br>  for (var i &#x3D; 1; i &lt;&#x3D; 5; i++) {<br>      setTimeout(function timer() {<br>          console.log(i);<br>      }, i * 1000);<br>  }<br>  因为延迟回调函数的执行总是在循环执行结束才执行的，此时执行回调函数是 i &#x3D;&#x3D;&#x3D; 6。尽管循环中5个函数都是分别定义的，但是它们都处在一个<strong>共享全局作用域</strong>中，因此实际上只有一个 i 。</p>
+<pre><code class="hljs">  for (var i = 1; i &lt;= 5; i++) &#123;
+      (function (i) &#123;
+          setTimeout(function timer() &#123;
+              console.log(i);
+          &#125;, j * 1000);
+      &#125;)(i);
+  &#125;
+</code></pre>
+<p>  IIFE 会通过声明并立即执行一个函数来创建作用域。在迭代内使用 IIFE 会为每个迭代都生成一个新的作用域， 使得延迟函数的回调可以将新的作用域封闭在每个迭代内部， 每个迭代中都会含有一个具有正确值的变量供我们访问。</p>
+<pre><code class="hljs">  for (let i = 1; i &lt;= 5; i++) &#123;
+      setTimeout(function timer() &#123;
+          console.log(i);
+      &#125;, i * 1000);
+  &#125;
+</code></pre>
+<p>  还能使用let声明创建块作用域，并且for 循环头部的 let 声明还会有一个特殊的行为。 这个行为指出变量在循环过程中不止被声明一次， 每次迭代都会声明。 随后的每个迭代都会使用上一个迭代结束时的值来初始化这个变量。</p>
+</li>
+<li><p><strong>模块</strong></p>
+<ul>
+<li><p>我们可以利用闭包创建JS模块</p>
+<ul>
+<li><p>具有特定功能的js文件</p>
+</li>
+<li><p>将所有的数据和功能都封装在一个函数内部(私有的)</p>
+</li>
+<li><p>只向外暴露一个包信n个方法的对象或函数</p>
+</li>
+<li><p>模块的使用者, 只需要通过模块暴露的对象调用方法来实现对应的功能</p>
+<pre><code class="hljs">  function CoolModule() &#123;
+      var something = &quot;cool&quot;;
+      var another = [1, 2, 3];
+
+      function doSomething() &#123;
+          console.log(something);
+      &#125;
+
+      function doAnother() &#123;
+          console.log(another.join(&quot; ! &quot;));
+      &#125;
+      return &#123;
+          doSomething: doSomething,
+          doAnother: doAnother
+      &#125;;
+  &#125;
+  //将以上部分通过js文件保存起来，直接引用外部js文件
+  var foo = CoolModule();
+  foo.doSomething(); // cool
+  foo.doAnother(); // 1 ! 2 ! 3
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p>首先， CoolModule() 只是一个函数， 必须要通过调用它来创建一个模块实例。 如果不执行外部函数， 内部作用域和闭包都无法被创建。</p>
+</li>
+<li><p>其次， CoolModule() 返回一个用对象字面量语法 { key: value, … } 来表示的对象。 这个返回的对象中含有对内部函数而不是内部数据变量的引用。 我们保持内部数据变量是隐藏且私有的状态。 可以将这个对象类型的返回值看作本质上是模块的公共 API。</p>
+</li>
+<li><p>这个对象类型的返回值最终被赋值给外部的变量 foo， 然后就可以通过它来访问 API 中的属性方法， 比如 foo.doSomething()。</p>
+</li>
+<li><p>doSomething() 和 doAnother() 函数具有涵盖模块实例内部作用域的闭包（ 通过调用CoolModule() 实现）。</p>
+</li>
+<li><p>模块模式需要具备两个必要条件。</p>
+<ol>
+<li>必须有外部的封闭函数， 该函数必须至少被调用一次（每次调用都会创建一个新的模块实例）。</li>
+<li>封闭函数必须返回至少一个内部函数， 这样内部函数才能在私有作用域中形成闭包，并且可以访问或者修改私有的状态。</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>记住闭包产生的条件：<strong>当函数可以记住并访问所在的词法作用域， 即使函数是在当前词法作用域之外执行， 这时就产生了闭包。</strong></p>
+</li>
+</ul>
+<h2 id="垃圾回收（GC）"><a href="#垃圾回收（GC）" class="headerlink" title="垃圾回收（GC）"></a>垃圾回收（GC）</h2><ul>
+<li>就像人生活的时间长了会产生垃圾一样，程序运行过程中也会产生垃圾，这些垃圾积攒过多以后，会导致程序运行的速度过慢，所以我们需要一个垃圾回收的机制，来处理程序运行过程中产生垃圾</li>
+<li>当一个对象没有任何的变量或属性对它进行引用，此时我们将永远无法操作该对象，此时这种对象就是一个垃圾，这种对象过多会占用大量的内存空间，导致程序运行变慢，所以这种垃圾必须进行清理。</li>
+<li>在JS中拥有自动的垃圾回收机制，会自动将这些垃圾对象从内存中销毁，我们不需要也不能进行垃圾回收的操作</li>
+<li>我们需要做的只是要将不再使用的对象设置null即可<br>  var obj &#x3D; new Object();<br><br> &#x2F;&#x2F;对对象进行各种操作。。。。<br><br> obj &#x3D; null;</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/javaScript/" class="category-chain-item">javaScript</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/javaScript/" class="print-no-link">#javaScript</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>函数</div>
+      <div>http://example.com/2021/10/15/javaScript/函数/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>sukksa</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年10月15日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2021/10/17/javaScript/%E5%AF%B9%E8%B1%A1/" title="对象">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">对象</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/10/15/DOM/%E4%BA%8B%E4%BB%B6/" title="事件">
+                        <span class="hidden-mobile">事件</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
