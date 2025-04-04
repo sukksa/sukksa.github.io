@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/images/javascript/%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF%E6%A8%A1%E5%9E%8B.png">
 <meta property="article:published_time" content="2021-10-17T14:36:27.000Z">
-<meta property="article:modified_time" content="2021-10-19T02:57:47.114Z">
+<meta property="article:modified_time" content="2025-04-04T01:25:38.370Z">
 <meta property="article:author" content="sukksa">
 <meta property="article:tag" content="javaScript">
 <meta name="twitter:card" content="summary_large_image">
@@ -309,13 +309,15 @@
 </li>
 <li><p>H5提出了实现多线程的方案：Web workers（很少用）</p>
 </li>
-<li><p>只能在主线程中更新界面，分线程中不能<br>  console.log(“1”)<br>  setTimeout(function(){<br>      console.log(2)<br>  }, 1000)<br>  console.log(3)<br>  输出：100 300 200</p>
+<li><p>只能在主线程中更新界面，分线程中不能</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;1&quot;</span>)<br><span class="hljs-built_in">setTimeout</span>(<span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)&#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-number">2</span>)<br>&#125;, <span class="hljs-number">1000</span>)<br><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-number">3</span>)<br></code></pre></td></tr></table></figure>
+<p>  输出：1 3 2</p>
 <p>  这个任务是串行的，不能发生阻塞，使用异步解决这种问题</p>
 <p>  过程：</p>
 <ol>
-<li>执行第一行，打印100</li>
+<li>执行第一行，打印1</li>
 <li>执行setTimeout 后，传入setTimeout 的函数会被暂存起来，不会立即执行（单线程的特点，不能同时干两件事）</li>
-<li>执行最后一行，打印300</li>
+<li>执行最后一行，打印3</li>
 <li>待所有程序执行完，处于空闲状态时，会立马看有没有暂存起来的要执行</li>
 <li>发现暂存起来的 setTimeout 中的函数无需等待时间，立即起来执行</li>
 </ol>
