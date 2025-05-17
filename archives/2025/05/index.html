@@ -191,7 +191,14 @@
     <link id="stylesheet-base" rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link id="stylesheet-mobile" rel="preload" href="/css/mobile.css" as="style" onload="this.onload=null;this.rel='stylesheet';this.media='screen and (max-width: 960px)'">
     <link id="stylesheet-theme-dark" rel="preload" href="/css/dark.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <!-- <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script"> -->
+    <link rel="preload" href="/lib/jquery.min.js" as="script">
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
     <link rel="preload" href="/scripts/main.js" as="script">
     <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
     <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
@@ -201,13 +208,15 @@
     <!-- Google tag (gtag.js) -->
 <meta name="generator" content="Hexo 7.3.0"></head>
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-    <script type="text/javascript">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script> -->
+    <script src="/lib/jquery.min.js"></script>
+    <script src=""></script>
+    <!-- <script type="text/javascript">
         if (typeof window.$ == undefined) {
             console.warn('jquery load from jsdelivr failed, will load local script')
             document.write('<script src="/lib/jquery.min.js" />')
         }
-    </script>
+    </script> -->
         <!-- header -->
         <header class="header header-mobile">
     <!-- top read progress line -->
@@ -400,7 +409,7 @@
             
         <article class="index-post">
             <a class="abstract-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E6%B3%A2%E6%B5%AA/">
-                <span class="abstract-title-text">[Untitled Post]</span>
+                <span class="abstract-title-text">使用着色器绘制波浪</span>
             </a>
             <div class="abstract-content">
                 通过 perlin noise 增加在主浪身上的小波浪循环调用 perlin noise 显得更加无序但是多次调用 perlin noise，会导致小波浪...
@@ -408,10 +417,15 @@
             <!-- read more -->
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2025/04/23">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2025/05/06</span>
+                <div class="abstract-date" title="Last updated: 2025/05/17">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2025/05/16</span>
                 </div>
                 <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="Threejs">Threejs</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="shader">shader</a>
+</div>
+
             </div>
         </article>
         <div class="index-post-divider"></div>
@@ -420,7 +434,7 @@
                 <span class="abstract-title-text">使用着色器绘制图案</span>
             </a>
             <div class="abstract-content">
-                <h1 id="使用着色器绘制图案"><a href="#使用着色器绘制图案" class="headerlink" title="使用着色器绘制图案"></a>使用着色器绘制图案</h1><h2 id="UV"><a href="#UV" class="headerlink" title="UV"></a>UV</h2><p>在创建着色器时，我们需要绘制特定的图案，如星星、圆圈、光透镜、波浪等。虽然可以使用纹理，但绘制形状可以让我们有更多的控制权;我们可以对形状参数进行动画处理，并且没有要加载的纹理。需要在fragment shader中用到uv坐标。</p>
+                <h2 id="What-is-UV"><a href="#What-is-UV" class="headerlink" title="What is UV"></a>What is UV</h2><p>在创建着色器时，我们需要绘制特定的图案，如星星、圆圈、光透镜、波浪等。虽然可以使用纹理，但绘制形状可以让我们有更多的控制权;我们可以对形状参数进行动画处理，并且没有要加载的纹理。需要在fragment shader中用到uv坐标。</p>
 <p>什么是uv坐标？</p>
 <p>UV坐标是用来将2D纹理贴图到3D模型表面的坐标系。这里的U和V代表的是2D空间的两个轴，类似于平面中的X和Y，但为了避免与3D空间中的X、Y、Z混淆，所以用U和V来命名。</p>
 <p>在Threejs中UV坐标的范围是0到1，覆盖整个纹理图像。原点(0,0)在左下角，而(1,1)在右上角。uv坐标的count取决于material的分段数</p>
@@ -428,7 +442,7 @@
 <p>fragment shader无法直接访问顶点数据，所以我们需要通过 vertex shader 创建变量发送给 fragment shader。</p>
 <figure class="highlight glsl"><table><tr><td class="gutter"></td><td class="code"></td></tr></table></figure>
 
-<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2>
+<h2 id="Pattern-1"><a href="#Pattern-1" class="headerlink" title="Pattern 1"></a>Pattern 1</h2><p>直接使用 uv 坐标，原点的颜色为到右上角的渐变</p>
             </div>
             <!-- read more -->
                 <div class="abstract-read-more-button">
@@ -439,7 +453,7 @@
                 </div>
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2025/05/06">
+                <div class="abstract-date" title="Last updated: 2025/05/17">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2025/05/06</span>
                 </div>
                 <!-- tags -->
@@ -456,7 +470,7 @@
                 <span class="abstract-title-text">第一个 shader 程序</span>
             </a>
             <div class="abstract-content">
-                <h1 id="第一个-shader-程序"><a href="#第一个-shader-程序" class="headerlink" title="第一个 shader 程序"></a>第一个 shader 程序</h1><p>shader 是用 GLSL(OpenGL Shading Language) 编写的程序，他会被发送到GPU运行。原生 WebGL 的一部分，如果不依赖任何库使用 WebGl 的话，需要自己动手创建 Shader。shader 会为几何体的每个顶点(vertex)定位，以及为几何体的所有可见片段（fragment）着色。</p>
+                <p>shader 是用 GLSL(OpenGL Shading Language) 编写的程序，他会被发送到GPU运行。原生 WebGL 的一部分，如果不依赖任何库使用 WebGl 的话，需要自己动手创建 Shader。shader 会为几何体的每个顶点(vertex)定位，以及为几何体的所有可见片段（fragment）着色。</p>
 <p>我们会为shader发送大量的数据，比如顶点坐标、网格变换信息、摄像机的信息以及几何体的顶点颜色、纹理等等。然后交给CPU，利用GLSL编写的着色器程序处理这些数据，最终在屏幕上定位顶点，并为每个可见片段着色</p>
 <p>着色器有两种类型</p>
 <ul>
@@ -468,6 +482,9 @@
 <p>fragment shader</p>
 <p>片段着色器会为顶点着色，包括颜色，纹理，透明度等等。</p>
 <p><a target="_blank" rel="noopener" href="https://learnopengl.com/Getting-started/Coordinate-Systems">https://learnopengl.com/Getting-started/Coordinate-Systems</a></p>
+
+
+<p>为什么要自己编写着色器？为什么我们不能直接使用Threejs的内置材质？</p>
             </div>
             <!-- read more -->
                 <div class="abstract-read-more-button">
@@ -478,7 +495,7 @@
                 </div>
             <div class="abstract-post-meta">
                 <!-- date -->
-                <div class="abstract-date" title="Last updated: 2025/05/06">
+                <div class="abstract-date" title="Last updated: 2025/05/17">
                     <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2025/05/06</span>
                 </div>
                 <!-- tags -->
@@ -593,8 +610,8 @@
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
         <li class="archive-post-item">
-            <span class="archive-post-date">05/06</span>
-            <a class="archive-post-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E6%B3%A2%E6%B5%AA/">[Untitled Post]</a>
+            <span class="archive-post-date">05/16</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E6%B3%A2%E6%B5%AA/">使用着色器绘制波浪</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">05/06</span>
@@ -820,11 +837,11 @@
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">04/27</span>
-            <a class="archive-post-title" href="/2021/javaScript/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+            <a class="archive-post-title" href="/2021/javaScript/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">类型转换</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">04/27</span>
-            <a class="archive-post-title" href="/2021/javaScript/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">类型转换</a>
+            <a class="archive-post-title" href="/2021/javaScript/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
         </li>
             </ul>
     </div>
@@ -840,6 +857,10 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 JavaScript
             </span>
+            <span class="sidebar-tag-name" data-tags="ES6">
+                <span class="iconfont-archer">&#xe606;</span>
+                ES6
+            </span>
             <span class="sidebar-tag-name" data-tags="javaScript">
                 <span class="iconfont-archer">&#xe606;</span>
                 javaScript
@@ -852,33 +873,29 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 jQuery
             </span>
-            <span class="sidebar-tag-name" data-tags="ES6">
-                <span class="iconfont-archer">&#xe606;</span>
-                ES6
-            </span>
-            <span class="sidebar-tag-name" data-tags="node">
-                <span class="iconfont-archer">&#xe606;</span>
-                node
-            </span>
             <span class="sidebar-tag-name" data-tags="Threejs">
                 <span class="iconfont-archer">&#xe606;</span>
                 Threejs
             </span>
-            <span class="sidebar-tag-name" data-tags="Vue">
+            <span class="sidebar-tag-name" data-tags="shader">
                 <span class="iconfont-archer">&#xe606;</span>
-                Vue
+                shader
             </span>
             <span class="sidebar-tag-name" data-tags="less">
                 <span class="iconfont-archer">&#xe606;</span>
                 less
             </span>
+            <span class="sidebar-tag-name" data-tags="node">
+                <span class="iconfont-archer">&#xe606;</span>
+                node
+            </span>
             <span class="sidebar-tag-name" data-tags="git">
                 <span class="iconfont-archer">&#xe606;</span>
                 git
             </span>
-            <span class="sidebar-tag-name" data-tags="shader">
+            <span class="sidebar-tag-name" data-tags="Vue">
                 <span class="iconfont-archer">&#xe606;</span>
-                shader
+                Vue
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
@@ -894,6 +911,10 @@
             <span class="iconfont-archer">&#xe60a;</span>
             Ajax
         </span>
+        <span class="sidebar-category-name" data-categories="ES6">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ES6
+        </span>
         <span class="sidebar-category-name" data-categories="DOM">
             <span class="iconfont-archer">&#xe60a;</span>
             DOM
@@ -902,41 +923,37 @@
             <span class="iconfont-archer">&#xe60a;</span>
             jQuery
         </span>
-        <span class="sidebar-category-name" data-categories="ES6">
-            <span class="iconfont-archer">&#xe60a;</span>
-            ES6
-        </span>
         <span class="sidebar-category-name" data-categories="javaScript">
             <span class="iconfont-archer">&#xe60a;</span>
             javaScript
         </span>
-        <span class="sidebar-category-name" data-categories="node">
+        <span class="sidebar-category-name" data-categories="shader">
             <span class="iconfont-archer">&#xe60a;</span>
-            node
+            shader
         </span>
         <span class="sidebar-category-name" data-categories="Threejs">
             <span class="iconfont-archer">&#xe60a;</span>
             Threejs
         </span>
-        <span class="sidebar-category-name" data-categories="Vue">
-            <span class="iconfont-archer">&#xe60a;</span>
-            Vue
-        </span>
         <span class="sidebar-category-name" data-categories="less">
             <span class="iconfont-archer">&#xe60a;</span>
             less
+        </span>
+        <span class="sidebar-category-name" data-categories="node">
+            <span class="iconfont-archer">&#xe60a;</span>
+            node
         </span>
         <span class="sidebar-category-name" data-categories="git">
             <span class="iconfont-archer">&#xe60a;</span>
             git
         </span>
+        <span class="sidebar-category-name" data-categories="Vue">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Vue
+        </span>
         <span class="sidebar-category-name" data-categories="实战">
             <span class="iconfont-archer">&#xe60a;</span>
             实战
-        </span>
-        <span class="sidebar-category-name" data-categories="shader">
-            <span class="iconfont-archer">&#xe60a;</span>
-            shader
         </span>
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
@@ -969,6 +986,7 @@
         <!-- algolia -->
         <!-- busuanzi -->
             <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+            <!-- <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script> -->
         <!-- async load share.js -->
         <!-- mermaid -->
     </body>

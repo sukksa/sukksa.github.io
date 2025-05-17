@@ -10,12 +10,12 @@
     <meta name="copyright" content="sukksa">
         <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
     <meta name="description" content="">
-    <meta name="description" content="使用着色器绘制图案UV在创建着色器时，我们需要绘制特定的图案，如星星、圆圈、光透镜、波浪等。虽然可以使用纹理，但绘制形状可以让我们有更多的控制权;我们可以对形状参数进行动画处理，并且没有要加载的纹理。需要在fragment shader中用到uv坐标。 什么是uv坐标？ UV坐标是用来将2D纹理贴图到3D模型表面的坐标系。这里的U和V代表的是2D空间的两个轴，类似于平面中的X和Y，但为了避免与3D">
+    <meta name="description" content="What is UV在创建着色器时，我们需要绘制特定的图案，如星星、圆圈、光透镜、波浪等。虽然可以使用纹理，但绘制形状可以让我们有更多的控制权;我们可以对形状参数进行动画处理，并且没有要加载的纹理。需要在fragment shader中用到uv坐标。 什么是uv坐标？ UV坐标是用来将2D纹理贴图到3D模型表面的坐标系。这里的U和V代表的是2D空间的两个轴，类似于平面中的X和Y，但为了避免与3D空">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用着色器绘制图案">
 <meta property="og:url" content="https://sukksa.github.io/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E5%9B%BE%E6%A1%88/index.html">
 <meta property="og:site_name" content="sukksa blog">
-<meta property="og:description" content="使用着色器绘制图案UV在创建着色器时，我们需要绘制特定的图案，如星星、圆圈、光透镜、波浪等。虽然可以使用纹理，但绘制形状可以让我们有更多的控制权;我们可以对形状参数进行动画处理，并且没有要加载的纹理。需要在fragment shader中用到uv坐标。 什么是uv坐标？ UV坐标是用来将2D纹理贴图到3D模型表面的坐标系。这里的U和V代表的是2D空间的两个轴，类似于平面中的X和Y，但为了避免与3D">
+<meta property="og:description" content="What is UV在创建着色器时，我们需要绘制特定的图案，如星星、圆圈、光透镜、波浪等。虽然可以使用纹理，但绘制形状可以让我们有更多的控制权;我们可以对形状参数进行动画处理，并且没有要加载的纹理。需要在fragment shader中用到uv坐标。 什么是uv坐标？ UV坐标是用来将2D纹理贴图到3D模型表面的坐标系。这里的U和V代表的是2D空间的两个轴，类似于平面中的X和Y，但为了避免与3D空">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/sukksa/upgit-images/main/2025/04/image-20250422155105545_1745308268.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/sukksa/upgit-images/main/2025/04/image-20250422155853192_1745308737.png">
@@ -69,7 +69,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/sukksa/upgit-images/main/2025/04/image-20250423175559671_1745402160.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/sukksa/upgit-images/main/2025/04/image-20250423175613542_1745402174.png">
 <meta property="article:published_time" content="2025-05-06T07:15:53.000Z">
-<meta property="article:modified_time" content="2025-05-06T08:15:03.982Z">
+<meta property="article:modified_time" content="2025-05-17T07:41:45.163Z">
 <meta property="article:author" content="sukksa">
 <meta property="article:tag" content="Threejs">
 <meta property="article:tag" content="shader">
@@ -249,7 +249,14 @@
     <link id="stylesheet-base" rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link id="stylesheet-mobile" rel="preload" href="/css/mobile.css" as="style" onload="this.onload=null;this.rel='stylesheet';this.media='screen and (max-width: 960px)'">
     <link id="stylesheet-theme-dark" rel="preload" href="/css/dark.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script">
+    <!-- <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script"> -->
+    <link rel="preload" href="/lib/jquery.min.js" as="script">
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
     <link rel="preload" href="/scripts/main.js" as="script">
     <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
     <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
@@ -259,13 +266,15 @@
     <!-- Google tag (gtag.js) -->
 <meta name="generator" content="Hexo 7.3.0"></head>
 
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-    <script type="text/javascript">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script> -->
+    <script src="/lib/jquery.min.js"></script>
+    <script src=""></script>
+    <!-- <script type="text/javascript">
         if (typeof window.$ == undefined) {
             console.warn('jquery load from jsdelivr failed, will load local script')
             document.write('<script src="/lib/jquery.min.js" />')
         }
-    </script>
+    </script> -->
         <body class="post-body">
         <!-- header -->
         <header class="header header-mobile">
@@ -498,7 +507,7 @@
             <div class="container container-unloaded">
                 <main class="main post-page">
     <article class="article-entry">
-        <h1 id="使用着色器绘制图案"><a href="#使用着色器绘制图案" class="headerlink" title="使用着色器绘制图案"></a>使用着色器绘制图案</h1><h2 id="UV"><a href="#UV" class="headerlink" title="UV"></a>UV</h2><p>在创建着色器时，我们需要绘制特定的图案，如星星、圆圈、光透镜、波浪等。虽然可以使用纹理，但绘制形状可以让我们有更多的控制权;我们可以对形状参数进行动画处理，并且没有要加载的纹理。需要在fragment shader中用到uv坐标。</p>
+        <h2 id="What-is-UV"><a href="#What-is-UV" class="headerlink" title="What is UV"></a>What is UV</h2><p>在创建着色器时，我们需要绘制特定的图案，如星星、圆圈、光透镜、波浪等。虽然可以使用纹理，但绘制形状可以让我们有更多的控制权;我们可以对形状参数进行动画处理，并且没有要加载的纹理。需要在fragment shader中用到uv坐标。</p>
 <p>什么是uv坐标？</p>
 <p>UV坐标是用来将2D纹理贴图到3D模型表面的坐标系。这里的U和V代表的是2D空间的两个轴，类似于平面中的X和Y，但为了避免与3D空间中的X、Y、Z混淆，所以用U和V来命名。</p>
 <p>在Threejs中UV坐标的范围是0到1，覆盖整个纹理图像。原点(0,0)在左下角，而(1,1)在右上角。uv坐标的count取决于material的分段数</p>
@@ -506,10 +515,6 @@
 <p>fragment shader无法直接访问顶点数据，所以我们需要通过 vertex shader 创建<code>vUv</code>变量发送给 fragment shader。</p>
 <figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vertex.glsl</span></span><br><span class="line"><span class="keyword">varying</span> <span class="type">vec2</span> vUv;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">    <span class="built_in">gl_Position</span> = projectionMatrix * modelViewMatrix * <span class="type">vec4</span>(position, <span class="number">1.0</span>);</span><br><span class="line"></span><br><span class="line">    vUv = uv;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// fragment.glsl</span></span><br><span class="line"><span class="keyword">varying</span> <span class="type">vec2</span> vUv;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// use vUv</span></span><br><span class="line">    <span class="built_in">gl_FragColor</span> = <span class="type">vec4</span>(vUv, <span class="number">1.0</span>, <span class="number">1.0</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><ul>
-<li><code>1.0 - ...</code> 反转颜色</li>
-<li></li>
-</ul>
 <h2 id="Pattern-1"><a href="#Pattern-1" class="headerlink" title="Pattern 1"></a>Pattern 1</h2><p>直接使用 uv 坐标，原点的颜色为<code>(0.0, 0.0, 1.0, 1.0)</code>到右上角<code>(1.0, 1.0, 1.0, 1.0)</code>的渐变</p>
 <figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">varying</span> <span class="type">vec2</span> vUv;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">    <span class="built_in">gl_FragColor</span> = <span class="type">vec4</span>(vUv, <span class="number">1.0</span>, <span class="number">1.0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -748,16 +753,16 @@
             <p>原文作者：<a href="https://sukksa.github.io">sukksa</a>
             <p>原文链接：<a href="https://sukksa.github.io/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E5%9B%BE%E6%A1%88/">https://sukksa.github.io/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E5%9B%BE%E6%A1%88/</a>
             <!-- <p>发表日期：<a href="https://sukksa.github.io/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E5%9B%BE%E6%A1%88/">May 6th 2025, 4:15:53 pm</a>
-            <p>更新日期：<a href="https://sukksa.github.io/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E5%9B%BE%E6%A1%88/">May 6th 2025, 5:15:03 pm</a> -->
+            <p>更新日期：<a href="https://sukksa.github.io/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E5%9B%BE%E6%A1%88/">May 17th 2025, 4:41:45 pm</a> -->
             <p>发表日期：<a href="https://sukksa.github.io/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E5%9B%BE%E6%A1%88/">2025-05-06 16:15:53</a>
-            <p>更新日期：<a href="https://sukksa.github.io/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E5%9B%BE%E6%A1%88/">2025-05-06 17:15:03</a>
+            <p>更新日期：<a href="https://sukksa.github.io/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E5%9B%BE%E6%A1%88/">2025-05-17 16:41:45</a>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">
         <li class="next">
                 <div class="nextSlogan">Next Post</div>
-                <a href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E6%B3%A2%E6%B5%AA/" title="">
-                    <div class="nextTitle">[Untitled Post]</div>
+                <a href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E6%B3%A2%E6%B5%AA/" title="使用着色器绘制波浪">
+                    <div class="nextTitle">使用着色器绘制波浪</div>
                 </a>
         </li>
         <li class="previous">
@@ -816,7 +821,7 @@
                 <div class="toc-catalog">
                     <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
                 </div>
-                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E5%9B%BE%E6%A1%88"><span class="toc-number">1.</span> <span class="toc-text">使用着色器绘制图案</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#UV"><span class="toc-number">1.1.</span> <span class="toc-text">UV</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-1"><span class="toc-number">1.3.</span> <span class="toc-text">Pattern 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-2"><span class="toc-number">1.4.</span> <span class="toc-text">Pattern 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-3"><span class="toc-number">1.5.</span> <span class="toc-text">Pattern 3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-4"><span class="toc-number">1.6.</span> <span class="toc-text">Pattern 4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-5-1-0-%E2%80%A6"><span class="toc-number">1.7.</span> <span class="toc-text">Pattern 5 (1.0 - …)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-6"><span class="toc-number">1.8.</span> <span class="toc-text">Pattern 6</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-7-mod-%E2%80%A6"><span class="toc-number">1.9.</span> <span class="toc-text">Pattern 7 mod(…)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-8-step-%E2%80%A6"><span class="toc-number">1.10.</span> <span class="toc-text">Pattern 8 step(…)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-9"><span class="toc-number">1.11.</span> <span class="toc-text">Pattern 9</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-10"><span class="toc-number">1.12.</span> <span class="toc-text">Pattern 10</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-11"><span class="toc-number">1.13.</span> <span class="toc-text">Pattern 11 +</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-12"><span class="toc-number">1.14.</span> <span class="toc-text">Pattern 12 *</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-13"><span class="toc-number">1.15.</span> <span class="toc-text">Pattern 13</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-14"><span class="toc-number">1.16.</span> <span class="toc-text">Pattern 14</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-15"><span class="toc-number">1.17.</span> <span class="toc-text">Pattern 15</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-16-abs"><span class="toc-number">1.18.</span> <span class="toc-text">Pattern 16 abs()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-17-min"><span class="toc-number">1.19.</span> <span class="toc-text">Pattern 17 min()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-18-max"><span class="toc-number">1.20.</span> <span class="toc-text">Pattern 18 max()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-19"><span class="toc-number">1.21.</span> <span class="toc-text">Pattern 19</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-20"><span class="toc-number">1.22.</span> <span class="toc-text">Pattern 20</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-21-floor"><span class="toc-number">1.23.</span> <span class="toc-text">Pattern 21 floor()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-22"><span class="toc-number">1.24.</span> <span class="toc-text">Pattern 22</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-23-random"><span class="toc-number">1.25.</span> <span class="toc-text">Pattern 23 random()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-24"><span class="toc-number">1.26.</span> <span class="toc-text">Pattern 24</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-25"><span class="toc-number">1.27.</span> <span class="toc-text">Pattern 25</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-26-length"><span class="toc-number">1.28.</span> <span class="toc-text">Pattern 26 length()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-27-distance"><span class="toc-number">1.29.</span> <span class="toc-text">Pattern 27 distance()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-28"><span class="toc-number">1.30.</span> <span class="toc-text">Pattern 28</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-29"><span class="toc-number">1.31.</span> <span class="toc-text">Pattern 29</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-30"><span class="toc-number">1.32.</span> <span class="toc-text">Pattern 30</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-31"><span class="toc-number">1.33.</span> <span class="toc-text">Pattern 31</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-32-rotate"><span class="toc-number">1.34.</span> <span class="toc-text">Pattern 32 rotate()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-33"><span class="toc-number">1.35.</span> <span class="toc-text">Pattern 33</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pattern-34"><span class="toc-number">1.36.</span> <span class="toc-text">pattern 34</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-35"><span class="toc-number">1.37.</span> <span class="toc-text">Pattern 35</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-36"><span class="toc-number">1.38.</span> <span class="toc-text">Pattern 36</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-37"><span class="toc-number">1.39.</span> <span class="toc-text">Pattern 37</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-38"><span class="toc-number">1.40.</span> <span class="toc-text">Pattern 38</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-40"><span class="toc-number">1.41.</span> <span class="toc-text">Pattern 40</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-41"><span class="toc-number">1.42.</span> <span class="toc-text">Pattern 41</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-42"><span class="toc-number">1.43.</span> <span class="toc-text">Pattern 42</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-43"><span class="toc-number">1.44.</span> <span class="toc-text">Pattern 43</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-44"><span class="toc-number">1.45.</span> <span class="toc-text">Pattern 44</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-45"><span class="toc-number">1.46.</span> <span class="toc-text">Pattern 45</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-46-perlin-noise"><span class="toc-number">1.47.</span> <span class="toc-text">Pattern 46 perlin noise</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-47"><span class="toc-number">1.48.</span> <span class="toc-text">Pattern 47</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-48"><span class="toc-number">1.49.</span> <span class="toc-text">Pattern 48</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pattern-49"><span class="toc-number">1.50.</span> <span class="toc-text">pattern 49</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pattern-50"><span class="toc-number">1.51.</span> <span class="toc-text">pattern 50</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mix-Color"><span class="toc-number">1.52.</span> <span class="toc-text">Mix Color</span></a></li></ol></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#What-is-UV"><span class="toc-number">1.</span> <span class="toc-text">What is UV</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-1"><span class="toc-number">2.</span> <span class="toc-text">Pattern 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-2"><span class="toc-number">3.</span> <span class="toc-text">Pattern 2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-3"><span class="toc-number">4.</span> <span class="toc-text">Pattern 3</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-4"><span class="toc-number">5.</span> <span class="toc-text">Pattern 4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-5-1-0-%E2%80%A6"><span class="toc-number">6.</span> <span class="toc-text">Pattern 5 (1.0 - …)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-6"><span class="toc-number">7.</span> <span class="toc-text">Pattern 6</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-7-mod-%E2%80%A6"><span class="toc-number">8.</span> <span class="toc-text">Pattern 7 mod(…)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-8-step-%E2%80%A6"><span class="toc-number">9.</span> <span class="toc-text">Pattern 8 step(…)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-9"><span class="toc-number">10.</span> <span class="toc-text">Pattern 9</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-10"><span class="toc-number">11.</span> <span class="toc-text">Pattern 10</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-11"><span class="toc-number">12.</span> <span class="toc-text">Pattern 11 +</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-12"><span class="toc-number">13.</span> <span class="toc-text">Pattern 12 *</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-13"><span class="toc-number">14.</span> <span class="toc-text">Pattern 13</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-14"><span class="toc-number">15.</span> <span class="toc-text">Pattern 14</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-15"><span class="toc-number">16.</span> <span class="toc-text">Pattern 15</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-16-abs"><span class="toc-number">17.</span> <span class="toc-text">Pattern 16 abs()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-17-min"><span class="toc-number">18.</span> <span class="toc-text">Pattern 17 min()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-18-max"><span class="toc-number">19.</span> <span class="toc-text">Pattern 18 max()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-19"><span class="toc-number">20.</span> <span class="toc-text">Pattern 19</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-20"><span class="toc-number">21.</span> <span class="toc-text">Pattern 20</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-21-floor"><span class="toc-number">22.</span> <span class="toc-text">Pattern 21 floor()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-22"><span class="toc-number">23.</span> <span class="toc-text">Pattern 22</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-23-random"><span class="toc-number">24.</span> <span class="toc-text">Pattern 23 random()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-24"><span class="toc-number">25.</span> <span class="toc-text">Pattern 24</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-25"><span class="toc-number">26.</span> <span class="toc-text">Pattern 25</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-26-length"><span class="toc-number">27.</span> <span class="toc-text">Pattern 26 length()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-27-distance"><span class="toc-number">28.</span> <span class="toc-text">Pattern 27 distance()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-28"><span class="toc-number">29.</span> <span class="toc-text">Pattern 28</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-29"><span class="toc-number">30.</span> <span class="toc-text">Pattern 29</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-30"><span class="toc-number">31.</span> <span class="toc-text">Pattern 30</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-31"><span class="toc-number">32.</span> <span class="toc-text">Pattern 31</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-32-rotate"><span class="toc-number">33.</span> <span class="toc-text">Pattern 32 rotate()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-33"><span class="toc-number">34.</span> <span class="toc-text">Pattern 33</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pattern-34"><span class="toc-number">35.</span> <span class="toc-text">pattern 34</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-35"><span class="toc-number">36.</span> <span class="toc-text">Pattern 35</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-36"><span class="toc-number">37.</span> <span class="toc-text">Pattern 36</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-37"><span class="toc-number">38.</span> <span class="toc-text">Pattern 37</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-38"><span class="toc-number">39.</span> <span class="toc-text">Pattern 38</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-40"><span class="toc-number">40.</span> <span class="toc-text">Pattern 40</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-41"><span class="toc-number">41.</span> <span class="toc-text">Pattern 41</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-42"><span class="toc-number">42.</span> <span class="toc-text">Pattern 42</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-43"><span class="toc-number">43.</span> <span class="toc-text">Pattern 43</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-44"><span class="toc-number">44.</span> <span class="toc-text">Pattern 44</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-45"><span class="toc-number">45.</span> <span class="toc-text">Pattern 45</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-46-perlin-noise"><span class="toc-number">46.</span> <span class="toc-text">Pattern 46 perlin noise</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-47"><span class="toc-number">47.</span> <span class="toc-text">Pattern 47</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pattern-48"><span class="toc-number">48.</span> <span class="toc-text">Pattern 48</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pattern-49"><span class="toc-number">49.</span> <span class="toc-text">pattern 49</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pattern-50"><span class="toc-number">50.</span> <span class="toc-text">pattern 50</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mix-Color"><span class="toc-number">51.</span> <span class="toc-text">Mix Color</span></a></li></ol>
             </div>
         <!-- sidebar -->
         <div class="sidebar sidebar-hide">
@@ -895,8 +900,8 @@
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
         <li class="archive-post-item">
-            <span class="archive-post-date">05/06</span>
-            <a class="archive-post-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E6%B3%A2%E6%B5%AA/">[Untitled Post]</a>
+            <span class="archive-post-date">05/16</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E6%B3%A2%E6%B5%AA/">使用着色器绘制波浪</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">05/06</span>
@@ -1122,11 +1127,11 @@
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">04/27</span>
-            <a class="archive-post-title" href="/2021/javaScript/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+            <a class="archive-post-title" href="/2021/javaScript/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">类型转换</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">04/27</span>
-            <a class="archive-post-title" href="/2021/javaScript/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">类型转换</a>
+            <a class="archive-post-title" href="/2021/javaScript/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
         </li>
             </ul>
     </div>
@@ -1142,6 +1147,10 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 JavaScript
             </span>
+            <span class="sidebar-tag-name" data-tags="ES6">
+                <span class="iconfont-archer">&#xe606;</span>
+                ES6
+            </span>
             <span class="sidebar-tag-name" data-tags="javaScript">
                 <span class="iconfont-archer">&#xe606;</span>
                 javaScript
@@ -1154,33 +1163,29 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 jQuery
             </span>
-            <span class="sidebar-tag-name" data-tags="ES6">
-                <span class="iconfont-archer">&#xe606;</span>
-                ES6
-            </span>
-            <span class="sidebar-tag-name" data-tags="node">
-                <span class="iconfont-archer">&#xe606;</span>
-                node
-            </span>
             <span class="sidebar-tag-name" data-tags="Threejs">
                 <span class="iconfont-archer">&#xe606;</span>
                 Threejs
             </span>
-            <span class="sidebar-tag-name" data-tags="Vue">
+            <span class="sidebar-tag-name" data-tags="shader">
                 <span class="iconfont-archer">&#xe606;</span>
-                Vue
+                shader
             </span>
             <span class="sidebar-tag-name" data-tags="less">
                 <span class="iconfont-archer">&#xe606;</span>
                 less
             </span>
+            <span class="sidebar-tag-name" data-tags="node">
+                <span class="iconfont-archer">&#xe606;</span>
+                node
+            </span>
             <span class="sidebar-tag-name" data-tags="git">
                 <span class="iconfont-archer">&#xe606;</span>
                 git
             </span>
-            <span class="sidebar-tag-name" data-tags="shader">
+            <span class="sidebar-tag-name" data-tags="Vue">
                 <span class="iconfont-archer">&#xe606;</span>
-                shader
+                Vue
             </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
@@ -1196,6 +1201,10 @@
             <span class="iconfont-archer">&#xe60a;</span>
             Ajax
         </span>
+        <span class="sidebar-category-name" data-categories="ES6">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ES6
+        </span>
         <span class="sidebar-category-name" data-categories="DOM">
             <span class="iconfont-archer">&#xe60a;</span>
             DOM
@@ -1204,41 +1213,37 @@
             <span class="iconfont-archer">&#xe60a;</span>
             jQuery
         </span>
-        <span class="sidebar-category-name" data-categories="ES6">
-            <span class="iconfont-archer">&#xe60a;</span>
-            ES6
-        </span>
         <span class="sidebar-category-name" data-categories="javaScript">
             <span class="iconfont-archer">&#xe60a;</span>
             javaScript
         </span>
-        <span class="sidebar-category-name" data-categories="node">
+        <span class="sidebar-category-name" data-categories="shader">
             <span class="iconfont-archer">&#xe60a;</span>
-            node
+            shader
         </span>
         <span class="sidebar-category-name" data-categories="Threejs">
             <span class="iconfont-archer">&#xe60a;</span>
             Threejs
         </span>
-        <span class="sidebar-category-name" data-categories="Vue">
-            <span class="iconfont-archer">&#xe60a;</span>
-            Vue
-        </span>
         <span class="sidebar-category-name" data-categories="less">
             <span class="iconfont-archer">&#xe60a;</span>
             less
+        </span>
+        <span class="sidebar-category-name" data-categories="node">
+            <span class="iconfont-archer">&#xe60a;</span>
+            node
         </span>
         <span class="sidebar-category-name" data-categories="git">
             <span class="iconfont-archer">&#xe60a;</span>
             git
         </span>
+        <span class="sidebar-category-name" data-categories="Vue">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Vue
+        </span>
         <span class="sidebar-category-name" data-categories="实战">
             <span class="iconfont-archer">&#xe60a;</span>
             实战
-        </span>
-        <span class="sidebar-category-name" data-categories="shader">
-            <span class="iconfont-archer">&#xe60a;</span>
-            shader
         </span>
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
@@ -1271,6 +1276,7 @@
         <!-- algolia -->
         <!-- busuanzi -->
             <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+            <!-- <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script> -->
         <!-- async load share.js -->
             <script src="/scripts/share.js" async></script>
         <!-- mermaid -->
