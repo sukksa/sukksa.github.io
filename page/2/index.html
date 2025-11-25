@@ -414,6 +414,67 @@
             <div class="container container-unloaded">
                 <main class="main index-page">
         <article class="index-post">
+            <a class="abstract-title" href="/2022/vue/Vue-router/">
+                <span class="abstract-title-text">vue-router</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="vue-router"><a href="#vue-router" class="headerlink" title="vue-router"></a>vue-router</h1><p><code>vue-router</code>是Vue.js官方的路由插件，它和vue.js是深度集成的，适合用于构建单页面应用。<br>我们可以访问其官方网站对其进行学习：<a target="_blank" rel="noopener" href="https://router.vuejs.org/zh/">https://router.vuejs.org/zh/</a></p>
+<p><code>vue-router</code>是基于路由和组件的</p>
+<ul>
+<li>路由用户设定访问路径的，将路径和组件映射起来。</li>
+<li>在<code>vue-router</code>的单页面应用中，页面的路径的改变就是组件的切换</li>
+</ul>
+            </div>
+            <!-- read more -->
+                <div class="abstract-read-more-button">
+                    <a href="/2022/vue/Vue-router/">
+                        <span style="margin-right: 0.2rem;">阅读全文</span>
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </div>
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/10/09">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/10/07</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="Vue">Vue</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+        <article class="index-post">
+            <a class="abstract-title" href="/2022/vue/mixin/">
+                <span class="abstract-title-text">Mixin (混入)</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="mixin"><a href="#mixin" class="headerlink" title="mixin"></a>mixin</h1><p><strong>混入 (mixins) 是一种分发 Vue 组件中可复用功能的非常灵活的方式。混入对象可以包含任意组件选项。当组件使用混入对象时，所有混入对象的选项将被混入该组件本身的选项</strong></p>
+<p>Mixins 是一种分发 Vue 组件中可复用功能的非常灵活的一种方式。页面的风格不用，但是执行的方法和需要的数据类似就可以选择使用混入</p>
+<p>混合对于封装一小段想要复用的代码来讲是有用的。它们当然不是唯一可行的。混合很好，它不需要传递状态，但是这种模式当然也可能会被滥用</p>
+            </div>
+            <!-- read more -->
+                <div class="abstract-read-more-button">
+                    <a href="/2022/vue/mixin/">
+                        <span style="margin-right: 0.2rem;">阅读全文</span>
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </div>
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/10/07">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/10/07</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="Vue">Vue</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+        <article class="index-post">
             <a class="abstract-title" href="/2022/vue/Vue%E8%84%9A%E6%89%8B%E6%9E%B6/">
                 <span class="abstract-title-text">Vue 脚手架</span>
             </a>
@@ -664,89 +725,6 @@
             </div>
         </article>
         <div class="index-post-divider"></div>
-        <article class="index-post">
-            <a class="abstract-title" href="/2022/vue/Vue%E5%AE%9E%E4%BE%8B%E5%AF%B9%E8%B1%A1/">
-                <span class="abstract-title-text">Vue实例对象</span>
-            </a>
-            <div class="abstract-content">
-                <h1 id="Vue实例对象"><a href="#Vue实例对象" class="headerlink" title="Vue实例对象"></a>Vue实例对象</h1><h2 id="创建并绑定-Vue-对象"><a href="#创建并绑定-Vue-对象" class="headerlink" title="创建并绑定 Vue 对象"></a>创建并绑定 Vue 对象</h2><p>Vue 也是一个构造函数,通过 <code>new Vue()</code>可以创建一个 Vue 对象,通过 Vue 对象进行对 DOM 元素以及内部的子孙元素的操作</p>
-<pre><code>    new Vue(&#123;
-        el: &#39;#div&#39;,
-        /*
-        在Vue中通过el属性来绑定一个DOM元素,从而让该DOM元素以及内部都绑定Vue的相关操作,一般是通过ID进行查找,因为这样才能够精确绑定
-        */
-        data: &#123;
-            //data属性中包含着在el中使用的使用的变量或属性
-            msg: 123,
-        &#125;,
-        //也可以使用函数形式的
-        data() &#123;
-            return &#123;
-                msg: 123,
-            &#125;
-        &#125;,
-        //methods属性包含着需要使用的方法
-        methods: &#123;
-            show() &#123;
-                console.log(this.msg)
-            &#125;,
-        &#125;,
-    &#125;)
-</code></pre>
-<p><strong>注:在实例内部使用定义的属性或方法时不能直接使用,必须通过 <code>this</code> 来指定需要用的属性</strong></p>
-            </div>
-            <!-- read more -->
-                <div class="abstract-read-more-button">
-                    <a href="/2022/vue/Vue%E5%AE%9E%E4%BE%8B%E5%AF%B9%E8%B1%A1/">
-                        <span style="margin-right: 0.2rem;">阅读全文</span>
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                </div>
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2022/10/07">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/07/29</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="Vue">Vue</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-        <article class="index-post">
-            <a class="abstract-title" href="/2022/ES6/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%89%A9%E5%B1%95/">
-                <span class="abstract-title-text">字符串的扩展</span>
-            </a>
-            <div class="abstract-content">
-                <h1 id="字符串的扩展"><a href="#字符串的扩展" class="headerlink" title="字符串的扩展"></a>字符串的扩展</h1><h2 id="字符的-Unicode-表示法"><a href="#字符的-Unicode-表示法" class="headerlink" title="字符的 Unicode 表示法"></a>字符的 Unicode 表示法</h2><p>JavaScript 允许采用<code>\uxxxx</code>形式表示一个字符，其中<code>xxxx</code>表示字符的 Unicode 码点。</p>
-<pre><code>    &#39;\u0061&#39;
-    // &quot;a&quot;
-</code></pre>
-<p>但是，这种表示法只限于码点在<code>\u0000~\uFFFF</code>之间的字符。超出这个范围的字符，必须用两个双字节的形式表示</p>
-            </div>
-            <!-- read more -->
-                <div class="abstract-read-more-button">
-                    <a href="/2022/ES6/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%89%A9%E5%B1%95/">
-                        <span style="margin-right: 0.2rem;">阅读全文</span>
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                </div>
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2022/10/07">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/07/26</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="ES6">ES6</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="javaScript">javaScript</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
     <!-- paginator  -->
         <nav class="page-nav">
             <a class="extend prev" rel="prev" href="/">&lt; PREV</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/3/">NEXT &gt;</a>
@@ -862,15 +840,25 @@
         
         
         
+        
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 57
+        Total : 59
         </div>
         <!-- search  -->
     </div>
     <div class="post-archive">
             <div class="archive-year"> 2025 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/note/%E3%80%8A%E7%BD%AA%E4%B8%8E%E7%BD%9A%E3%80%8B/">《罪与罚》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/other/%E4%BB%8E%E7%8E%B0%E6%9C%89%E7%9A%84%E4%BB%93%E5%BA%93%E5%88%87%E6%8D%A2%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E4%BB%93%E5%BA%93/">从现有git仓库切换到另一个仓库</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">05/16</span>
             <a class="archive-post-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E6%B3%A2%E6%B5%AA/">使用着色器绘制波浪</a>
@@ -1159,6 +1147,10 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 Vue
             </span>
+            <span class="sidebar-tag-name" data-tags="Note">
+                <span class="iconfont-archer">&#xe606;</span>
+                Note
+            </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -1216,6 +1208,10 @@
         <span class="sidebar-category-name" data-categories="实战">
             <span class="iconfont-archer">&#xe60a;</span>
             实战
+        </span>
+        <span class="sidebar-category-name" data-categories="note">
+            <span class="iconfont-archer">&#xe60a;</span>
+            note
         </span>
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
