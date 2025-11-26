@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+<!-- keywords -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="sukksa">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="sukksa">
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    <meta name="description" content="">
+    <meta name="description" content="shader 是用 GLSL(OpenGL Shading Language) 编写的程序，他会被发送到GPU运行。原生 WebGL 的一部分，如果不依赖任何库使用 WebGl 的话，需要自己动手创建 Shader。shader 会为几何体的每个顶点(vertex)定位，以及为几何体的所有可见片段（fragment）着色。 我们会为shader发送大量的数据，比如顶点坐标、网格变换信息、摄像机的信">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第一个 shader 程序">
+<meta property="og:url" content="https://sukksa.github.io/2025/shader/%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%9D%80%E8%89%B2%E5%99%A8%E7%A8%8B%E5%BA%8F/index.html">
+<meta property="og:site_name" content="sukksa blog">
+<meta property="og:description" content="shader 是用 GLSL(OpenGL Shading Language) 编写的程序，他会被发送到GPU运行。原生 WebGL 的一部分，如果不依赖任何库使用 WebGl 的话，需要自己动手创建 Shader。shader 会为几何体的每个顶点(vertex)定位，以及为几何体的所有可见片段（fragment）着色。 我们会为shader发送大量的数据，比如顶点坐标、网格变换信息、摄像机的信">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://learnopengl.com/img/getting-started/coordinate_systems.png">
+<meta property="article:published_time" content="2025-05-06T08:10:38.000Z">
+<meta property="article:modified_time" content="2025-11-26T01:14:32.076Z">
+<meta property="article:author" content="sukksa">
+<meta property="article:tag" content="Threejs">
+<meta property="article:tag" content="shader">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://learnopengl.com/img/getting-started/coordinate_systems.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    <title>第一个 shader 程序 · sukksa&#39;s Studio</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .footer-fixed-btn,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(
+            -45deg,
+            #444 0,
+            #444 80px,
+            #333 80px,
+            #333 160px
+        );
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link id="stylesheet-fancybox" rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-base" rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-mobile" rel="preload" href="/css/mobile.css" as="style" onload="this.onload=null;this.rel='stylesheet';this.media='screen and (max-width: 960px)'">
+    <link id="stylesheet-theme-dark" rel="preload" href="/css/dark.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script"> -->
+    <link rel="preload" href="/lib/jquery.min.js" as="script">
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    <!-- 百度统计  -->
+    <!-- 谷歌统计  -->
+    <!-- Google tag (gtag.js) -->
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script> -->
+    <script src="/lib/jquery.min.js"></script>
+    <script src=""></script>
+    <!-- <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script> -->
+        <body class="post-body">
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        <div class="header-sidebar-menu">
+            <div style="padding-left: 1px;">&#xe775;</div>
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href="/">sukksa's Studio</a>
+        </span>
+    </div>
+    <!-- toggle banner -->
+    <div class="banner">
+        <div class="blog-title header-element">
+            <a href="/">sukksa&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">第一个 shader 程序</a>
+        </div>
+    </div>
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- donate button -->
+
+    <!-- back to top button -->
+    <div class="footer-fixed-btn footer-fixed-btn--hidden back-top">
+        <div>&#xe639;</div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="    height:50vh;
+">
+    <!-- 主页  -->
+    <!-- 404页  -->
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.png)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+                第一个 shader 程序
+            <!-- 404 -->
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            <!-- 404 -->
+        </p>
+        <!-- 文章页 meta -->
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                    <div class="post-intro-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="Threejs">Threejs</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="shader">shader</a>
+</div>
+
+                <!-- 文章字数统计 -->
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.8k</span>阅读时长: <span class="post-count reading-time">11 min</span></span>
+                    </div>
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2025-05-06</span>
+                    <!-- busuanzi -->
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    <!-- 文章分享 -->
+                    <!-- <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span> -->
+                </div>
+            </div>
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <p>shader 是用 GLSL(OpenGL Shading Language) 编写的程序，他会被发送到GPU运行。原生 WebGL 的一部分，如果不依赖任何库使用 WebGl 的话，需要自己动手创建 Shader。shader 会为几何体的每个顶点(vertex)定位，以及为几何体的所有可见片段（fragment）着色。</p>
+<p>我们会为shader发送大量的数据，比如顶点坐标、网格变换信息、摄像机的信息以及几何体的顶点颜色、纹理等等。然后交给CPU，利用GLSL编写的着色器程序处理这些数据，最终在屏幕上定位顶点，并为每个可见片段着色</p>
+<p>着色器有两种类型</p>
+<ul>
+<li>vertex shader</li>
+<li>fragment shader</li>
+</ul>
+<p>Vertex Shader</p>
+<p>顶点着色器会为每个几何体的顶点定位，当顶点着色器为顶点定位完之后，GPU 便知道哪些几何体的像素是可见的，然后进入片段着色器(fragment shader)</p>
+<p>fragment shader</p>
+<p>片段着色器会为顶点着色，包括颜色，纹理，透明度等等。</p>
+<p><a target="_blank" rel="noopener" href="https://learnopengl.com/Getting-started/Coordinate-Systems">https://learnopengl.com/Getting-started/Coordinate-Systems</a></p>
+<img src="https://learnopengl.com/img/getting-started/coordinate_systems.png" alt="img" style="zoom:80%;" />
+
+<p>为什么要自己编写着色器？为什么我们不能直接使用Threejs的内置材质？</p>
+<ul>
+<li>材质不够灵活，一些形状通过内置的material无法实现</li>
+<li>着色器高效，比Threejs需要性能开销更少</li>
+<li>可以做后期处理</li>
+</ul>
+<p>Threejs有两种着色器<code>ShaderMaterial</code> <code>RawShaderMaterial</code>。<code>ShaderMaterial</code>包含了必要的<code>uniforms</code>和<code>attributes</code>的声明，除此之外并无差别。<code>RawShaderMaterial</code>就是原始的，必须编写所有代码。</p>
+<h2 id="RawShaderMaterial"><a href="#RawShaderMaterial" class="headerlink" title="RawShaderMaterial"></a>RawShaderMaterial</h2><p><code>THREE.RawShaderMaterial</code>创建原始着色器,<code>RawShaderMaterial</code> 不会自动注入 Three.js 的内置着色器代码（如光照、矩阵变换等），开发者需要手动管理所有 Uniforms 和 Attributes。</p>
+<p>分别创建<code>vertex.glsl</code>和<code>fragment.glsl</code>文件, 使用 <code>vite-plugin-glsl</code>或者<code>vite-plugin-glslify</code>插件，可以将大的着色器分割为小的模块，可以重用着色器块，以及可以使用其他开发者编写的着色器块.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install vite-plugin-glsl</span><br></pre></td></tr></table></figure>
+
+<p>在<code>vite.config.js</code>中导入glsl</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> glsl <span class="keyword">from</span> <span class="string">&#x27;vite-plugin-glsl&#x27;</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="attr">plugins</span>: [</span><br><span class="line">    <span class="title function_">glsl</span>(),</span><br><span class="line">  ],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// script.js</span></span><br><span class="line"><span class="comment">// Geometry</span></span><br><span class="line"><span class="keyword">const</span> geometry = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">PlaneGeometry</span>(<span class="number">1</span>, <span class="number">1</span>, <span class="number">32</span>, <span class="number">32</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> count = geometry.<span class="property">attributes</span>.<span class="property">position</span>.<span class="property">count</span></span><br><span class="line"><span class="keyword">const</span> randoms = <span class="keyword">new</span> <span class="title class_">Float32Array</span>(count)</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</span><br><span class="line">  randoms[i] = <span class="title class_">Math</span>.<span class="title function_">random</span>()</span><br><span class="line">&#125;</span><br><span class="line">geometry.<span class="title function_">setAttribute</span>(<span class="string">&#x27;aRandom&#x27;</span>, <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">BufferAttribute</span>(randoms, <span class="number">1</span>))</span><br><span class="line"><span class="comment">// Material</span></span><br><span class="line"><span class="keyword">const</span> material = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">RawShaderMaterial</span>(&#123;</span><br><span class="line">  <span class="attr">vertexShader</span>: testVertexShader,</span><br><span class="line">  <span class="attr">fragmentShader</span>: testFragmentShader,</span><br><span class="line">  <span class="attr">transparent</span>: <span class="literal">true</span>,</span><br><span class="line">  <span class="attr">side</span>: <span class="variable constant_">THREE</span>.<span class="property">DoubleSide</span>,</span><br><span class="line">  <span class="comment">// wireframe: true,</span></span><br><span class="line">  <span class="attr">uniforms</span>: &#123;</span><br><span class="line">    <span class="attr">uFrequency</span>: &#123; <span class="attr">value</span>: <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">Vector2</span>(<span class="number">10</span>, <span class="number">5</span>) &#125;,</span><br><span class="line">    <span class="attr">uTime</span>: &#123; <span class="attr">value</span>: <span class="number">0</span> &#125;,</span><br><span class="line">    <span class="attr">uColor</span>: &#123; <span class="attr">value</span>: <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">Color</span>(<span class="number">0x7799cc</span>) &#125;,</span><br><span class="line">    <span class="attr">uTexture</span>: &#123; <span class="attr">value</span>: flagTexture &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>在<code>THREE.RawShaderMaterial</code>中，THREEjs中的material同样可以使用<code>wireframe</code>, <code>side</code>, <code>transparent</code>, <code>flatShading</code>这些属性。但是像<code>map</code>，<code>alphaMap</code>,<code>opacity</code>等等都没法使用，因为这些事在顶点内部处理的，只有在<code>fragmentShader</code>中才能更改</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> count = geometry.<span class="property">attributes</span>.<span class="property">position</span>.<span class="property">count</span></span><br><span class="line"><span class="keyword">const</span> randoms = <span class="keyword">new</span> <span class="title class_">Float32Array</span>(count)</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</span><br><span class="line">  randoms[i] = <span class="title class_">Math</span>.<span class="title function_">random</span>()</span><br><span class="line">&#125;</span><br><span class="line">geometry.<span class="title function_">setAttribute</span>(<span class="string">&#x27;aRandom&#x27;</span>, <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">BufferAttribute</span>(randoms, <span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+
+<p>上面创建了一个随机生成的名为<code>aRandom</code>的<code>attribute</code>，添加在<code>geometry</code>的<code>attribute</code>上，在<code>vertex.glsl</code>中可以通过<code>attribute float aRandom;</code>接收。</p>
+<p>因为<code>new THREE.BufferAttribute(randoms, 1)</code>为 1，表明一个为一组。所以是<code>float</code>类型</p>
+<p>通过<code>gui</code>直接操作shader中数据，可以通过更改<code>uniforms</code>中的值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">gui.<span class="title function_">add</span>(material.<span class="property">uniforms</span>.<span class="property">uFrequency</span>.<span class="property">value</span>, <span class="string">&#x27;x&#x27;</span>).<span class="title function_">min</span>(<span class="number">0</span>).<span class="title function_">max</span>(<span class="number">20</span>).<span class="title function_">step</span>(<span class="number">0.01</span>).<span class="title function_">name</span>(<span class="string">&#x27;uFrequency.x&#x27;</span>)</span><br><span class="line">gui.<span class="title function_">add</span>(material.<span class="property">uniforms</span>.<span class="property">uFrequency</span>.<span class="property">value</span>, <span class="string">&#x27;y&#x27;</span>).<span class="title function_">min</span>(<span class="number">0</span>).<span class="title function_">max</span>(<span class="number">20</span>).<span class="title function_">step</span>(<span class="number">0.01</span>).<span class="title function_">name</span>(<span class="string">&#x27;uFrequency.y&#x27;</span>)</span><br><span class="line">gui.<span class="title function_">addColor</span>(material.<span class="property">uniforms</span>.<span class="property">uColor</span>, <span class="string">&#x27;value&#x27;</span>).<span class="title function_">name</span>(<span class="string">&#x27;uColor&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="vertex-glsl"><a href="#vertex-glsl" class="headerlink" title="vertex.glsl"></a>vertex.glsl</h2><p>他会对每个顶点执行这段代码</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vertex.glsl</span></span><br><span class="line"><span class="keyword">uniform</span> <span class="type">mat4</span> projectionMatrix;</span><br><span class="line"><span class="keyword">uniform</span> <span class="type">mat4</span> viewMatrix;</span><br><span class="line"><span class="keyword">uniform</span> <span class="type">mat4</span> modelMatrix;</span><br><span class="line"><span class="keyword">uniform</span> <span class="type">vec2</span> uFrequency;</span><br><span class="line"><span class="keyword">uniform</span> <span class="type">float</span> uTime;</span><br><span class="line"></span><br><span class="line"><span class="keyword">attribute</span> <span class="type">vec3</span> position;</span><br><span class="line"><span class="keyword">attribute</span> <span class="type">vec2</span> uv;</span><br><span class="line"></span><br><span class="line"><span class="keyword">varying</span> <span class="type">vec2</span> vUv;</span><br><span class="line"><span class="keyword">varying</span> <span class="type">float</span> vElevation;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">  <span class="type">vec4</span> modelPosition = modelMatrix * <span class="type">vec4</span>(position, <span class="number">1.0</span>);</span><br><span class="line">  <span class="type">float</span> elevation = <span class="built_in">sin</span>(modelPosition.x * uFrequency.x - uTime) * <span class="number">0.1</span>;</span><br><span class="line">  elevation += <span class="built_in">sin</span>(modelPosition.y * uFrequency.y - uTime) * <span class="number">0.1</span>;</span><br><span class="line">  modelPosition.z += elevation;</span><br><span class="line"></span><br><span class="line">  <span class="type">vec4</span> viewPosition = viewMatrix * modelPosition;</span><br><span class="line">  <span class="type">vec4</span> projectionPosition = projectionMatrix * viewPosition;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">gl_Position</span> = projectionPosition;</span><br><span class="line">  <span class="comment">// gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);</span></span><br><span class="line"></span><br><span class="line">  vUv = uv;</span><br><span class="line">  vElevation = elevation;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>gl_Position</code> 为什么是一个<code>vec4</code>?</p>
+<p>这是因为我们的坐标实际上是在裁剪空间里，裁剪空间不是一个二维空间，是一个四维的投影变换，将3D场景转换为2D屏幕坐标。当我们从camera观察其中一个物体时，最终渲染是在2d的canvas上的，除了知道他的顶点坐标(x,y,z)，还需要知道他的深度，帮助计算机判断物体哪个顶点坐标在前，形成透视效果。在正交投影中，<code>w</code> 分量通常为 <code>1</code>，因此不影响结果。</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">uniform</span> <span class="type">mat4</span> projectionMatrix;</span><br><span class="line"><span class="keyword">uniform</span> <span class="type">mat4</span> viewMatrix;</span><br><span class="line"><span class="keyword">uniform</span> <span class="type">mat4</span> modelMatrix;</span><br></pre></td></tr></table></figure>
+
+<p> uniform 变量是全局常量，在整个渲染过程中保持不变。它的作用是从 CPU 侧的应用程序向 GPU 中的着色器程序传递数据，例如变换矩阵、光照参数、时间等。uniform 变量可以同时在顶点着色器和片段着色器中使用，并且一旦设置，在一次渲染调用中，所有顶点和片段的 uniform 变量值都是相同的，且在着色器内部不能被修改。</p>
+<p>上面三个矩阵都是 uniform 的，不会改变，对几何体的每个顶点都采用相同的矩阵运算</p>
+<ul>
+<li><p><code>uniform mat4 modelMatrix;</code> </p>
+<p>模型矩阵，他将对每个顶点应用模型自身的变换（平移、旋转、缩放），将顶点从模型本地坐标系转换到世界坐标系。</p>
+<p><code>mesh.position.x = 1</code>就会变换这个矩阵，只需要提供(position, rotation, scale)</p>
+</li>
+<li><p><code>uniform mat4 viewMatrix;</code> </p>
+<p>相机矩阵，他定义相机的位姿（位置和朝向），将顶点从世界坐标系转换到相机坐标系。</p>
+<p>同理，改变camera的 position, rotation, near, far都会变换这个矩阵 </p>
+</li>
+<li><p><code>uniform mat4 projectionMatrix;</code> </p>
+<p>投影矩阵，它负责将3D场景从相机视角（观察空间）投影到2D裁剪空间。</p>
+</li>
+</ul>
+<p>也可以传递自定义的属性。</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">uniform</span> <span class="type">vec2</span> uFrequency;</span><br><span class="line"><span class="keyword">uniform</span> <span class="type">float</span> uTime;</span><br></pre></td></tr></table></figure>
+
+<p>在<code>RawShaderMaterial</code>中通过<code>uniforms</code>可以传递<code>uniform</code>类型的数据</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> material = <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">RawShaderMaterial</span>(&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  <span class="attr">uniforms</span>: &#123;</span><br><span class="line">    <span class="attr">uFrequency</span>: &#123; <span class="attr">value</span>: <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">Vector2</span>(<span class="number">10</span>, <span class="number">5</span>) &#125;,</span><br><span class="line">    <span class="attr">uTime</span>: &#123; <span class="attr">value</span>: <span class="number">0</span> &#125;,</span><br><span class="line">    <span class="attr">uColor</span>: &#123; <span class="attr">value</span>: <span class="keyword">new</span> <span class="variable constant_">THREE</span>.<span class="title class_">Color</span>(<span class="number">0x7799cc</span>) &#125;,</span><br><span class="line">    <span class="attr">uTexture</span>: &#123; <span class="attr">value</span>: flagTexture &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>上面就像顶点着色器和片段着色器传递了四个<code>uniform</code>类型的数据</p>
+<p>attribute (属性)是顶点间变化的数据。主要功能是从顶点缓冲区读取每个顶点的数据。这些数据通常包含顶点的位置、法线、纹理坐标等信息。它是专门为顶点着色器设计的，因为它存储的是每个顶点特有的数据。在顶点着色器执行过程中，会逐个处理每个顶点的 attribute 数据。</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">attribute</span> <span class="type">vec3</span> position;</span><br><span class="line"><span class="keyword">attribute</span> <span class="type">vec2</span> uv;</span><br></pre></td></tr></table></figure>
+
+<p>这个值从实例化的<code>THREE.xxxGeometry</code>中 <code>geometry.attributes.position</code>中的每个坐标点取得</p>
+<p><code>attribute vec2 uv;</code>同样的接收一个uv坐标，也可以通过<code>geometry.setAttribute(&#39;random&#39;, new THREE.BufferAttribute(randoms, 1))</code>添加一组名为 <code>random</code>的<code>attribute</code>,同样通过<code>attribute float random;</code>获取</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">varying</span> <span class="type">vec2</span> vUv;</span><br><span class="line"><span class="keyword">varying</span> <span class="type">float</span> vElevation;</span><br></pre></td></tr></table></figure>
+
+<p>varying 变量充当了顶点着色器和片段着色器之间的数据桥梁。顶点着色器会为每个顶点计算 varying 变量的值，在光栅化阶段，这些值会在三角形的各个片段之间进行插值。片段着色器会接收这些插值后的值，并以此进行后续的计算。简而言之，varying 变量将顶点级别的数据传递到了片段着色器。</p>
+<p>上面代码就向片段着色器传递了 <code>vec2 vUv</code>和 <code>float vElevation</code>的值，在<code>fragment.glsl</code>中用相同的方式接收。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">main</span>(<span class="params"></span>) &#123;</span><br><span class="line">  vec4 modelPosition = modelMatrix * <span class="title function_">vec4</span>(position, <span class="number">1.0</span>);</span><br><span class="line">  float elevation = <span class="title function_">sin</span>(modelPosition.<span class="property">x</span> * uFrequency.<span class="property">x</span> - uTime) * <span class="number">0.1</span>;</span><br><span class="line">  elevation += <span class="title function_">sin</span>(modelPosition.<span class="property">y</span> * uFrequency.<span class="property">y</span> - uTime) * <span class="number">0.1</span>;</span><br><span class="line">  modelPosition.<span class="property">z</span> += elevation;</span><br><span class="line"></span><br><span class="line">  vec4 viewPosition = viewMatrix * modelPosition;</span><br><span class="line">  vec4 projectionPosition = projectionMatrix * viewPosition;</span><br><span class="line"></span><br><span class="line">  gl_Position = projectionPosition;</span><br><span class="line">  <span class="comment">// gl_Position = projectionMatrix * viewMatrix * modelMatrix * vec4(position, 1.0);</span></span><br><span class="line"></span><br><span class="line">  vUv = uv;</span><br><span class="line">  vElevation = elevation;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>main()</code>函数是整个程序的入口，对每个顶点都会执行这段代码。</p>
+<p><code>gl_Position</code>是顶点着色器的内置输出变量，用于存储顶点的最终裁剪空间坐标。这个坐标会被后续的图形管线用于裁剪、透视除法和视口变换到屏幕空间。</p>
+<p>每个矩阵都会对 <code>gl_Position</code>进行变换，最终时将顶点定位在裁剪空间内。所以在渲染时我们会应用不同的矩阵，直到获得裁剪空间的顶点坐标。</p>
+<blockquote>
+<p>在每次顶点着色器运行结束时，OpenGL 期望坐标在特定范围内，并且任何超出此范围的坐标都将被剪裁。被剪切的坐标将被丢弃，因此剩余的坐标最终将在屏幕上显示为片段。这也是 clip space (裁剪空间)名称的由来。</p>
+</blockquote>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">gl_Position</span> = projectionMatrix * viewMatrix * modelMatrix * <span class="type">vec4</span>(position, <span class="number">1.0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>因为矩阵乘法是右乘计算的，<strong>实际计算顺序</strong>：<code>modelMatrix</code> → <code>viewMatrix</code> → <code>projectionMatrix</code>。组合顺序不能变，等价于下面的代码</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">vec4</span> modelPosition = modelMatrix * <span class="type">vec4</span>(position, <span class="number">1.0</span>);</span><br><span class="line"><span class="type">vec4</span> viewPosition = viewMatrix * modelPosition;</span><br><span class="line"><span class="type">vec4</span> projectionPosition = projectionMatrix * viewPosition;</span><br><span class="line"></span><br><span class="line"><span class="built_in">gl_Position</span> = projectionPosition;</span><br></pre></td></tr></table></figure>
+
+<h2 id="fragment-glsl"><a href="#fragment-glsl" class="headerlink" title="fragment.glsl"></a>fragment.glsl</h2><figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">precision</span> <span class="keyword">mediump</span> <span class="type">float</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">uniform</span> <span class="type">vec3</span> uColor;</span><br><span class="line"><span class="comment">// 声明一个 uniform sampler2D，用于表示可以在片段着色器中采样的纹理</span></span><br><span class="line"><span class="keyword">uniform</span> <span class="type">sampler2D</span> uTexture;</span><br><span class="line"></span><br><span class="line"><span class="keyword">varying</span> <span class="type">vec2</span> vUv;</span><br><span class="line"><span class="keyword">varying</span> <span class="type">float</span> vElevation;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> main() &#123;</span><br><span class="line">    <span class="comment">// 第一个参数是纹理，第二个参数是在纹理的哪个位置着色也就是uv坐标</span></span><br><span class="line">    <span class="type">vec4</span> textrueColor = <span class="built_in">texture2D</span>(uTexture, vUv);</span><br><span class="line">    textrueColor.rgb *= vElevation * <span class="number">2.0</span> + <span class="number">0.5</span>; <span class="comment">// [0.3, 0.7]</span></span><br><span class="line">    <span class="comment">// gl_FragColor = vec4(uColor, 1.0);</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">gl_FragColor</span> = <span class="type">vec4</span>(textrueColor);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">precision</span> <span class="keyword">mediump</span> <span class="type">float</span>;</span><br></pre></td></tr></table></figure>
+
+<p>定义浮点数的精度：<code>highp</code>，<code>mediump</code>，<code>lowp</code></p>
+<p>为什么需要？当你在处理非常大、非常小的数值时，或者需要大幅缩小场景，然后放大到场景中的一个很小的物体上，可能会影响渲染效果。</p>
+<p><code>highp</code>会影响性能，而且低端设备上可能无法支持；<code>lowp</code>可能因为缺乏精度引发错误。所以通常使用 <code>mediump</code></p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">uniform</span> <span class="type">sampler2D</span> uTexture;</span><br></pre></td></tr></table></figure>
+
+<p>申明一个 uniform的 sampler2D(2D textrue)类型，存储了纹理数据</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">varying</span> <span class="type">vec2</span> vUv;</span><br><span class="line"><span class="keyword">varying</span> <span class="type">float</span> vElevation;</span><br></pre></td></tr></table></figure>
+
+<p>从 vertex.glsl 中接收插值<code>vec2 vUv</code>和<code>float vElevation</code></p>
+<p>fragment shader 不能直接获取<code>attribute</code>，如果要获取uv坐标，需要通过 vertex shader，发送给 fragment shader 接收，并且要取别名不能重复声明变量。</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">vec4</span> textrueColor = <span class="built_in">texture2D</span>(uTexture, vUv);</span><br></pre></td></tr></table></figure>
+
+<p><code>texture2D(sampler2D sampler, vec2 uv)</code> 是一个用于从2D纹理中采样颜色值的内置函数，根据给定的纹理坐标从绑定的纹理中获取对应的颜色数据。为3D模型的每个顶点指定UV坐标，告诉渲染器：“将纹理图像中<code>(u, v)</code>位置的颜色，应用到该顶点对应的模型表面区域”。</p>
+<p>输入两个参数，第一个参数是纹理，第二个参数是在纹理的哪个位置着色也就是uv坐标；输出一个 <code>vec4</code> 类型的颜色值（RGBA格式）</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">gl_FragColor</span> = <span class="type">vec4</span>(uColor, <span class="number">1.0</span>); <span class="comment">// 应用 material.uniforms.uColor 的颜色</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">gl_FragColor</span> = <span class="type">vec4</span>(textrueColor); <span class="comment">// 应用采样后的纹理颜色</span></span><br></pre></td></tr></table></figure>
+
+<p><code>gl_FragColor = vec4(r, g, b, a)</code>给每个可见片段上色，直接决定了渲染到屏幕（或帧缓冲）的像素颜色。若要更改透明度(a)时，需要给<code>material</code>设置 <code>transparent: true</code></p>
+<p>如果想查看某些值，我们可以发送给<code>gl_FragColor</code>显示，例如查看uv <code>gl_FragColor = vec4(vUv, 1.0, 1.0);</code></p>
+<h2 id="ShaderMaterial"><a href="#ShaderMaterial" class="headerlink" title="ShaderMaterial"></a>ShaderMaterial</h2><p><code>ShaderMaterial</code>和<code>RawShaderMaterial</code>基本相同，只不过<code>ShaderMaterial</code>提前加入了一些声明：</p>
+<figure class="highlight glsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">uniform</span> <span class="type">mat4</span> projectionMatrix;</span><br><span class="line"><span class="keyword">uniform</span> <span class="type">mat4</span> viewMatrix;</span><br><span class="line"><span class="keyword">uniform</span> <span class="type">mat4</span> modelMatrix;</span><br><span class="line"></span><br><span class="line"><span class="keyword">attribute</span> <span class="type">vec3</span> position;</span><br><span class="line"><span class="keyword">attribute</span> <span class="type">vec2</span> uv;</span><br><span class="line"></span><br><span class="line"><span class="keyword">precision</span> <span class="keyword">mediump</span> <span class="type">float</span>;</span><br></pre></td></tr></table></figure>
+
+<p><code>RawShaderMaterial</code>中所有<code>uniforms</code>和<code>attributes</code>需用户手动声明和赋值。</p>
+
+    </article>
+    <!-- license -->
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://sukksa.github.io">sukksa</a>
+            <p>原文链接：<a href="https://sukksa.github.io/2025/shader/%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%9D%80%E8%89%B2%E5%99%A8%E7%A8%8B%E5%BA%8F/">https://sukksa.github.io/2025/shader/%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%9D%80%E8%89%B2%E5%99%A8%E7%A8%8B%E5%BA%8F/</a>
+            <!-- <p>发表日期：<a href="https://sukksa.github.io/2025/shader/%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%9D%80%E8%89%B2%E5%99%A8%E7%A8%8B%E5%BA%8F/">May 6th 2025, 4:10:38 pm</a>
+            <p>更新日期：<a href="https://sukksa.github.io/2025/shader/%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%9D%80%E8%89%B2%E5%99%A8%E7%A8%8B%E5%BA%8F/">November 26th 2025, 9:14:32 am</a> -->
+            <p>发表日期：<a href="https://sukksa.github.io/2025/shader/%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%9D%80%E8%89%B2%E5%99%A8%E7%A8%8B%E5%BA%8F/">2025-05-06 16:10:38</a>
+            <p>更新日期：<a href="https://sukksa.github.io/2025/shader/%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%9D%80%E8%89%B2%E5%99%A8%E7%A8%8B%E5%BA%8F/">2025-11-26 09:14:32</a>
+        </div>
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E5%9B%BE%E6%A1%88/" title="使用着色器绘制图案">
+                    <div class="nextTitle">使用着色器绘制图案</div>
+                </a>
+        </li>
+        <li class="previous">
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2025/Threejs/Threejs%20Modules/" title="THREE Modules">
+                    <div class="prevTitle">THREE Modules</div>
+                </a>
+        </li>
+    </ul>
+    <!-- comment -->
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+            
+            
+            
+            <!-- utteranc评论 -->
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+            
+            
+            
+        </div>
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    <!-- Mathjax -->
+</main>
+
+                <!-- profile -->
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+        <div class="social">
+                            <a href="mailto:2450553074@qq.com" class="iconfont-archer email" title="email" ></a>
+                <a href="//github.com/sukksa" class="iconfont-archer github" target="_blank" title="github"></a>
+                <a href="https://space.bilibili.com/74396531" class="iconfont-archer bilibili" target="_blank" title="bilibili"></a>
+
+        </div>
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    <!-- 不蒜子  -->
+        <div class="busuanzi-container">
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+        </div>
+</footer>
+
+        </div>
+        <!-- toc -->
+            <div class="toc-wrapper toc-wrapper-loding" style=    top:50vh;
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#RawShaderMaterial"><span class="toc-number">1.</span> <span class="toc-text">RawShaderMaterial</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#vertex-glsl"><span class="toc-number">2.</span> <span class="toc-text">vertex.glsl</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fragment-glsl"><span class="toc-number">3.</span> <span class="toc-text">fragment.glsl</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ShaderMaterial"><span class="toc-number">4.</span> <span class="toc-text">ShaderMaterial</span></a></li></ol>
+            </div>
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 62
+        </div>
+        <!-- search  -->
+    </div>
+    <div class="post-archive">
+            <div class="archive-year"> 2025 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/26</span>
+            <a class="archive-post-title" href="/2025/hello-world/">Hello World</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/26</span>
+            <a class="archive-post-title" href="/2025/other/%E5%B0%86Hexo%E6%8F%90%E4%BA%A4%E5%88%B0%E4%BB%93%E5%BA%93/">将Hexo提交到仓库</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/note/%E3%80%8A%E7%BD%AA%E4%B8%8E%E7%BD%9A%E3%80%8B/">《罪与罚》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/other/%E4%BB%8E%E7%8E%B0%E6%9C%89%E7%9A%84%E4%BB%93%E5%BA%93%E5%88%87%E6%8D%A2%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E4%BB%93%E5%BA%93/">从现有git仓库切换到另一个仓库</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/cesium/%E5%8F%AA%E6%98%BE%E7%A4%BA%E6%9F%90%E4%B8%AA%E5%8C%BA%E5%9F%9F/">仅显示某个行政区划（cesium 挖孔）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2025/cesium/%E7%AC%AC%E4%B8%80%E4%B8%AAcesium%E9%A1%B9%E7%9B%AE/">第一个cesium项目</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E6%B3%A2%E6%B5%AA/">使用着色器绘制波浪</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E5%9B%BE%E6%A1%88/">使用着色器绘制图案</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%9D%80%E8%89%B2%E5%99%A8%E7%A8%8B%E5%BA%8F/">第一个 shader 程序</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span>
+            <a class="archive-post-title" href="/2025/Threejs/Threejs%20Modules/">THREE Modules</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2025/other/%E5%A6%82%E4%BD%95%E7%A7%BB%E9%99%A4%20GitHub%20%E4%B8%AD%E7%9A%84%20contributors/">如何移除 GitHub 中的 contributors</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vuex/">Vuex</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E6%8F%92%E4%BB%B6/">Vue 插件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vue-router/">vue-router</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/mixin/">Mixin (混入)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E8%84%9A%E6%89%8B%E6%9E%B6/">Vue 脚手架</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/%E7%BB%84%E4%BB%B6%E9%97%B4%E9%80%9A%E4%BF%A1/">组件间通信</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/%E6%8C%89%E9%94%AE%E4%BF%AE%E9%A5%B0%E7%AC%A6/">按键修饰符</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span>
+            <a class="archive-post-title" href="/2022/vue/%E7%BB%84%E4%BB%B6/">Vue 组件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span>
+            <a class="archive-post-title" href="/2022/vue/%E8%BF%87%E6%B8%A1%E4%B8%8E%E5%8A%A8%E7%94%BB/">过渡与动画</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span>
+            <a class="archive-post-title" href="/2022/ES6/Promise/">Promise</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E6%8C%87%E4%BB%A4/">Vue 基本指令</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">Vue 生命周期</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/29</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E5%AE%9E%E4%BE%8B%E5%AF%B9%E8%B1%A1/">Vue实例对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span>
+            <a class="archive-post-title" href="/2022/ES6/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%89%A9%E5%B1%95/">字符串的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span>
+            <a class="archive-post-title" href="/2022/ES6/Moudle%20%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%AE%9E%E7%8E%B0/">Module 的加载实现</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/21</span>
+            <a class="archive-post-title" href="/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/">Module 模块化</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span>
+            <a class="archive-post-title" href="/2022/ES6/%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%89%A9%E5%B1%95/">对象的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2022/ES6/Class%E7%9A%84%E7%BB%A7%E6%89%BF/">Class的基本用法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2022/ES6/Class%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">Class的基本用法</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/18</span>
+            <a class="archive-post-title" href="/2021/ES6/set%E4%B8%8Emap/">set 与 map</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/05</span>
+            <a class="archive-post-title" href="/2021/Ajax/Ajax%E8%B7%A8%E5%9F%9F%E8%AF%B7%E6%B1%82/">Ajax跨域</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2021/Ajax/Fetch/">Fetch</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2021/Ajax/Axios/">Axios</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/22</span>
+            <a class="archive-post-title" href="/2021/Ajax/%E5%8E%9F%E7%94%9FAjax/">原生Ajax</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span>
+            <a class="archive-post-title" href="/2021/node/node/">node</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span>
+            <a class="archive-post-title" href="/2021/less/less/">less</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/11</span>
+            <a class="archive-post-title" href="/2021/ES6/Symbol/">Symbol</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/08</span>
+            <a class="archive-post-title" href="/2021/ES6/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A9%E5%B1%95/">函数的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2021/ES6/%E5%8F%98%E9%87%8F%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC/">变量解构赋值</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2021/ES6/ES6%E7%AE%80%E4%BB%8B/">ES6简介</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2021/ES6/let%E4%B8%8Econst/">let与const</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/26</span>
+            <a class="archive-post-title" href="/2021/%E5%AE%9E%E6%88%98/jQuery%E8%BD%AE%E6%92%AD%E5%9B%BE/">jQuery轮播图</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E6%8F%92%E4%BB%B6/">jQuery插件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E5%8A%A8%E7%94%BB/">jQuery动画</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/21</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E4%BA%8B%E4%BB%B6/">jQuery事件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E4%BF%AE%E6%94%B9DOM%E7%BB%93%E6%9E%84/">jQuery修改DOM结构</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E6%93%8D%E4%BD%9CDOM/">jQuery操作DOM元素</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E9%80%89%E6%8B%A9%E5%99%A8/">jQuery选择器</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E7%AE%80%E4%BB%8B/">jQuery介绍</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%AF%B9%E8%B1%A1/">对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E7%BA%BF%E7%A8%8B%E6%9C%BA%E5%88%B6%E4%B8%8E%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6/">线程机制与事件机制</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%87%BD%E6%95%B0/">函数</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/DOM/%E4%BA%8B%E4%BB%B6/">事件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%8F%98%E9%87%8F%E4%B8%8E%E4%BD%9C%E7%94%A8%E5%9F%9F/">变量与作用域</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/DOM/DOM/">DOM介绍</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/DOM/%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1/">事件对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">基本语法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E6%95%B0%E7%BB%84/">数组</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%96%B9%E6%B3%95/">字符串方法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">类型转换</a>
+        </li>
+            </ul>
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+            <span class="sidebar-tag-name" data-tags="Ajax">
+                <span class="iconfont-archer">&#xe606;</span>
+                Ajax
+            </span>
+            <span class="sidebar-tag-name" data-tags="JavaScript">
+                <span class="iconfont-archer">&#xe606;</span>
+                JavaScript
+            </span>
+            <span class="sidebar-tag-name" data-tags="ES6">
+                <span class="iconfont-archer">&#xe606;</span>
+                ES6
+            </span>
+            <span class="sidebar-tag-name" data-tags="javaScript">
+                <span class="iconfont-archer">&#xe606;</span>
+                javaScript
+            </span>
+            <span class="sidebar-tag-name" data-tags="DOM">
+                <span class="iconfont-archer">&#xe606;</span>
+                DOM
+            </span>
+            <span class="sidebar-tag-name" data-tags="Threejs">
+                <span class="iconfont-archer">&#xe606;</span>
+                Threejs
+            </span>
+            <span class="sidebar-tag-name" data-tags="cesium">
+                <span class="iconfont-archer">&#xe606;</span>
+                cesium
+            </span>
+            <span class="sidebar-tag-name" data-tags="vite">
+                <span class="iconfont-archer">&#xe606;</span>
+                vite
+            </span>
+            <span class="sidebar-tag-name" data-tags="jQuery">
+                <span class="iconfont-archer">&#xe606;</span>
+                jQuery
+            </span>
+            <span class="sidebar-tag-name" data-tags="less">
+                <span class="iconfont-archer">&#xe606;</span>
+                less
+            </span>
+            <span class="sidebar-tag-name" data-tags="node">
+                <span class="iconfont-archer">&#xe606;</span>
+                node
+            </span>
+            <span class="sidebar-tag-name" data-tags="shader">
+                <span class="iconfont-archer">&#xe606;</span>
+                shader
+            </span>
+            <span class="sidebar-tag-name" data-tags="Note">
+                <span class="iconfont-archer">&#xe606;</span>
+                Note
+            </span>
+            <span class="sidebar-tag-name" data-tags="git">
+                <span class="iconfont-archer">&#xe606;</span>
+                git
+            </span>
+            <span class="sidebar-tag-name" data-tags="Vue">
+                <span class="iconfont-archer">&#xe606;</span>
+                Vue
+            </span>
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+        <span class="sidebar-category-name" data-categories="Ajax">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Ajax
+        </span>
+        <span class="sidebar-category-name" data-categories="ES6">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ES6
+        </span>
+        <span class="sidebar-category-name" data-categories="DOM">
+            <span class="iconfont-archer">&#xe60a;</span>
+            DOM
+        </span>
+        <span class="sidebar-category-name" data-categories="Threejs">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Threejs
+        </span>
+        <span class="sidebar-category-name" data-categories="cesium">
+            <span class="iconfont-archer">&#xe60a;</span>
+            cesium
+        </span>
+        <span class="sidebar-category-name" data-categories="jQuery">
+            <span class="iconfont-archer">&#xe60a;</span>
+            jQuery
+        </span>
+        <span class="sidebar-category-name" data-categories="javaScript">
+            <span class="iconfont-archer">&#xe60a;</span>
+            javaScript
+        </span>
+        <span class="sidebar-category-name" data-categories="less">
+            <span class="iconfont-archer">&#xe60a;</span>
+            less
+        </span>
+        <span class="sidebar-category-name" data-categories="node">
+            <span class="iconfont-archer">&#xe60a;</span>
+            node
+        </span>
+        <span class="sidebar-category-name" data-categories="shader">
+            <span class="iconfont-archer">&#xe60a;</span>
+            shader
+        </span>
+        <span class="sidebar-category-name" data-categories="note">
+            <span class="iconfont-archer">&#xe60a;</span>
+            note
+        </span>
+        <span class="sidebar-category-name" data-categories="git">
+            <span class="iconfont-archer">&#xe60a;</span>
+            git
+        </span>
+        <span class="sidebar-category-name" data-categories="Vue">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Vue
+        </span>
+        <span class="sidebar-category-name" data-categories="实战">
+            <span class="iconfont-archer">&#xe60a;</span>
+            实战
+        </span>
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://sukksa.github.io",
+        root: siteMetaRoot,
+        author: "sukksa"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+        <!-- main func -->
+        <script src="/scripts/main.js"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" onload="window.Fancybox.bind('[data-fancybox]')" defer></script>
+        <!-- algolia -->
+        <!-- busuanzi -->
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+            <!-- <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script> -->
+        <!-- async load share.js -->
+            <script src="/scripts/share.js" async></script>
+        <!-- mermaid -->
+    </body>
+</html>

@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+<!-- keywords -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="sukksa">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="sukksa">
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    <meta name="description" content="">
+    <meta name="description" content="对象（Object） 对象是JS中的引用数据类型 对象是一种复合数据类型，在对象中可以保存多个不同数据类型的属性 使用typeof检查一个对象时，会返回object">
+<meta property="og:type" content="article">
+<meta property="og:title" content="对象">
+<meta property="og:url" content="https://sukksa.github.io/2021/javaScript/%E5%AF%B9%E8%B1%A1/index.html">
+<meta property="og:site_name" content="sukksa blog">
+<meta property="og:description" content="对象（Object） 对象是JS中的引用数据类型 对象是一种复合数据类型，在对象中可以保存多个不同数据类型的属性 使用typeof检查一个对象时，会返回object">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://sukksa.github.io/images/javascript/%E5%8E%9F%E5%9E%8B%E9%93%BE1.png">
+<meta property="og:image" content="https://sukksa.github.io/images/javascript/%E5%8E%9F%E5%9E%8B%E9%93%BE2.png">
+<meta property="og:image" content="https://sukksa.github.io/images/javascript/%E7%BB%84%E5%90%88%E7%BB%A7%E6%89%BF.png">
+<meta property="article:published_time" content="2021-10-17T15:13:23.000Z">
+<meta property="article:modified_time" content="2025-11-26T01:14:32.072Z">
+<meta property="article:author" content="sukksa">
+<meta property="article:tag" content="javaScript">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://sukksa.github.io/images/javascript/%E5%8E%9F%E5%9E%8B%E9%93%BE1.png">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    <title>对象 · sukksa&#39;s Studio</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .footer-fixed-btn,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(
+            -45deg,
+            #444 0,
+            #444 80px,
+            #333 80px,
+            #333 160px
+        );
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link id="stylesheet-fancybox" rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-base" rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-mobile" rel="preload" href="/css/mobile.css" as="style" onload="this.onload=null;this.rel='stylesheet';this.media='screen and (max-width: 960px)'">
+    <link id="stylesheet-theme-dark" rel="preload" href="/css/dark.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script"> -->
+    <link rel="preload" href="/lib/jquery.min.js" as="script">
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    <!-- 百度统计  -->
+    <!-- 谷歌统计  -->
+    <!-- Google tag (gtag.js) -->
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script> -->
+    <script src="/lib/jquery.min.js"></script>
+    <script src=""></script>
+    <!-- <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script> -->
+        <body class="post-body">
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        <div class="header-sidebar-menu">
+            <div style="padding-left: 1px;">&#xe775;</div>
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href="/">sukksa's Studio</a>
+        </span>
+    </div>
+    <!-- toggle banner -->
+    <div class="banner">
+        <div class="blog-title header-element">
+            <a href="/">sukksa&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">对象</a>
+        </div>
+    </div>
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- donate button -->
+
+    <!-- back to top button -->
+    <div class="footer-fixed-btn footer-fixed-btn--hidden back-top">
+        <div>&#xe639;</div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="    height:50vh;
+">
+    <!-- 主页  -->
+    <!-- 404页  -->
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.png)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+                对象
+            <!-- 404 -->
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            <!-- 404 -->
+        </p>
+        <!-- 文章页 meta -->
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                    <div class="post-intro-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="javaScript">javaScript</a>
+</div>
+
+                <!-- 文章字数统计 -->
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">4k</span>阅读时长: <span class="post-count reading-time">16 min</span></span>
+                    </div>
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2021-10-17</span>
+                    <!-- busuanzi -->
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    <!-- 文章分享 -->
+                    <!-- <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span> -->
+                </div>
+            </div>
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="对象（Object）"><a href="#对象（Object）" class="headerlink" title="对象（Object）"></a>对象（Object）</h1><ul>
+<li>对象是JS中的引用数据类型</li>
+<li>对象是一种复合数据类型，在对象中可以保存多个不同数据类型的属性</li>
+<li>使用<code>typeof</code>检查一个对象时，会返回<code>object</code></li>
+</ul>
+<span id="more"></span>
+
+<h2 id="对象的基本语法"><a href="#对象的基本语法" class="headerlink" title="对象的基本语法"></a>对象的基本语法</h2><h3 id="创建对象"><a href="#创建对象" class="headerlink" title="创建对象"></a>创建对象</h3><ul>
+<li><p>方式一：</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var obj = new Object()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>方式二：</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var obj = &#123;&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>方式三：<br>  使用对象字面量，在创建对象时直接向对象中添加属性</p>
+<ul>
+<li><p>语法：</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var obj = &#123;</span><br><span class="line">    name: &#x27;tom&#x27;,</span><br><span class="line">    age: 18,</span><br><span class="line">    sex: &#x27;男&#x27;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>  <strong>注</strong>：在什么时候使用 <code>对象[&quot;对象名&quot;]</code> 的方式</p>
+<ol>
+<li><p>属性名包含特殊字符：_ 空格</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//需求: 添加一个属性: content-type: text/json</span><br><span class="line">//p.content-type = &#x27;text/json&#x27; //不正确</span><br><span class="line"> p[&#x27;content-type&#x27;] = &#x27;text/json&#x27;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<pre><code>2. 属性名不确定
+    
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">	//将name作为p的属性添加进p对象</span><br><span class="line">var prop = &#x27;name&#x27;</span><br><span class="line">var value = 123</span><br><span class="line">// p.prop = value  //不正确</span><br><span class="line">p[prop] = value</span><br></pre></td></tr></table></figure>
+</code></pre>
+<ol>
+<li>2个引用变量指向同一个对象, 通过一个引用变量修改对象内部数据, 另一个引用变量也看得见</li>
+<li>2个引用变量指向同一个对象,让一个引用变量指向另一个对象, 另一个引用变量还是指向原来的对象</li>
+</ol>
+</li>
+</ul>
+<h3 id="向对象中添加属性"><a href="#向对象中添加属性" class="headerlink" title="向对象中添加属性"></a>向对象中添加属性</h3><ul>
+<li>语法：<br>  <code>对象.属性名 = 属性值</code><br>  <code>对象[&quot;属性名&quot;] = 属性值</code><ul>
+<li>对象的属性名没有任何要求，不需要遵守标识符的规范，<br>  但是在开发中，尽量按照标识符的要求去写。</li>
+<li>属性值也可以任意的数据类型。</li>
+</ul>
+</li>
+</ul>
+<h3 id="读取对象中的属性"><a href="#读取对象中的属性" class="headerlink" title="读取对象中的属性"></a>读取对象中的属性</h3><ul>
+<li><p>语法：</p>
+<p>  <code>对象.属性名</code><br>  <code>对象[&quot;属性名&quot;]</code></p>
+</li>
+<li><p>如果读取一个对象中没有的属性，它不会报错，而是返回一个<code>undefined</code></p>
+</li>
+</ul>
+<h3 id="删除对象中的属性"><a href="#删除对象中的属性" class="headerlink" title="删除对象中的属性"></a>删除对象中的属性</h3><ul>
+<li>语法：<br>  <code>delete 对象.属性名</code><br>  <code>delete 对象[&quot;属性名&quot;]</code></li>
+</ul>
+<h3 id="使用in检查对象中是否含有指定属性"><a href="#使用in检查对象中是否含有指定属性" class="headerlink" title="使用in检查对象中是否含有指定属性"></a>使用in检查对象中是否含有指定属性</h3><ul>
+<li><p>语法：<br>  <code>&quot;属性名&quot; in 对象</code></p>
+</li>
+<li><p>如果在对象中含有该属性，则返回true如果没有则返回false</p>
+</li>
+</ul>
+<h3 id="基本数据类型和引用数据类型"><a href="#基本数据类型和引用数据类型" class="headerlink" title="基本数据类型和引用数据类型"></a>基本数据类型和引用数据类型</h3><ul>
+<li>基本数据类型<br>  <code>String Number Boolean Null Undefined</code></li>
+<li>引用数据类型<br>  <code>Object</code></li>
+<li>基本数据类型的数据，变量是直接保存的它的值。<br>  变量与变量之间是互相独立的，修改一个变量不会影响其他的变量。</li>
+<li>引用数据类型的数据，变量是保存的对象的引用（内存地址）。<br>  如果多个变量指向的是同一个对象，此时修改一个变量的属性，会影响其他的变量。</li>
+<li>比较两个变量时，对于基本数据类型，比较的就是值，<br>  对于引用数据类型比较的是地址，地址相同才相同</li>
+</ul>
+<h2 id="创建对象的方式"><a href="#创建对象的方式" class="headerlink" title="创建对象的方式"></a>创建对象的方式</h2><h3 id="Object构造函数模式"><a href="#Object构造函数模式" class="headerlink" title="Object构造函数模式"></a>Object构造函数模式</h3><ul>
+<li><p>套路: 先创建空<code>Object</code>对象, 再动态添加属性&#x2F;方法</p>
+</li>
+<li><p>适用场景: 起始时不确定对象内部数据</p>
+</li>
+<li><p>问题: 语句太多</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> p = <span class="keyword">new</span> <span class="title class_">Object</span>()</span><br><span class="line">p.<span class="property">name</span> = <span class="string">&#x27;Tom&#x27;</span></span><br><span class="line">p.<span class="property">age</span> = <span class="number">12</span></span><br><span class="line">p.<span class="property">setName</span> = <span class="keyword">function</span> (<span class="params">name</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="对象字面量模式"><a href="#对象字面量模式" class="headerlink" title="对象字面量模式"></a>对象字面量模式</h3><ul>
+<li><p>套路: 使用<code>&#123;&#125;</code>创建对象, 同时指定属性&#x2F;方法</p>
+</li>
+<li><p>适用场景: 起始时对象内部数据是确定的</p>
+</li>
+<li><p>问题: 如果创建多个对象, 有重复代码</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> p = &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;Tom&#x27;</span>,</span><br><span class="line">    <span class="attr">age</span>: <span class="number">23</span>,</span><br><span class="line">    <span class="attr">setName</span>: <span class="keyword">function</span> (<span class="params">name</span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">name</span> = name</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="工厂模式"><a href="#工厂模式" class="headerlink" title="工厂模式"></a>工厂模式</h3><ul>
+<li><p>套路: 通过工厂函数动态创建对象并返回</p>
+</li>
+<li><p>适用场景: 需要创建多个对象</p>
+</li>
+<li><p>问题: 对象没有一个具体的类型, 都是<code>Object</code>类型</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">createPerson</span>(<span class="params">name, age</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> p = &#123;</span><br><span class="line">        <span class="attr">name</span>: name,</span><br><span class="line">        <span class="attr">age</span>: age,</span><br><span class="line">        <span class="attr">setName</span>: <span class="keyword">function</span> (<span class="params">name</span>) &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">name</span> = name</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> p</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> p1 = <span class="title function_">createPerson</span>(<span class="string">&#x27;Tom&#x27;</span>, <span class="number">12</span>)</span><br><span class="line"><span class="keyword">var</span> p2 = <span class="title function_">createPerson</span>(<span class="string">&#x27;JAck&#x27;</span>, <span class="number">13</span>)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="自定义构造函数模式"><a href="#自定义构造函数模式" class="headerlink" title="自定义构造函数模式"></a>自定义构造函数模式</h3><ul>
+<li><p>套路: 自定义构造函数, 通过<code>new</code>创建对象</p>
+</li>
+<li><p>适用场景: 需要创建多个类型确定的对象</p>
+</li>
+<li><p>问题: 每个对象都有相同的数据, 浪费内存</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">name, age</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">age</span> = age</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">setName</span> = <span class="keyword">function</span> (<span class="params">name</span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">name</span> = name</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&#x27;Tom&#x27;</span>, <span class="number">12</span>)</span><br><span class="line"><span class="keyword">var</span> p2 = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&#x27;Tom2&#x27;</span>, <span class="number">13</span>)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="构造函数-原型的组合模式"><a href="#构造函数-原型的组合模式" class="headerlink" title="构造函数+原型的组合模式"></a>构造函数+原型的组合模式</h3><ul>
+<li><p>套路: 自定义构造函数, 属性在函数中初始化, 方法添加到原型上</p>
+</li>
+<li><p>适用场景: 需要创建多个类型确定的对象</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">name, age</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">age</span> = age</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">setName</span> = <span class="keyword">function</span> (<span class="params">name</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&#x27;Tom&#x27;</span>, <span class="number">12</span>)</span><br><span class="line"><span class="keyword">var</span> p2 = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&#x27;JAck&#x27;</span>, <span class="number">23</span>)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="原型-prototype"><a href="#原型-prototype" class="headerlink" title="原型 prototype"></a>原型 prototype</h2><h3 id="基本介绍"><a href="#基本介绍" class="headerlink" title="基本介绍"></a>基本介绍</h3><p>我们所创建的每一个函数，解析器都会向函数中添加一个属性<code>prototype</code>，这个属性对应着一个对象，这个对象就是我们所谓的原型对象<br>如果函数作为普通函数调用<code>prototype</code>没有任何作用，当函数以构造函数的形式调用时，它所创建的对象中都会有一个隐含的属性，指向该构造函数的原型对象，我们可以通过 <code>__proto__</code> 来访问该属性</p>
+<p>原型对象就相当于一个公共的区域，所有同一个类的实例都可以访问到这个原型对象，我们可以将对象中共有的内容，统一设置到原型对象中。</p>
+<p>当我们访问对象的一个属性或方法时，它会先在对象自身中寻找，如果有则直接使用，如果没有则会去原型对象中寻找，如果找到则直接使用</p>
+<p>我们创建构造函数时，可以将这些对象共有的属性和方法，统一添加到构造函数的原型对象中，这样不用分别为每一个对象添加，也不会影响到全局作用域，就可以使每个对象都具有这些属性和方法了</p>
+<ul>
+<li><p>向构造函数的原型中添加属性</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MyClass.prototype.name = 123</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>向构造函数中原型中添加一个方法</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">MyClass</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">sayHello</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;hello&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="hasOwnProperty-NaN"><a href="#hasOwnProperty-NaN" class="headerlink" title="hasOwnProperty()"></a><code>hasOwnProperty()</code></h3><ul>
+<li>可以使用对象的<code>hasOwnProperty()</code>来检查对象自身中是否含有该属性</li>
+<li>使用<code>hasOwnProperty()</code>方法只有当对象自身中含有属性时，才会返回<code>true</code></li>
+<li>使用<code>in</code>检查对象中是否含有某个属性时，如果对象中没有但是原型中有，也会返回<code>true</code></li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Person</span>(<span class="params">name, age, gender</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">age</span> = age</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">gender</span> = gender</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">a</span> = <span class="number">123</span></span><br><span class="line"><span class="keyword">var</span> p = <span class="keyword">new</span> <span class="title class_">Person</span>(<span class="string">&#x27;张三&#x27;</span>, <span class="number">18</span>, <span class="string">&#x27;男&#x27;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;a&#x27;</span> <span class="keyword">in</span> p) <span class="comment">//true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(p.<span class="title function_">hasOwnProperty</span>(<span class="string">&#x27;a&#x27;</span>)) <span class="comment">//false</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(p.<span class="property">__proto__</span>.<span class="title function_">hasOwnProterty</span>(<span class="string">&#x27;a&#x27;</span>)) <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>注意：</strong></p>
+<ul>
+<li><p>原型对象也是对象，所以它也有原型，当我们使用一个对象的属性或方法时，会现在自身中寻找，自身中如果有，则直接使用，如果没有则去原型对象中寻找，如果原型对象中有，则使用，如果没有则去原型的原型中寻找，直到找到Object对象的原型，Object对象的原型没有原型，如果在Object原型中依然没有找到，则返回<code>undefined</code></p>
+</li>
+<li><p><strong>通过原型对象添加的属性和方法函数本身是没有的</strong>，这就是静态方法和实例方法的区别</p>
+</li>
+</ul>
+</li>
+<li><p><strong>总结</strong></p>
+<ul>
+<li>函数的<code>prototype</code>属性: 在定义函数时自动添加的, 默认值是一个空<code>Object</code>对象</li>
+<li>对象的<code>__proto__</code>属性: 创建对象时自动添加的, 默认值为构造函数的<code>prototype</code>属性值</li>
+<li>实例与构造函数原型有直接联系，但是实例与构造函数之间没有。</li>
+<li>程序员能直接操作显式原型, 但不能直接操作隐式原型(ES6之前)</li>
+</ul>
+</li>
+</ul>
+<h3 id="原型链"><a href="#原型链" class="headerlink" title="原型链"></a>原型链</h3><ul>
+<li>每个构造函数都有一个原型对象，原型有一个属性（<code>constructor</code>）指回构造函数，而实例有一个内部指针（<code>__proto__</code>）指向原型，又原型也是另一个类型的实例，那就意味着这个原型本身有一个内部指针指向另一个原型，相应的另一个原型也有一个指针指向另一个构造函数。这样实例和原型之间就构造了一条原型链。</li>
+<li>任何函数的默认原型都是一个<code>Object</code>的实例，因此构造函数的原型对象都有<code>__proto__</code>指向<code>Object.prototype</code>（包括<code>Function</code>），而<code>Object.__proto__ === null</code>，因此Object.__proto__是整条原型链的末端。</li>
+</ul>
+<p><strong>注：</strong></p>
+<ul>
+<li><strong>实例对象的<code>__proto__</code>等于构造函数的prototype</strong></li>
+<li>实例对象的<code>prototype</code>是<code>undefined</code></li>
+<li>任何函数的构造函数都是<code>Function</code>，包括<code>Function</code>也不例外，因此<code>Function.__proto__ === Function.prototype</code></li>
+<li><code>function</code>是<code>Function</code>的实例，实例化的对象是<code>Object</code>的实例</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Person</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;123&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">name</span> = <span class="string">&#x27;aaa&#x27;</span></span><br><span class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> <span class="title class_">Person</span>()</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(p1.<span class="property">name</span>) <span class="comment">//aaa</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span> === <span class="title class_">Object</span>.<span class="property">__proto__</span>) <span class="comment">//true (Object是Function的实例对象</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Function</span>.<span class="property">__proto__</span> === <span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>) <span class="comment">//true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property"><span class="keyword">prototype</span></span>) <span class="comment">//undefined</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">__proto__</span> === <span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>) <span class="comment">//true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Person</span>.<span class="property">__proto__</span> === <span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>) <span class="comment">//true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">__proto__</span> === <span class="title class_">Object</span>.<span class="property"><span class="keyword">prototype</span></span>) <span class="comment">//true</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Object</span>.<span class="property">__proto__</span> === <span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>) <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/javascript/%E5%8E%9F%E5%9E%8B%E9%93%BE1.png" alt="原型链1"></p>
+<ul>
+<li>重写函数的prototype后，相当于prototype指向了一个新的对象<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Person</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;123&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">name</span> = <span class="string">&#x27;aaa&#x27;</span></span><br><span class="line"><span class="keyword">var</span> p1 = <span class="keyword">new</span> <span class="title class_">Person</span>()</span><br><span class="line"><span class="title class_">Person</span>.<span class="property"><span class="keyword">prototype</span></span> = &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;bbb&#x27;</span>,</span><br><span class="line">    <span class="attr">age</span>: <span class="number">5</span>,</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> p2 = <span class="keyword">new</span> <span class="title class_">Person</span>()</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(p1.<span class="property">constructor</span>) <span class="comment">//Person</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="title class_">Person</span>.<span class="property">constructor</span>) <span class="comment">//Function</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(p1.<span class="property">age</span>) <span class="comment">//undefined</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(p1.<span class="property">name</span>) <span class="comment">//aaa</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(p1.<span class="property">__proto__</span>.<span class="property">constructor</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">age</span>) <span class="comment">//5</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(p2.<span class="property">age</span>) <span class="comment">//5</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(p1.<span class="property">name</span>) <span class="comment">//bbb</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<p><img src="/images/javascript/%E5%8E%9F%E5%9E%8B%E9%93%BE2.png" alt="原型链2"></p>
+<h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><h3 id="通过原型链继承"><a href="#通过原型链继承" class="headerlink" title="通过原型链继承"></a>通过原型链继承</h3><ul>
+<li><p>套路</p>
+<ol>
+<li>定义父类型构造函数</li>
+<li>给父类型的原型添加方法</li>
+<li>定义子类型的构造函数</li>
+<li>创建父类型的对象赋值给子类型的原型</li>
+<li>将子类型原型的构造属性设置为子类型</li>
+<li>给子类型原型添加方法</li>
+<li>创建子类型的对象: 可以调用父类型的方法</li>
+</ol>
+</li>
+<li><p>关键</p>
+<p>  子类型的原型为父类型的一个实例对象</p>
+<p>  function SuperType() {<br>  this.colors &#x3D; [‘red’, ‘blue’, ‘green’]<br>  this.name &#x3D; 2<br>  }</p>
+<p>  function SubType() {}</p>
+<p>  &#x2F;&#x2F; 继承 SuperType<br>  SubType.prototype &#x3D; new SuperType()</p>
+<p>  let instance1 &#x3D; new SubType()<br>  instance1.name +&#x3D; 2<br>  instance1.colors.push(‘black’)<br>  console.log(instance1.colors) &#x2F;&#x2F; “red,blue,green,black”<br>  console.log(instance1.name) &#x2F;&#x2F; 4</p>
+<p>  let instance2 &#x3D; new SubType()<br>  console.log(instance2.colors) &#x2F;&#x2F; “red,blue,green,black”<br>  console.log(instance2.name) &#x2F;&#x2F; 2</p>
+</li>
+</ul>
+<p>在这个例子中， <code>SuperType</code> 构造函数定义了一个 <code>colors</code> 属性，其中包含一个数组（引用值）。每个 <code>SuperType</code> 的实例都会有自己的 <code>colors</code> 属性，包含自己的数组。但是，当 <code>SubType</code> 通过原型继承SuperType 后， <code>SubType.prototype</code> 变成了 <code>SuperType</code> 的一个实例，因而也获得了自己的 <code>colors</code>属性。这类似于创建了 <code>SubType.prototype.colors</code> 属性。最终结果是， <code>SubType</code> 的所有实例都会共享这个 <code>colors</code> 属性。</p>
+<p>导致<code>SubType</code>的每个实例引用 <code>colors</code> 属性, 都会从原型链中寻找<code>SubType.prototype.colors</code> 属性，相当于每个<code>SubType</code>都共用同一个 <code>colors</code> 属性。</p>
+<p>而对于基本数据类型来说，执行instance1.name +&#x3D; 2 这行代码，会在instance1 实例中添加name属性，然后在从SubType.prototype中读取name属性的值（2），最后 +2，等价于instance1.name &#x3D; SubType.prototype.name + 2。而SubType.prototype.name的值没有改变，仅读取instance2.name的值时，instance2会从原型链中读取SubType.prototype.name的值（2） </p>
+<h3 id="盗用构造函数继承"><a href="#盗用构造函数继承" class="headerlink" title="盗用构造函数继承"></a>盗用构造函数继承</h3><ul>
+<li>套路:<ol>
+<li>定义父类型构造函数</li>
+<li>定义子类型构造函数</li>
+<li><strong>在子类型构造函数中调用父类型构造</strong></li>
+</ol>
+</li>
+<li>关键:<ol>
+<li>在子类型构造函数中通用call() 调用父类型构造函数</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">SuperType</span>(<span class="params">name</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">SubType</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// 继承 SuperType 并传参</span></span><br><span class="line">    <span class="title class_">SuperType</span>.<span class="title function_">call</span>(<span class="variable language_">this</span>, <span class="string">&#x27;Nicholas&#x27;</span>) <span class="comment">// this.SuperType(&quot;Nicholas&quot;) 等价于 this.name = name</span></span><br><span class="line">    <span class="comment">// 实例属性</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">age</span> = <span class="number">29</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> instance = <span class="keyword">new</span> <span class="title class_">SubType</span>()</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(instance.<span class="property">name</span>) <span class="comment">// &quot;Nicholas&quot;;</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(instance.<span class="property">age</span>) <span class="comment">// 29</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>盗用构造函数的一个优点就是可以在子类构造函数中向父类构造函数传参。<br>在 <code>SubType</code> 构造函数中调用 <code>SuperType</code> 构造函数时传入这个参数，实际上会在 <code>SubType</code> 的实例上定义 <code>name</code> 属性。</p>
+<h3 id="组合继承"><a href="#组合继承" class="headerlink" title="组合继承"></a>组合继承</h3><ul>
+<li>原型链+盗用构造函数的组合继承<ul>
+<li>使用原型链继承原型上的属性和方法</li>
+<li>通过盗用构造函数继承实例属性</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">SuperType</span>(<span class="params">name</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">name</span> = name</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">colors</span> = [<span class="string">&#x27;red&#x27;</span>, <span class="string">&#x27;blue&#x27;</span>, <span class="string">&#x27;green&#x27;</span>]</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">SuperType</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">sayName</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">name</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">SubType</span>(<span class="params">name, age</span>) &#123;</span><br><span class="line">    <span class="comment">// 继承属性</span></span><br><span class="line">    <span class="title class_">SuperType</span>.<span class="title function_">call</span>(<span class="variable language_">this</span>, name)</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">age</span> = age</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 继承方法</span></span><br><span class="line"><span class="title class_">SubType</span>.<span class="property"><span class="keyword">prototype</span></span> = <span class="keyword">new</span> <span class="title class_">SuperType</span>()</span><br><span class="line"><span class="title class_">SubType</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">sayAge</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">age</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> instance1 = <span class="keyword">new</span> <span class="title class_">SubType</span>(<span class="string">&#x27;Nicholas&#x27;</span>, <span class="number">29</span>)</span><br><span class="line">instance1.<span class="property">colors</span>.<span class="title function_">push</span>(<span class="string">&#x27;black&#x27;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(instance1.<span class="property">colors</span>) <span class="comment">// &quot;red,blue,green,black&quot;</span></span><br><span class="line">instance1.<span class="title function_">sayName</span>() <span class="comment">// &quot;Nicholas&quot;;</span></span><br><span class="line">instance1.<span class="title function_">sayAge</span>() <span class="comment">// 29</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> instance2 = <span class="keyword">new</span> <span class="title class_">SubType</span>(<span class="string">&#x27;Greg&#x27;</span>, <span class="number">27</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(instance2.<span class="property">colors</span>) <span class="comment">// &quot;red,blue,green&quot;</span></span><br><span class="line">instance2.<span class="title function_">sayName</span>() <span class="comment">// &quot;Greg&quot;</span></span><br><span class="line">instance2.<span class="title function_">sayAge</span>() <span class="comment">// 27</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在这个例子中， <code>SuperType</code> 构造函数定义了两个属性， <code>name</code> 和 <code>colors</code>，而它的原型上也定义了一个方法叫 <code>sayName()</code>。<br><code>SubType</code> 构造函数调用了 <code>SuperType</code> 构造函数，传入了 <code>name</code> 参数，然后又定义了自己的属性 <code>age</code>。此外， <code>SubType.prototype</code> 也被赋值为 <code>SuperType</code> 的实例。原型赋值之后，又在这个原型上添加了新方法 <code>sayAge()</code>。<br>这样，就可以创建两个 <code>SubType</code> 实例，让这两个实例都有自己的属性，包括 <code>colors</code>，同时还共享相同的方法。</p>
+<p><img src="/images/javascript/%E7%BB%84%E5%90%88%E7%BB%A7%E6%89%BF.png" alt="组合继承"></p>
+<h2 id="Date对象"><a href="#Date对象" class="headerlink" title="Date对象"></a>Date对象</h2><ul>
+<li><p>在JS中使用<code>Date</code>对象来表示一个时间</p>
+</li>
+<li><p>创建一个<code>Date</code>对象</p>
+<ul>
+<li><p>如果直接使用构造函数创建一个Date对象，则会封装为当前代码执行的时间</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var date = new Date();  //封装此行代码执行的时间</span><br><span class="line">console.log(date); //打印date  Fri Dec 11 2020 23:32:17 GMT+0800 (中国标准时间)</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>创建一个指定的时间对象</p>
+<ul>
+<li><p>需要在构造函数中传递一个表示时间的字符串作为参数</p>
+</li>
+<li><p>日期的格式: 月&#x2F;日&#x2F;年 时:分:秒</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var date = new Date(&quot;2/18/2011 11:10:30&quot;);</span><br><span class="line">console.log(date); //2011-02-18T03:10:30.000Z</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h3 id="getDate"><a href="#getDate" class="headerlink" title="getDate()"></a><code>getDate()</code></h3><ul>
+<li><p>获取当前日期对象是几日</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var date = new Date(&quot;2/18/2011 11:10:30&quot;);</span><br><span class="line">var d = date.getDate();</span><br><span class="line">console.log(d); //18</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="getDay"><a href="#getDay" class="headerlink" title="getDay()"></a><code>getDay()</code></h3><ul>
+<li><p>获取当前日期对象时周几</p>
+</li>
+<li><p>会返回一个0-6的值<br>  0 表示周日<br>  1 表示周一</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var date = new Date(&quot;2/18/2011 11:10:30&quot;)</span><br><span class="line">var d = date.getDay()</span><br><span class="line">console.log(d) //5 (周六)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="getMonth"><a href="#getMonth" class="headerlink" title="getMonth()"></a><code>getMonth()</code></h3><ul>
+<li><p>获取当前时间对象的月份</p>
+</li>
+<li><p>会返回一个0-11的值<br>  0 表示1月<br>  1 表示2月<br>  11 表示12月</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var date = new Date(&quot;2/18/2011 11:10:30&quot;);</span><br><span class="line">var d = date.getMonth();</span><br><span class="line">console.log(d); //1</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>​	</p>
+<h3 id="getFullYear"><a href="#getFullYear" class="headerlink" title="getFullYear()"></a><code>getFullYear()</code></h3><ul>
+<li><p>获取当前日期对象的年份</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var date = new Date(&quot;2/18/2011 11:10:30&quot;);</span><br><span class="line">var d = date.getFullYear();</span><br><span class="line">console.log(d); //2011</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="getTime"><a href="#getTime" class="headerlink" title="getTime()"></a><code>getTime()</code></h3><ul>
+<li>获取当前日期对象的时间戳<ul>
+<li>时间戳，指的是从格林威治标准时间的1970年1月1日，0时0分0秒 到当前日期所花费的毫秒数</li>
+</ul>
+</li>
+<li>计算机底层在保存时间时使用都是时间戳  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var date = new Date(&quot;2/18/2011 11:10:30&quot;)</span><br><span class="line">var time = date.getTime()</span><br><span class="line">console.log(time) //1297998630000 (毫秒数)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="Date-now"><a href="#Date-now" class="headerlink" title="Date.now()"></a><code>Date.now()</code></h3><ul>
+<li><p>获取当前的时间戳</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var time = Date.now();</span><br></pre></td></tr></table></figure></li>
+<li><p>可以利用时间戳来测试代码的执行的性能</p>
+</li>
+</ul>
+<h2 id="Math对象"><a href="#Math对象" class="headerlink" title="Math对象"></a>Math对象</h2><p><code>Math</code>和其他的对象不同，它不是一个构造函数，它属于一个工具类不用创建对象，它里边封装了数学运算相关的属性和方法</p>
+<h3 id="abs"><a href="#abs" class="headerlink" title="abs()"></a><code>abs()</code></h3><p> 可以用来计算一个数的绝对值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(Math.abs(-2)) //2</span><br></pre></td></tr></table></figure>
+
+<h3 id="Math-ceil"><a href="#Math-ceil" class="headerlink" title="Math.ceil()"></a><code>Math.ceil()</code></h3><p>可以对一个数进行向上取整，小数位只有有值就自动进1</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(Math.ceil(1.1)) //2</span><br></pre></td></tr></table></figure>
+
+<h3 id="Math-floor"><a href="#Math-floor" class="headerlink" title="Math.floor()"></a><code>Math.floor()</code></h3><p>可以对一个数进行向下取整，小数部分会被舍掉</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(Math.floor(1.99)) //1</span><br></pre></td></tr></table></figure>
+
+<h3 id="Math-round"><a href="#Math-round" class="headerlink" title="Math.round()"></a><code>Math.round()</code></h3><p>可以对一个数进行四舍五入取整</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(Math.round(1.4)) //1</span><br></pre></td></tr></table></figure>
+
+<h3 id="Math-random"><a href="#Math-random" class="headerlink" title="Math.random()"></a><code>Math.random()</code></h3><p>可以用来生成一个0-1之间的随机数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//生成一个0-10的随机数</span><br><span class="line">Math.round(Math.random() * 10)</span><br><span class="line"></span><br><span class="line">//生成一个1-5之间的随机数</span><br><span class="line">Math.round(Math.random() * 5 + 1)</span><br></pre></td></tr></table></figure>
+
+<h3 id="max"><a href="#max" class="headerlink" title="max()"></a><code>max()</code></h3><p>可以获取多个数中的最大值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var max = Math.max(10,45,30,100) // 100</span><br></pre></td></tr></table></figure>
+
+<h3 id="min"><a href="#min" class="headerlink" title="min()"></a><code>min()</code></h3><p>可以获取多个数中的最小值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var min = Math.min(10,45,30,100) // 10</span><br></pre></td></tr></table></figure>
+
+<h3 id="Math-pow-x-y"><a href="#Math-pow-x-y" class="headerlink" title="Math.pow(x,y)"></a><code>Math.pow(x,y)</code></h3><p>返回x的y次幂</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(Math.pow(12,3)) //12^3</span><br></pre></td></tr></table></figure>
+
+<h3 id="Math-sqrt"><a href="#Math-sqrt" class="headerlink" title="Math.sqrt()"></a><code>Math.sqrt()</code></h3><p>用于对一个数进行开方运算</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">console.log(Math.sqrt(20))</span><br></pre></td></tr></table></figure>
+
+
+    </article>
+    <!-- license -->
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://sukksa.github.io">sukksa</a>
+            <p>原文链接：<a href="https://sukksa.github.io/2021/javaScript/%E5%AF%B9%E8%B1%A1/">https://sukksa.github.io/2021/javaScript/%E5%AF%B9%E8%B1%A1/</a>
+            <!-- <p>发表日期：<a href="https://sukksa.github.io/2021/javaScript/%E5%AF%B9%E8%B1%A1/">October 17th 2021, 11:13:23 pm</a>
+            <p>更新日期：<a href="https://sukksa.github.io/2021/javaScript/%E5%AF%B9%E8%B1%A1/">November 26th 2025, 9:14:32 am</a> -->
+            <p>发表日期：<a href="https://sukksa.github.io/2021/javaScript/%E5%AF%B9%E8%B1%A1/">2021-10-17 23:13:23</a>
+            <p>更新日期：<a href="https://sukksa.github.io/2021/javaScript/%E5%AF%B9%E8%B1%A1/">2025-11-26 09:14:32</a>
+        </div>
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2021/javaScript/%E7%BA%BF%E7%A8%8B%E6%9C%BA%E5%88%B6%E4%B8%8E%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6/" title="线程机制与事件机制">
+                    <div class="nextTitle">线程机制与事件机制</div>
+                </a>
+        </li>
+        <li class="previous">
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2021/javaScript/%E5%87%BD%E6%95%B0/" title="函数">
+                    <div class="prevTitle">函数</div>
+                </a>
+        </li>
+    </ul>
+    <!-- comment -->
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+            
+            
+            
+            <!-- utteranc评论 -->
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+            
+            
+            
+        </div>
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    <!-- Mathjax -->
+</main>
+
+                <!-- profile -->
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+        <div class="social">
+                            <a href="mailto:2450553074@qq.com" class="iconfont-archer email" title="email" ></a>
+                <a href="//github.com/sukksa" class="iconfont-archer github" target="_blank" title="github"></a>
+                <a href="https://space.bilibili.com/74396531" class="iconfont-archer bilibili" target="_blank" title="bilibili"></a>
+
+        </div>
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    <!-- 不蒜子  -->
+        <div class="busuanzi-container">
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+        </div>
+</footer>
+
+        </div>
+        <!-- toc -->
+            <div class="toc-wrapper toc-wrapper-loding" style=    top:50vh;
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%EF%BC%88Object%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">对象（Object）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">对象的基本语法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.1.1.</span> <span class="toc-text">创建对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%91%E5%AF%B9%E8%B1%A1%E4%B8%AD%E6%B7%BB%E5%8A%A0%E5%B1%9E%E6%80%A7"><span class="toc-number">1.1.2.</span> <span class="toc-text">向对象中添加属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%8F%96%E5%AF%B9%E8%B1%A1%E4%B8%AD%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="toc-number">1.1.3.</span> <span class="toc-text">读取对象中的属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E5%AF%B9%E8%B1%A1%E4%B8%AD%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="toc-number">1.1.4.</span> <span class="toc-text">删除对象中的属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8in%E6%A3%80%E6%9F%A5%E5%AF%B9%E8%B1%A1%E4%B8%AD%E6%98%AF%E5%90%A6%E5%90%AB%E6%9C%89%E6%8C%87%E5%AE%9A%E5%B1%9E%E6%80%A7"><span class="toc-number">1.1.5.</span> <span class="toc-text">使用in检查对象中是否含有指定属性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%92%8C%E5%BC%95%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.1.6.</span> <span class="toc-text">基本数据类型和引用数据类型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">创建对象的方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Object%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.1.</span> <span class="toc-text">Object构造函数模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E5%AD%97%E9%9D%A2%E9%87%8F%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.2.</span> <span class="toc-text">对象字面量模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.3.</span> <span class="toc-text">工厂模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.4.</span> <span class="toc-text">自定义构造函数模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-%E5%8E%9F%E5%9E%8B%E7%9A%84%E7%BB%84%E5%90%88%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.5.</span> <span class="toc-text">构造函数+原型的组合模式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B-prototype"><span class="toc-number">1.3.</span> <span class="toc-text">原型 prototype</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.3.1.</span> <span class="toc-text">基本介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hasOwnProperty-NaN"><span class="toc-number">1.3.2.</span> <span class="toc-text">hasOwnProperty()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E5%9E%8B%E9%93%BE"><span class="toc-number">1.3.3.</span> <span class="toc-text">原型链</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%A7%E6%89%BF"><span class="toc-number">1.4.</span> <span class="toc-text">继承</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E5%8E%9F%E5%9E%8B%E9%93%BE%E7%BB%A7%E6%89%BF"><span class="toc-number">1.4.1.</span> <span class="toc-text">通过原型链继承</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%97%E7%94%A8%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E7%BB%A7%E6%89%BF"><span class="toc-number">1.4.2.</span> <span class="toc-text">盗用构造函数继承</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E5%90%88%E7%BB%A7%E6%89%BF"><span class="toc-number">1.4.3.</span> <span class="toc-text">组合继承</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Date%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.5.</span> <span class="toc-text">Date对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#getDate"><span class="toc-number">1.5.1.</span> <span class="toc-text">getDate()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#getDay"><span class="toc-number">1.5.2.</span> <span class="toc-text">getDay()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#getMonth"><span class="toc-number">1.5.3.</span> <span class="toc-text">getMonth()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#getFullYear"><span class="toc-number">1.5.4.</span> <span class="toc-text">getFullYear()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#getTime"><span class="toc-number">1.5.5.</span> <span class="toc-text">getTime()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Date-now"><span class="toc-number">1.5.6.</span> <span class="toc-text">Date.now()</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Math%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.6.</span> <span class="toc-text">Math对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#abs"><span class="toc-number">1.6.1.</span> <span class="toc-text">abs()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Math-ceil"><span class="toc-number">1.6.2.</span> <span class="toc-text">Math.ceil()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Math-floor"><span class="toc-number">1.6.3.</span> <span class="toc-text">Math.floor()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Math-round"><span class="toc-number">1.6.4.</span> <span class="toc-text">Math.round()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Math-random"><span class="toc-number">1.6.5.</span> <span class="toc-text">Math.random()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#max"><span class="toc-number">1.6.6.</span> <span class="toc-text">max()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#min"><span class="toc-number">1.6.7.</span> <span class="toc-text">min()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Math-pow-x-y"><span class="toc-number">1.6.8.</span> <span class="toc-text">Math.pow(x,y)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Math-sqrt"><span class="toc-number">1.6.9.</span> <span class="toc-text">Math.sqrt()</span></a></li></ol></li></ol></li></ol>
+            </div>
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 62
+        </div>
+        <!-- search  -->
+    </div>
+    <div class="post-archive">
+            <div class="archive-year"> 2025 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/26</span>
+            <a class="archive-post-title" href="/2025/hello-world/">Hello World</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/26</span>
+            <a class="archive-post-title" href="/2025/other/%E5%B0%86Hexo%E6%8F%90%E4%BA%A4%E5%88%B0%E4%BB%93%E5%BA%93/">将Hexo提交到仓库</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/note/%E3%80%8A%E7%BD%AA%E4%B8%8E%E7%BD%9A%E3%80%8B/">《罪与罚》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/other/%E4%BB%8E%E7%8E%B0%E6%9C%89%E7%9A%84%E4%BB%93%E5%BA%93%E5%88%87%E6%8D%A2%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E4%BB%93%E5%BA%93/">从现有git仓库切换到另一个仓库</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/cesium/%E5%8F%AA%E6%98%BE%E7%A4%BA%E6%9F%90%E4%B8%AA%E5%8C%BA%E5%9F%9F/">仅显示某个行政区划（cesium 挖孔）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2025/cesium/%E7%AC%AC%E4%B8%80%E4%B8%AAcesium%E9%A1%B9%E7%9B%AE/">第一个cesium项目</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E6%B3%A2%E6%B5%AA/">使用着色器绘制波浪</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E5%9B%BE%E6%A1%88/">使用着色器绘制图案</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%9D%80%E8%89%B2%E5%99%A8%E7%A8%8B%E5%BA%8F/">第一个 shader 程序</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span>
+            <a class="archive-post-title" href="/2025/Threejs/Threejs%20Modules/">THREE Modules</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2025/other/%E5%A6%82%E4%BD%95%E7%A7%BB%E9%99%A4%20GitHub%20%E4%B8%AD%E7%9A%84%20contributors/">如何移除 GitHub 中的 contributors</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vuex/">Vuex</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E6%8F%92%E4%BB%B6/">Vue 插件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vue-router/">vue-router</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/mixin/">Mixin (混入)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E8%84%9A%E6%89%8B%E6%9E%B6/">Vue 脚手架</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/%E7%BB%84%E4%BB%B6%E9%97%B4%E9%80%9A%E4%BF%A1/">组件间通信</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/%E6%8C%89%E9%94%AE%E4%BF%AE%E9%A5%B0%E7%AC%A6/">按键修饰符</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span>
+            <a class="archive-post-title" href="/2022/vue/%E7%BB%84%E4%BB%B6/">Vue 组件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span>
+            <a class="archive-post-title" href="/2022/vue/%E8%BF%87%E6%B8%A1%E4%B8%8E%E5%8A%A8%E7%94%BB/">过渡与动画</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span>
+            <a class="archive-post-title" href="/2022/ES6/Promise/">Promise</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E6%8C%87%E4%BB%A4/">Vue 基本指令</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">Vue 生命周期</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/29</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E5%AE%9E%E4%BE%8B%E5%AF%B9%E8%B1%A1/">Vue实例对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span>
+            <a class="archive-post-title" href="/2022/ES6/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%89%A9%E5%B1%95/">字符串的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span>
+            <a class="archive-post-title" href="/2022/ES6/Moudle%20%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%AE%9E%E7%8E%B0/">Module 的加载实现</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/21</span>
+            <a class="archive-post-title" href="/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/">Module 模块化</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span>
+            <a class="archive-post-title" href="/2022/ES6/%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%89%A9%E5%B1%95/">对象的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2022/ES6/Class%E7%9A%84%E7%BB%A7%E6%89%BF/">Class的基本用法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2022/ES6/Class%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">Class的基本用法</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/18</span>
+            <a class="archive-post-title" href="/2021/ES6/set%E4%B8%8Emap/">set 与 map</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/05</span>
+            <a class="archive-post-title" href="/2021/Ajax/Ajax%E8%B7%A8%E5%9F%9F%E8%AF%B7%E6%B1%82/">Ajax跨域</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2021/Ajax/Fetch/">Fetch</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2021/Ajax/Axios/">Axios</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/22</span>
+            <a class="archive-post-title" href="/2021/Ajax/%E5%8E%9F%E7%94%9FAjax/">原生Ajax</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span>
+            <a class="archive-post-title" href="/2021/node/node/">node</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span>
+            <a class="archive-post-title" href="/2021/less/less/">less</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/11</span>
+            <a class="archive-post-title" href="/2021/ES6/Symbol/">Symbol</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/08</span>
+            <a class="archive-post-title" href="/2021/ES6/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A9%E5%B1%95/">函数的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2021/ES6/%E5%8F%98%E9%87%8F%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC/">变量解构赋值</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2021/ES6/ES6%E7%AE%80%E4%BB%8B/">ES6简介</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2021/ES6/let%E4%B8%8Econst/">let与const</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/26</span>
+            <a class="archive-post-title" href="/2021/%E5%AE%9E%E6%88%98/jQuery%E8%BD%AE%E6%92%AD%E5%9B%BE/">jQuery轮播图</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E6%8F%92%E4%BB%B6/">jQuery插件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E5%8A%A8%E7%94%BB/">jQuery动画</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/21</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E4%BA%8B%E4%BB%B6/">jQuery事件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E4%BF%AE%E6%94%B9DOM%E7%BB%93%E6%9E%84/">jQuery修改DOM结构</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E6%93%8D%E4%BD%9CDOM/">jQuery操作DOM元素</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E9%80%89%E6%8B%A9%E5%99%A8/">jQuery选择器</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E7%AE%80%E4%BB%8B/">jQuery介绍</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%AF%B9%E8%B1%A1/">对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E7%BA%BF%E7%A8%8B%E6%9C%BA%E5%88%B6%E4%B8%8E%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6/">线程机制与事件机制</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%87%BD%E6%95%B0/">函数</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/DOM/%E4%BA%8B%E4%BB%B6/">事件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%8F%98%E9%87%8F%E4%B8%8E%E4%BD%9C%E7%94%A8%E5%9F%9F/">变量与作用域</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/DOM/DOM/">DOM介绍</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/DOM/%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1/">事件对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">基本语法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E6%95%B0%E7%BB%84/">数组</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%96%B9%E6%B3%95/">字符串方法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">类型转换</a>
+        </li>
+            </ul>
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+            <span class="sidebar-tag-name" data-tags="Ajax">
+                <span class="iconfont-archer">&#xe606;</span>
+                Ajax
+            </span>
+            <span class="sidebar-tag-name" data-tags="JavaScript">
+                <span class="iconfont-archer">&#xe606;</span>
+                JavaScript
+            </span>
+            <span class="sidebar-tag-name" data-tags="ES6">
+                <span class="iconfont-archer">&#xe606;</span>
+                ES6
+            </span>
+            <span class="sidebar-tag-name" data-tags="javaScript">
+                <span class="iconfont-archer">&#xe606;</span>
+                javaScript
+            </span>
+            <span class="sidebar-tag-name" data-tags="DOM">
+                <span class="iconfont-archer">&#xe606;</span>
+                DOM
+            </span>
+            <span class="sidebar-tag-name" data-tags="Threejs">
+                <span class="iconfont-archer">&#xe606;</span>
+                Threejs
+            </span>
+            <span class="sidebar-tag-name" data-tags="cesium">
+                <span class="iconfont-archer">&#xe606;</span>
+                cesium
+            </span>
+            <span class="sidebar-tag-name" data-tags="vite">
+                <span class="iconfont-archer">&#xe606;</span>
+                vite
+            </span>
+            <span class="sidebar-tag-name" data-tags="jQuery">
+                <span class="iconfont-archer">&#xe606;</span>
+                jQuery
+            </span>
+            <span class="sidebar-tag-name" data-tags="less">
+                <span class="iconfont-archer">&#xe606;</span>
+                less
+            </span>
+            <span class="sidebar-tag-name" data-tags="node">
+                <span class="iconfont-archer">&#xe606;</span>
+                node
+            </span>
+            <span class="sidebar-tag-name" data-tags="shader">
+                <span class="iconfont-archer">&#xe606;</span>
+                shader
+            </span>
+            <span class="sidebar-tag-name" data-tags="Note">
+                <span class="iconfont-archer">&#xe606;</span>
+                Note
+            </span>
+            <span class="sidebar-tag-name" data-tags="git">
+                <span class="iconfont-archer">&#xe606;</span>
+                git
+            </span>
+            <span class="sidebar-tag-name" data-tags="Vue">
+                <span class="iconfont-archer">&#xe606;</span>
+                Vue
+            </span>
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+        <span class="sidebar-category-name" data-categories="Ajax">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Ajax
+        </span>
+        <span class="sidebar-category-name" data-categories="ES6">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ES6
+        </span>
+        <span class="sidebar-category-name" data-categories="DOM">
+            <span class="iconfont-archer">&#xe60a;</span>
+            DOM
+        </span>
+        <span class="sidebar-category-name" data-categories="Threejs">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Threejs
+        </span>
+        <span class="sidebar-category-name" data-categories="cesium">
+            <span class="iconfont-archer">&#xe60a;</span>
+            cesium
+        </span>
+        <span class="sidebar-category-name" data-categories="jQuery">
+            <span class="iconfont-archer">&#xe60a;</span>
+            jQuery
+        </span>
+        <span class="sidebar-category-name" data-categories="javaScript">
+            <span class="iconfont-archer">&#xe60a;</span>
+            javaScript
+        </span>
+        <span class="sidebar-category-name" data-categories="less">
+            <span class="iconfont-archer">&#xe60a;</span>
+            less
+        </span>
+        <span class="sidebar-category-name" data-categories="node">
+            <span class="iconfont-archer">&#xe60a;</span>
+            node
+        </span>
+        <span class="sidebar-category-name" data-categories="shader">
+            <span class="iconfont-archer">&#xe60a;</span>
+            shader
+        </span>
+        <span class="sidebar-category-name" data-categories="note">
+            <span class="iconfont-archer">&#xe60a;</span>
+            note
+        </span>
+        <span class="sidebar-category-name" data-categories="git">
+            <span class="iconfont-archer">&#xe60a;</span>
+            git
+        </span>
+        <span class="sidebar-category-name" data-categories="Vue">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Vue
+        </span>
+        <span class="sidebar-category-name" data-categories="实战">
+            <span class="iconfont-archer">&#xe60a;</span>
+            实战
+        </span>
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://sukksa.github.io",
+        root: siteMetaRoot,
+        author: "sukksa"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+        <!-- main func -->
+        <script src="/scripts/main.js"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" onload="window.Fancybox.bind('[data-fancybox]')" defer></script>
+        <!-- algolia -->
+        <!-- busuanzi -->
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+            <!-- <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script> -->
+        <!-- async load share.js -->
+            <script src="/scripts/share.js" async></script>
+        <!-- mermaid -->
+    </body>
+</html>

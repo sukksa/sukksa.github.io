@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+<!-- keywords -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="sukksa">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="sukksa">
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    <meta name="description" content="">
+    <meta name="description" content="Vue 基本指令v-textv-text，该指令的用法同原生 JS 中的 innerText，更新绑定元素内部的文本内容     &lt;div id&#x3D;&quot;div&quot;&gt;         &lt;span v-text&#x3D;&quot;msg&quot;&gt;&lt;&#x2F;span&gt;         &lt;!--不会有闪烁问题--&gt;&lt;!-- 和下面的一样 --&amp;g">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue 基本指令">
+<meta property="og:url" content="https://sukksa.github.io/2022/vue/Vue%E6%8C%87%E4%BB%A4/index.html">
+<meta property="og:site_name" content="sukksa blog">
+<meta property="og:description" content="Vue 基本指令v-textv-text，该指令的用法同原生 JS 中的 innerText，更新绑定元素内部的文本内容     &lt;div id&#x3D;&quot;div&quot;&gt;         &lt;span v-text&#x3D;&quot;msg&quot;&gt;&lt;&#x2F;span&gt;         &lt;!--不会有闪烁问题--&gt;&lt;!-- 和下面的一样 --&amp;g">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-09-17T15:23:42.000Z">
+<meta property="article:modified_time" content="2025-11-26T01:14:32.077Z">
+<meta property="article:author" content="sukksa">
+<meta property="article:tag" content="Vue">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    <title>Vue 基本指令 · sukksa&#39;s Studio</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .footer-fixed-btn,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(
+            -45deg,
+            #444 0,
+            #444 80px,
+            #333 80px,
+            #333 160px
+        );
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link id="stylesheet-fancybox" rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-base" rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-mobile" rel="preload" href="/css/mobile.css" as="style" onload="this.onload=null;this.rel='stylesheet';this.media='screen and (max-width: 960px)'">
+    <link id="stylesheet-theme-dark" rel="preload" href="/css/dark.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script"> -->
+    <link rel="preload" href="/lib/jquery.min.js" as="script">
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    <!-- 百度统计  -->
+    <!-- 谷歌统计  -->
+    <!-- Google tag (gtag.js) -->
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script> -->
+    <script src="/lib/jquery.min.js"></script>
+    <script src=""></script>
+    <!-- <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script> -->
+        <body class="post-body">
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        <div class="header-sidebar-menu">
+            <div style="padding-left: 1px;">&#xe775;</div>
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href="/">sukksa's Studio</a>
+        </span>
+    </div>
+    <!-- toggle banner -->
+    <div class="banner">
+        <div class="blog-title header-element">
+            <a href="/">sukksa&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">Vue 基本指令</a>
+        </div>
+    </div>
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- donate button -->
+
+    <!-- back to top button -->
+    <div class="footer-fixed-btn footer-fixed-btn--hidden back-top">
+        <div>&#xe639;</div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="    height:50vh;
+">
+    <!-- 主页  -->
+    <!-- 404页  -->
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.png)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+                Vue 基本指令
+            <!-- 404 -->
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            <!-- 404 -->
+        </p>
+        <!-- 文章页 meta -->
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                    <div class="post-intro-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="Vue">Vue</a>
+</div>
+
+                <!-- 文章字数统计 -->
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">3.9k</span>阅读时长: <span class="post-count reading-time">16 min</span></span>
+                    </div>
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2022-09-17</span>
+                    <!-- busuanzi -->
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    <!-- 文章分享 -->
+                    <!-- <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span> -->
+                </div>
+            </div>
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="Vue-基本指令"><a href="#Vue-基本指令" class="headerlink" title="Vue 基本指令"></a>Vue 基本指令</h1><h2 id="v-text"><a href="#v-text" class="headerlink" title="v-text"></a>v-text</h2><p><code>v-text</code>，该指令的用法同原生 JS 中的 <code>innerText</code>，更新绑定元素内部的文本内容</p>
+<pre><code>    &lt;div id=&quot;div&quot;&gt;
+        &lt;span v-text=&quot;msg&quot;&gt;&lt;/span&gt;
+        &lt;!--不会有闪烁问题--&gt;&lt;!-- 和下面的一样 --&gt;
+        &lt;span&gt;&#123;&#123;msg&#125;&#125;&lt;/span&gt;
+    &lt;/div&gt;
+</code></pre>
+<p>与插值语法的区别：<code>v-text</code>会替换掉节点中的内容，<code>&#123;&#123;xx&#125;&#125;</code>则不会。</p>
+<span id="more"></span>
+
+
+<h2 id="v-html"><a href="#v-html" class="headerlink" title="v-html"></a>v-html</h2><p><code>v-html</code>，该指令用法同原生 JS 的 <code>innerHTML</code>，可以解析内部的 HTML 标签</p>
+<h2 id="v-cloak"><a href="#v-cloak" class="headerlink" title="v-cloak"></a>v-cloak</h2><p><code>v-cloak</code>，该指令 CSS 一起使用，用于隐藏还没有开始编译的<code>&#123;&#123;&#125;&#125;</code>(插值表达式)直到编译完成，解决其闪烁问题<br>使用<code>css</code>配合<code>v-cloak</code>可以解决网速慢时页面展示出<code>&#123;&#123;xxx&#125;&#125;</code>的问题。</p>
+<p>本质是一个特殊属性，Vue实例创建完毕并接管容器后，会删掉<code>v-cloak</code>属性。</p>
+<h2 id="v-show"><a href="#v-show" class="headerlink" title="v-show"></a>v-show</h2><p><code>v-show</code>，该指令用于显示和隐藏 DOM 元素，<strong>根据表达式之真假值</strong>，切换元素的 <code>display</code> 属性值</p>
+<ul>
+<li><code>v-show</code> 值为<code>true</code>时显示</li>
+<li>当条件变化时该指令触发过渡效果，切换频率较高的场景</li>
+<li>不展示的DOM元素未被移除，仅仅是使用样式隐藏掉</li>
+<li><code>v-show</code> 指令不支持在<code>&lt;template&gt;&lt; /template&gt;</code>标签上写，也不支持 <code>v-else</code>，一般来说，<code>v-if</code> 有更高的切换开销，而 <code>v-show</code> 有更高的初始渲染开销。因此，如果需要非常频繁地切换，则使用 <code>v-show</code> 较好，如果在运行时条件很少改变，则使用 <code>v-if</code> 较好</li>
+</ul>
+<h2 id="v-if，v-else-与-v-else-if"><a href="#v-if，v-else-与-v-else-if" class="headerlink" title="v-if，v-else 与 v-else-if"></a>v-if，v-else 与 v-else-if</h2><p><code>v-if</code>，该指令用于是否渲染 DOM 元素，传入一个布尔值，通过该布尔值的条件改变实现对于 DOM 元素的删除和重建，该指令不同于 <code>v-show</code>，而是会完全销毁这个 DOM 元素<br>**注意:**当条件变化时该指令触发过渡效果</p>
+<p><code>v-else</code>， 该指令用于 不需要任何表达式 ，但是在该指令的前一个兄弟元素必须有 <code>v-if</code> 或者 <code>v-else-if</code> 指令，该指令的用处是为 <code>v-if</code> 或者 <code>v-else-if</code> 添加 <code>else</code> 的选项</p>
+<pre><code>    &lt;div v-if=&quot;Math.random() &gt; 0.5&quot;&gt;Now you see me&lt;/div&gt;
+    &lt;div v-else&gt;Now you don&#39;t&lt;/div&gt;
+</code></pre>
+<p><code>v-else-if</code>，该指令用于用于 <code>v-if</code> 的 <code>else if</code> 选项，前一个兄弟元素必须要 <code>v-if</code> 指令，并且该指令可以链式调用，也就是说可以调用多次 <code>v-else-if</code> 指令</p>
+<pre><code>    &lt;div v-if=&quot;type === &#39;A&#39;&quot;&gt;A&lt;/div&gt;
+    &lt;div v-else-if=&quot;type === &#39;B&#39;&quot;&gt;B&lt;/div&gt;
+    &lt;div v-else-if=&quot;type === &#39;C&#39;&quot;&gt;C&lt;/div&gt;
+    &lt;div v-else&gt;Not A/B/C&lt;/div&gt;
+</code></pre>
+<h2 id="v-for"><a href="#v-for" class="headerlink" title="v-for"></a>v-for</h2><p><code>v-for</code>该指令可以基于源数据多次渲染元素或模板块，用于循环遍历某个数组或对象，如果只用一个变量代表得到是数组或对象的 <code>value</code> 值</p>
+<p>**注意:在内部必须使用固定的 <code>item in/of items</code>**形式的特殊语法(下面的 <code>in</code> 都可以用 <code>of</code> 代替，并且更符合实际)</p>
+<pre><code>    &lt;ul id=&quot;example-1&quot;&gt;
+        &lt;li v-for=&quot;item in items&quot;&gt;
+            &#123;&#123; item.message &#125;&#125;
+            &lt;!--Foo Bar--&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;script&gt;
+        var example1 = new Vue(&#123;
+            el: &#39;#example-1&#39;，
+            data: &#123;
+                items: [&#123; message: &#39;Foo&#39; &#125;， &#123; message: &#39;Bar&#39; &#125;]，
+            &#125;，
+        &#125;)
+    &lt;/script&gt;
+</code></pre>
+<p><strong>遍历数组</strong>时其实还支持第二个变量，代表的是遍历数组的索引值</p>
+<pre><code>    &lt;ul id=&quot;example-2&quot;&gt;
+        &lt;li v-for=&quot;(item， index) in items&quot;&gt;
+            &#123;&#123; parentMessage &#125;&#125; - &#123;&#123; index &#125;&#125; - &#123;&#123; item.message &#125;&#125;
+            &lt;!--
+              Parent-0-Foo
+              Parent-1-Bar
+          --&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;script&gt;
+        var example2 = new Vue(&#123;
+            el: &#39;#example-2&#39;，
+            data: &#123;
+                parentMessage: &#39;Parent&#39;，
+                items: [&#123; message: &#39;Foo&#39; &#125;， &#123; message: &#39;Bar&#39; &#125;]，
+            &#125;，
+        &#125;)
+    &lt;/script&gt;
+</code></pre>
+<ul>
+<li><p><code>遍历对象</code>时还可以接受第二三两个变量，分别代表了键名和索引值</p>
+<pre><code>  &lt;ul id=&quot;v-for-object&quot; class=&quot;demo&quot;&gt;
+      &lt;div v-for=&quot;(value， key， index) in object&quot;&gt;
+          &#123;&#123; index &#125;&#125;. &#123;&#123; key &#125;&#125;: &#123;&#123; value &#125;&#125;
+          &lt;!--
+         0. firstName: John
+         1. lastName: Doe
+         2. age: 30
+        --&gt;
+      &lt;/div&gt;
+  &lt;/ul&gt;
+  &lt;script&gt;
+      new Vue(&#123;
+          el: &#39;#v-for-object&#39;，
+          data: &#123;
+              object: &#123;
+                  firstName: &#39;John&#39;，
+                  lastName: &#39;Doe&#39;，
+                  age: 30，
+              &#125;，
+          &#125;，
+      &#125;)
+  &lt;/script&gt;
+</code></pre>
+</li>
+</ul>
+<p>**注意:**当 <code>v-for</code> 和 <code>v-if</code> 处于同一节点时，<code>v-for</code> 的优先级比 <code>v-if</code> 更高，这意味着 <code>v-if</code> 将分别重复运行于每个 <code>v-for</code> 循环中，当想为仅有的一些项渲染节点时，这种优先级的机制会十分有用</p>
+<pre><code>    &lt;li v-for=&quot;todo in todos&quot; v-if=&quot;!todo.isComplete&quot;&gt;&#123;&#123; todo &#125;&#125;&lt;/li&gt;
+    &lt;!--
+        官方并不建议v-for和v-if指令一起使用，如果要使用这种方式，就进行条件渲染
+    --&gt;
+
+    &lt;!--
+        如果想有条件才继续v-for指令，则可以将v-if置于外层元素(或&lt;template&gt;)上
+    --&gt;
+    &lt;ul v-if=&quot;todos.length&quot;&gt;
+        &lt;li v-for=&quot;todo in todos&quot;&gt;&#123;&#123; todo &#125;&#125;&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;p v-else&gt;No todos left!&lt;/p&gt;
+    &lt;!--
+        条件渲染
+        v-if如果想只写一个而同时切换多个元素，可以在最外成包裹一层&lt;template&gt;&lt;/template&gt;，
+        在这个标签上面使用v-if，在渲染的时候并不会将&lt;template&gt;标签渲染出来
+    --&gt;
+</code></pre>
+<h2 id="v-bind"><a href="#v-bind" class="headerlink" title="v-bind"></a>v-bind</h2><p><code>v-bind</code>，该指令用于动态绑定一个或多个特性，该方法绑定的特性与普通的属性效果一致，只是其内部会被解析为 JS 表达式，而不是普通特性一样会是一个字符串<br><strong>修辞符</strong></p>
+<ul>
+<li><code>.prop</code>  被用于绑定 DOM 属性(<code>property</code>)</li>
+<li><code>.camel</code>  将短横线命名法特性名转换为驼峰命名法</li>
+<li><code>.sync</code>  会扩展成一个更新父组件绑定值的 <code>v-on</code> 侦听器</li>
+</ul>
+<p><strong>注意</strong></p>
+<ul>
+<li><p>该指令有其简写写法，通过冒号<code>:</code>来代替 <code>v-bind</code>:</p>
+</li>
+<li><p>该指令可以动态对绑定的参数进行改变，参数用<code>[]</code>括起来</p>
+<pre><code>  &lt;!-- 绑定一个属性 --&gt;
+  &lt;img v-bind:src=&quot;imageSrc&quot;&gt;
+  
+  &lt;!-- 动态特性名 (2.6.0+) --&gt;
+  &lt;button v-bind:[key]=&quot;value&quot;&gt;&lt;/button&gt;
+  
+  &lt;!-- 缩写 --&gt;
+  &lt;img :src=&quot;imageSrc&quot;&gt;
+  
+  &lt;!-- 动态特性名缩写 (2.6.0+) --&gt;
+  &lt;button :[key]=&quot;value&quot;&gt;&lt;/button&gt;
+  
+  &lt;!-- 内联字符串拼接 --&gt;
+  &lt;img :src=&quot;&#39;/path/to/images/&#39; + fileName&quot;&gt;
+  
+  &lt;!-- class 绑定 --&gt;
+  &lt;div :class=&quot;&#123; red: isRed &#125;&quot;&gt;&lt;/div&gt;&lt;!--对象通过布尔值确定是否传入class中--&gt;
+  &lt;div :class=&quot;[classA， classB]&quot;&gt;&lt;/div&gt;&lt;!--数组会直接将类名传入到class中--&gt;
+  &lt;div :class=&quot;[classA， &#123; classB: isB， classC: isC &#125;]&quot;&gt;&lt;!--对象和数组可以混用--&gt;
+  
+  &lt;!-- style 绑定 --&gt;
+  &lt;div :style=&quot;&#123; fontSize: size + &#39;px&#39; &#125;&quot;&gt;&lt;/div&gt;&lt;!--通过对象写入每个属性--&gt;
+  &lt;div :style=&quot;[styleObjectA， styleObjectB]&quot;&gt;&lt;/div&gt;&lt;!--数组的成员中实际是一个个对象--&gt;
+  
+  &lt;!-- 绑定一个有属性的对象 --&gt;
+  &lt;div v-bind=&quot;&#123; id: someProp， &#39;other-attr&#39;: otherProp &#125;&quot;&gt;&lt;/div&gt;
+  
+  &lt;!-- 通过 prop 修饰符绑定 DOM 属性 --&gt;
+  &lt;div v-bind:text-content.prop=&quot;text&quot;&gt;&lt;/div&gt;
+  
+  &lt;!-- prop 绑定。“prop”必须在 my-component 中声明。--&gt;
+  &lt;my-component :prop=&quot;someThing&quot;&gt;&lt;/my-component&gt;
+  
+  &lt;!-- 通过 $props 将父组件的 props 一起传给子组件 --&gt;
+  &lt;child-component v-bind=&quot;$props&quot;&gt;&lt;/child-component&gt;
+  
+  &lt;!-- XLink --&gt;
+  &lt;svg&gt;&lt;a :xlink:special=&quot;foo&quot;&gt;&lt;/a&gt;&lt;/svg&gt;
+</code></pre>
+</li>
+</ul>
+<h2 id="v-on"><a href="#v-on" class="headerlink" title="v-on"></a>v-on</h2><p><code>v-on</code>，该指令用于绑定监听事件，表达式可以是一个方法的名字或一个内联语句(也就是说在传入事件的时候可以选择加()可以选择不加()，推荐在传入参数的时候添加，在不传参的时候写事件名)</p>
+<p>**参数:**该指令的参数为原生 JS 中的事件名，只不过没有 <code>on</code></p>
+<p><strong>修饰符</strong></p>
+<ul>
+<li><p><code>.stop</code>  调用 <code>event.stopPropagation()</code>，会阻止本元素上的事件进行冒泡传播 </p>
+</li>
+<li><p><code>.prevent</code>  调用 <code>event.preventDefault()</code>，不能和<code>.passive</code> 一起使用 </p>
+</li>
+<li><p><code>.capture</code>  添加事件侦听器时使用 <code>capture</code> 模式，父元素会执行在子元素上进行的同名事件 </p>
+</li>
+<li><p><code>.self</code>  只当事件是从侦听器绑定的元素本身触发时才触发回调，只会真正自己触发的事件才会进行，和<code>.stop</code> 是有区别的，这个只会阻止自己的冒泡，但不会阻止该元素的父元素事件的冒泡进行 </p>
+</li>
+<li><p><code>.&#123;keyCode | keyAlias&#125;</code>  只当事件是从特定键触发时才触发回调，可以是表示键盘字符的数字或者表示特效事件的按键修饰符 </p>
+</li>
+<li><p><code>.native</code>  监听组件根元素的原生事件，一个 Vue 实例内部通过只能 v-on 只能绑定自己内部的方法，不能绑定原生 DOM 事件的方法，通过该修饰符就可以使用原生 JS 的事件方法了 </p>
+</li>
+<li><p><code>.once</code>  只触发一次回调 </p>
+</li>
+<li><p><code>.left</code>  只当点击鼠标左键时触发 </p>
+</li>
+<li><p><code>.right</code>  只当点击鼠标右键时触发 </p>
+</li>
+<li><p><code>.middle</code>  只当点击鼠标中键时触发 </p>
+</li>
+<li><p><code>.passive</code>  不用查找是否阻止默认事件的请求直接进行操作。<br>  如在滚动页面时的 <code>onscroll</code> 事件，每次触发事件时浏览器都会查看是否有阻止默认滚动事件的操作，但是如果本来就没有进行这个操作，在滚动的时候就会出现卡的的情况，因为在触发滚动条滚动时总会先查找请求，这个修饰符就是告诉浏览器不用进行查找直接进行滚动操作。因为作用的冲突，所以不能和<code>.prevent</code> 一起使用</p>
+</li>
+</ul>
+<p><strong>注意:</strong></p>
+<ul>
+<li><p>该指令有简写形式，通过<code>@</code>来代替 <code>v-on</code>:</p>
+</li>
+<li><p>该指令可以动态对绑定的参数进行改变，参数用中括号<code>[]</code>括起来</p>
+<pre><code>  &lt;!-- 方法处理器 --&gt;
+  &lt;button v-on:click=&quot;doThis&quot;&gt;&lt;/button&gt;
+  
+  &lt;!-- 动态事件 (2.6.0+) --&gt;
+  &lt;button v-on:[event]=&quot;doThis&quot;&gt;&lt;/button&gt;
+  
+  &lt;!-- 内联语句 --&gt;
+  &lt;button v-on:click=&quot;doThat(&#39;hello&#39;， $event)&quot;&gt;&lt;/button&gt;
+  
+  &lt;!-- 缩写 --&gt;
+  &lt;button @click=&quot;doThis&quot;&gt;&lt;/button&gt;
+  
+  &lt;!-- 动态事件缩写 (2.6.0+) --&gt;
+  &lt;button @[event]=&quot;doThis&quot;&gt;&lt;/button&gt;
+  
+  &lt;!-- 停止冒泡 --&gt;
+  &lt;button @click.stop=&quot;doThis&quot;&gt;&lt;/button&gt;
+  
+  &lt;!-- 阻止默认行为 --&gt;
+  &lt;button @click.prevent=&quot;doThis&quot;&gt;&lt;/button&gt;
+  
+  &lt;!-- 阻止默认行为，没有表达式 --&gt;
+  &lt;form @submit.prevent&gt;&lt;/form&gt;
+  
+  &lt;!--  串联修饰符 --&gt;
+  &lt;button @click.stop.prevent=&quot;doThis&quot;&gt;&lt;/button&gt;
+  
+  &lt;!-- 键修饰符，键别名 --&gt;
+  &lt;input @keyup.enter=&quot;onEnter&quot;&gt;
+  
+  &lt;!-- 键修饰符，键代码 --&gt;
+  &lt;input @keyup.13=&quot;onEnter&quot;&gt;
+  
+  &lt;!-- 点击回调只会触发一次 --&gt;
+  &lt;button v-on:click.once=&quot;doThis&quot;&gt;&lt;/button&gt;
+  
+  &lt;!-- 对象语法 (2.4.0+) --&gt;
+  &lt;button v-on=&quot;&#123; mousedown: doThis， mouseup: doThat &#125;&quot;&gt;&lt;/button&gt;
+  
+  &lt;!-- 组件中的自定义事件 --&gt;
+  &lt;my-component @my-event=&quot;handleThis&quot;&gt;&lt;/my-component&gt;
+  
+  &lt;!-- 内联语句 --&gt;
+  &lt;my-component @my-event=&quot;handleThis(123， $event)&quot;&gt;&lt;/my-component&gt;
+  
+  &lt;!-- 组件中的原生事件 --&gt;
+  &lt;my-component @click.native=&quot;onClick&quot;&gt;&lt;/my-component&gt;
+</code></pre>
+</li>
+</ul>
+<h2 id="v-model"><a href="#v-model" class="headerlink" title="v-model"></a>v-model</h2><p><code>v-model</code>，该指令用于表单内的标签进行双向的数据绑定 </p>
+<p>**注意:**v-model 只能绑定给 <code>input</code>，<code>textarea</code>，<code>select</code> 等表单元素和自定义的组件中，除此之外不能在其他标签上绑定<br><strong>与<code>v-bind</code>的区别</strong>：</p>
+<ul>
+<li><code>v-bind</code>是单向绑定，而<code>v-model</code>是双向绑定；</li>
+<li><code>v-bind</code>只能将<code>vue</code>中的数据同步到页面，而<code>v-model</code>不只能将<code>vue</code>中的数据同步到页面，还可以将用户数据的数据赋值给<code>vue</code>中的属性</li>
+</ul>
+<p><strong>修辞符</strong>: </p>
+<ul>
+<li><code>.lazy</code>  取代 input 监听 change 事件，默认在用户写入值时是使用的 <code>input</code> 事件，也就是当值输入完成后才会触发事件，而 change 是一些有输入法的语言在值还没有输入时就时刻监听改变 </li>
+<li><code>.number</code> 输入字符串转为有效的数字 </li>
+<li><code>.trim</code>  输入首尾空格过滤</li>
+</ul>
+<p><strong>用法</strong>: </p>
+<ul>
+<li><p><strong>如果是对 <code>input</code> 文本框和 <code>textarea</code> 绑定的</strong>，绑定的值会根据输入的内容，就是将内部的变量的值改为 value 中的值 </p>
+</li>
+<li><p>**如果是对复选框绑定的 **</p>
+<ul>
+<li><p><strong>如果绑定的变量不是数组</strong>，会根据复选框是否被选中而改变为 false 或 true，即使原来不是布尔值也会被强制转换为布尔值，这是因为双向的数据绑定，如果是有多个复选框，那么则会一起被选中或不选中 </p>
+</li>
+<li><p><strong>如果变量是数组</strong>，则会将 value 属性中的值(没有写 value 属性会传入 null)传入该数组作为其中的一个成员，Vue 会根据数组内部的值来判断是否选中该复选框(内部其实就是这样运作的)，如果 value 值一样会有多个复选框被选中，再次点击就会将该值删去然后取消复选框的选中</p>
+  <div id="example">
+      <input
+          type="checkbox"
+          id="jack"
+          value="Jack"
+          v-model="checkedNames"
+      />
+      <label for="jack">Jack</label>
+      <input
+          type="checkbox"
+          id="john"
+          value="John"
+          v-model="checkedNames"
+      />
+      <label for="john">John</label>
+      <input
+          type="checkbox"
+          id="mike"
+          value="Mike"
+          v-model="checkedNames"
+      />
+      <label for="mike">Mike</label>
+      <br />
+      <span>Checked names: </span>
+  </div>
+
+  <!--也可以在被选中和没被选择直接设置不同的值-->
+<p>  <input
+  type="checkbox"
+  v-model="toggle"
+  true-value="yes"
+  false-value="no"
+  /></p>
+  <!--
+      当选中时 vm.toggle === 'yes' 当没有选中时 vm.toggle === 'no'
+      注意:点击了才会改变值，如果没有点击过而变量本身有值的话就不会是fasle-value的值
+  --></li>
+</ul>
+</li>
+<li><p><strong>如果是对单选按钮进行绑定的</strong>，变量值会随着选中单选框的 <code>value</code> 值而变化，如果变量的值刚开始就是一个单选框的 <code>value</code> 值，那么就会自动选中这个单选框<br>  **注意: **</p>
+<ul>
+<li><p>单选框和复选框即使不写相同的 <code>name</code> 而只绑定了相同的 <code>modle</code> 也会认做是一类单选框的，但是最好还是将 <code>name</code> 写上 </p>
+</li>
+<li><p>单选框和复选框都可以通过 <code>v-bind:value</code> 绑定的 <code>value</code> 值来设置值自身的 <code>value</code> 值</p>
+</li>
+</ul>
+</li>
+<li><p>如果是对选择框 <code>select</code> 进行绑定的 ，绑定的变量的值会随着选中的 option 选项内部的内容而发生变化，如果 <code>option</code> 没有写 <code>value</code> 属性，该变量会变成<code>&lt;option&gt;&lt;/option&gt;</code>内部的值，如果有 <code>value</code> 属性，变量会变成 <code>value</code> 值而不是 <code>option</code> 的内容</p>
+<pre><code>  &lt;div id=&quot;example&quot;&gt;
+      &lt;select v-model=&quot;selected&quot;&gt;
+          &lt;option disabled value=&quot;&quot;&gt;请选择&lt;/option&gt;
+          &lt;option&gt;A&lt;/option&gt;
+          &lt;option&gt;B&lt;/option&gt;
+          &lt;option&gt;C&lt;/option&gt;
+      &lt;/select&gt;
+      &lt;span&gt;Selected: &#123;&#123; selected &#125;&#125;&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;script&gt;
+      new Vue(&#123;
+          el: &#39;#example&#39;，
+          data: &#123;
+              selected: &#39;&#39;，
+          &#125;，
+      &#125;)
+  &lt;/script&gt;
+</code></pre>
+</li>
+</ul>
+<p><strong>注意:</strong><br>在 s 多选时要绑定一个数组，将上方的 <code>selected:[]</code>，这样在选入的时候就能将每个选择的选项的值加到变量中去，还可以是一个对象，但是要通过 <code>v-bind:value</code> 绑定</p>
+<h2 id="v-pre"><a href="#v-pre" class="headerlink" title="v-pre"></a>v-pre</h2><p>该指令不接受任何表达式，使用了该指令的元素 Vue 在编译时跳过这个元素和它的子元素的编译过程，可以用来显示原始的模板<code>&#123;&#123;&#125;&#125;</code>标签，跳过大量没有指令的节点会加快编译</p>
+<h2 id="v-once"><a href="#v-once" class="headerlink" title="v-once"></a>v-once</h2><p>该指令不需要表达式，<code>只渲染元素和组件一次</code>。随后的重新渲染，元素&#x2F;组件及其所有的子节点将被视为静态内容并跳过。<br>以后数据的改变不会引起v-once所在结构的更新，这可以用于优化更新性能</p>
+<ul>
+<li>跳过其所在节点的编译过程。</li>
+<li>可利用它跳过：没有使用指令语法、没有使用插值语法的节点，会加快编译。</li>
+</ul>
+
+    </article>
+    <!-- license -->
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://sukksa.github.io">sukksa</a>
+            <p>原文链接：<a href="https://sukksa.github.io/2022/vue/Vue%E6%8C%87%E4%BB%A4/">https://sukksa.github.io/2022/vue/Vue%E6%8C%87%E4%BB%A4/</a>
+            <!-- <p>发表日期：<a href="https://sukksa.github.io/2022/vue/Vue%E6%8C%87%E4%BB%A4/">September 17th 2022, 11:23:42 pm</a>
+            <p>更新日期：<a href="https://sukksa.github.io/2022/vue/Vue%E6%8C%87%E4%BB%A4/">November 26th 2025, 9:14:32 am</a> -->
+            <p>发表日期：<a href="https://sukksa.github.io/2022/vue/Vue%E6%8C%87%E4%BB%A4/">2022-09-17 23:23:42</a>
+            <p>更新日期：<a href="https://sukksa.github.io/2022/vue/Vue%E6%8C%87%E4%BB%A4/">2025-11-26 09:14:32</a>
+        </div>
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2022/ES6/Promise/" title="Promise">
+                    <div class="nextTitle">Promise</div>
+                </a>
+        </li>
+        <li class="previous">
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2022/vue/Vue%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/" title="Vue 生命周期">
+                    <div class="prevTitle">Vue 生命周期</div>
+                </a>
+        </li>
+    </ul>
+    <!-- comment -->
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+            
+            
+            
+            <!-- utteranc评论 -->
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+            
+            
+            
+        </div>
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    <!-- Mathjax -->
+</main>
+
+                <!-- profile -->
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+        <div class="social">
+                            <a href="mailto:2450553074@qq.com" class="iconfont-archer email" title="email" ></a>
+                <a href="//github.com/sukksa" class="iconfont-archer github" target="_blank" title="github"></a>
+                <a href="https://space.bilibili.com/74396531" class="iconfont-archer bilibili" target="_blank" title="bilibili"></a>
+
+        </div>
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    <!-- 不蒜子  -->
+        <div class="busuanzi-container">
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+        </div>
+</footer>
+
+        </div>
+        <!-- toc -->
+            <div class="toc-wrapper toc-wrapper-loding" style=    top:50vh;
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Vue-%E5%9F%BA%E6%9C%AC%E6%8C%87%E4%BB%A4"><span class="toc-number">1.</span> <span class="toc-text">Vue 基本指令</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#v-text"><span class="toc-number">1.1.</span> <span class="toc-text">v-text</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#v-html"><span class="toc-number">1.2.</span> <span class="toc-text">v-html</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#v-cloak"><span class="toc-number">1.3.</span> <span class="toc-text">v-cloak</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#v-show"><span class="toc-number">1.4.</span> <span class="toc-text">v-show</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#v-if%EF%BC%8Cv-else-%E4%B8%8E-v-else-if"><span class="toc-number">1.5.</span> <span class="toc-text">v-if，v-else 与 v-else-if</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#v-for"><span class="toc-number">1.6.</span> <span class="toc-text">v-for</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#v-bind"><span class="toc-number">1.7.</span> <span class="toc-text">v-bind</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#v-on"><span class="toc-number">1.8.</span> <span class="toc-text">v-on</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#v-model"><span class="toc-number">1.9.</span> <span class="toc-text">v-model</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#v-pre"><span class="toc-number">1.10.</span> <span class="toc-text">v-pre</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#v-once"><span class="toc-number">1.11.</span> <span class="toc-text">v-once</span></a></li></ol></li></ol>
+            </div>
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 62
+        </div>
+        <!-- search  -->
+    </div>
+    <div class="post-archive">
+            <div class="archive-year"> 2025 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/26</span>
+            <a class="archive-post-title" href="/2025/hello-world/">Hello World</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/26</span>
+            <a class="archive-post-title" href="/2025/other/%E5%B0%86Hexo%E6%8F%90%E4%BA%A4%E5%88%B0%E4%BB%93%E5%BA%93/">将Hexo提交到仓库</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/note/%E3%80%8A%E7%BD%AA%E4%B8%8E%E7%BD%9A%E3%80%8B/">《罪与罚》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/other/%E4%BB%8E%E7%8E%B0%E6%9C%89%E7%9A%84%E4%BB%93%E5%BA%93%E5%88%87%E6%8D%A2%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E4%BB%93%E5%BA%93/">从现有git仓库切换到另一个仓库</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/cesium/%E5%8F%AA%E6%98%BE%E7%A4%BA%E6%9F%90%E4%B8%AA%E5%8C%BA%E5%9F%9F/">仅显示某个行政区划（cesium 挖孔）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2025/cesium/%E7%AC%AC%E4%B8%80%E4%B8%AAcesium%E9%A1%B9%E7%9B%AE/">第一个cesium项目</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E6%B3%A2%E6%B5%AA/">使用着色器绘制波浪</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E5%9B%BE%E6%A1%88/">使用着色器绘制图案</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%9D%80%E8%89%B2%E5%99%A8%E7%A8%8B%E5%BA%8F/">第一个 shader 程序</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span>
+            <a class="archive-post-title" href="/2025/Threejs/Threejs%20Modules/">THREE Modules</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2025/other/%E5%A6%82%E4%BD%95%E7%A7%BB%E9%99%A4%20GitHub%20%E4%B8%AD%E7%9A%84%20contributors/">如何移除 GitHub 中的 contributors</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vuex/">Vuex</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E6%8F%92%E4%BB%B6/">Vue 插件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vue-router/">vue-router</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/mixin/">Mixin (混入)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E8%84%9A%E6%89%8B%E6%9E%B6/">Vue 脚手架</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/%E7%BB%84%E4%BB%B6%E9%97%B4%E9%80%9A%E4%BF%A1/">组件间通信</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/%E6%8C%89%E9%94%AE%E4%BF%AE%E9%A5%B0%E7%AC%A6/">按键修饰符</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span>
+            <a class="archive-post-title" href="/2022/vue/%E7%BB%84%E4%BB%B6/">Vue 组件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span>
+            <a class="archive-post-title" href="/2022/vue/%E8%BF%87%E6%B8%A1%E4%B8%8E%E5%8A%A8%E7%94%BB/">过渡与动画</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span>
+            <a class="archive-post-title" href="/2022/ES6/Promise/">Promise</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E6%8C%87%E4%BB%A4/">Vue 基本指令</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">Vue 生命周期</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/29</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E5%AE%9E%E4%BE%8B%E5%AF%B9%E8%B1%A1/">Vue实例对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span>
+            <a class="archive-post-title" href="/2022/ES6/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%89%A9%E5%B1%95/">字符串的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span>
+            <a class="archive-post-title" href="/2022/ES6/Moudle%20%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%AE%9E%E7%8E%B0/">Module 的加载实现</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/21</span>
+            <a class="archive-post-title" href="/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/">Module 模块化</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span>
+            <a class="archive-post-title" href="/2022/ES6/%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%89%A9%E5%B1%95/">对象的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2022/ES6/Class%E7%9A%84%E7%BB%A7%E6%89%BF/">Class的基本用法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2022/ES6/Class%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">Class的基本用法</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/18</span>
+            <a class="archive-post-title" href="/2021/ES6/set%E4%B8%8Emap/">set 与 map</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/05</span>
+            <a class="archive-post-title" href="/2021/Ajax/Ajax%E8%B7%A8%E5%9F%9F%E8%AF%B7%E6%B1%82/">Ajax跨域</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2021/Ajax/Fetch/">Fetch</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2021/Ajax/Axios/">Axios</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/22</span>
+            <a class="archive-post-title" href="/2021/Ajax/%E5%8E%9F%E7%94%9FAjax/">原生Ajax</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span>
+            <a class="archive-post-title" href="/2021/node/node/">node</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span>
+            <a class="archive-post-title" href="/2021/less/less/">less</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/11</span>
+            <a class="archive-post-title" href="/2021/ES6/Symbol/">Symbol</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/08</span>
+            <a class="archive-post-title" href="/2021/ES6/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A9%E5%B1%95/">函数的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2021/ES6/%E5%8F%98%E9%87%8F%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC/">变量解构赋值</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2021/ES6/ES6%E7%AE%80%E4%BB%8B/">ES6简介</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2021/ES6/let%E4%B8%8Econst/">let与const</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/26</span>
+            <a class="archive-post-title" href="/2021/%E5%AE%9E%E6%88%98/jQuery%E8%BD%AE%E6%92%AD%E5%9B%BE/">jQuery轮播图</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E6%8F%92%E4%BB%B6/">jQuery插件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E5%8A%A8%E7%94%BB/">jQuery动画</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/21</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E4%BA%8B%E4%BB%B6/">jQuery事件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E4%BF%AE%E6%94%B9DOM%E7%BB%93%E6%9E%84/">jQuery修改DOM结构</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E6%93%8D%E4%BD%9CDOM/">jQuery操作DOM元素</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E9%80%89%E6%8B%A9%E5%99%A8/">jQuery选择器</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E7%AE%80%E4%BB%8B/">jQuery介绍</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%AF%B9%E8%B1%A1/">对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E7%BA%BF%E7%A8%8B%E6%9C%BA%E5%88%B6%E4%B8%8E%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6/">线程机制与事件机制</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%87%BD%E6%95%B0/">函数</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/DOM/%E4%BA%8B%E4%BB%B6/">事件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%8F%98%E9%87%8F%E4%B8%8E%E4%BD%9C%E7%94%A8%E5%9F%9F/">变量与作用域</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/DOM/DOM/">DOM介绍</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/DOM/%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1/">事件对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">基本语法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E6%95%B0%E7%BB%84/">数组</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%96%B9%E6%B3%95/">字符串方法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">类型转换</a>
+        </li>
+            </ul>
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+            <span class="sidebar-tag-name" data-tags="Ajax">
+                <span class="iconfont-archer">&#xe606;</span>
+                Ajax
+            </span>
+            <span class="sidebar-tag-name" data-tags="JavaScript">
+                <span class="iconfont-archer">&#xe606;</span>
+                JavaScript
+            </span>
+            <span class="sidebar-tag-name" data-tags="ES6">
+                <span class="iconfont-archer">&#xe606;</span>
+                ES6
+            </span>
+            <span class="sidebar-tag-name" data-tags="javaScript">
+                <span class="iconfont-archer">&#xe606;</span>
+                javaScript
+            </span>
+            <span class="sidebar-tag-name" data-tags="DOM">
+                <span class="iconfont-archer">&#xe606;</span>
+                DOM
+            </span>
+            <span class="sidebar-tag-name" data-tags="Threejs">
+                <span class="iconfont-archer">&#xe606;</span>
+                Threejs
+            </span>
+            <span class="sidebar-tag-name" data-tags="cesium">
+                <span class="iconfont-archer">&#xe606;</span>
+                cesium
+            </span>
+            <span class="sidebar-tag-name" data-tags="vite">
+                <span class="iconfont-archer">&#xe606;</span>
+                vite
+            </span>
+            <span class="sidebar-tag-name" data-tags="jQuery">
+                <span class="iconfont-archer">&#xe606;</span>
+                jQuery
+            </span>
+            <span class="sidebar-tag-name" data-tags="less">
+                <span class="iconfont-archer">&#xe606;</span>
+                less
+            </span>
+            <span class="sidebar-tag-name" data-tags="node">
+                <span class="iconfont-archer">&#xe606;</span>
+                node
+            </span>
+            <span class="sidebar-tag-name" data-tags="shader">
+                <span class="iconfont-archer">&#xe606;</span>
+                shader
+            </span>
+            <span class="sidebar-tag-name" data-tags="Note">
+                <span class="iconfont-archer">&#xe606;</span>
+                Note
+            </span>
+            <span class="sidebar-tag-name" data-tags="git">
+                <span class="iconfont-archer">&#xe606;</span>
+                git
+            </span>
+            <span class="sidebar-tag-name" data-tags="Vue">
+                <span class="iconfont-archer">&#xe606;</span>
+                Vue
+            </span>
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+        <span class="sidebar-category-name" data-categories="Ajax">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Ajax
+        </span>
+        <span class="sidebar-category-name" data-categories="ES6">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ES6
+        </span>
+        <span class="sidebar-category-name" data-categories="DOM">
+            <span class="iconfont-archer">&#xe60a;</span>
+            DOM
+        </span>
+        <span class="sidebar-category-name" data-categories="Threejs">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Threejs
+        </span>
+        <span class="sidebar-category-name" data-categories="cesium">
+            <span class="iconfont-archer">&#xe60a;</span>
+            cesium
+        </span>
+        <span class="sidebar-category-name" data-categories="jQuery">
+            <span class="iconfont-archer">&#xe60a;</span>
+            jQuery
+        </span>
+        <span class="sidebar-category-name" data-categories="javaScript">
+            <span class="iconfont-archer">&#xe60a;</span>
+            javaScript
+        </span>
+        <span class="sidebar-category-name" data-categories="less">
+            <span class="iconfont-archer">&#xe60a;</span>
+            less
+        </span>
+        <span class="sidebar-category-name" data-categories="node">
+            <span class="iconfont-archer">&#xe60a;</span>
+            node
+        </span>
+        <span class="sidebar-category-name" data-categories="shader">
+            <span class="iconfont-archer">&#xe60a;</span>
+            shader
+        </span>
+        <span class="sidebar-category-name" data-categories="note">
+            <span class="iconfont-archer">&#xe60a;</span>
+            note
+        </span>
+        <span class="sidebar-category-name" data-categories="git">
+            <span class="iconfont-archer">&#xe60a;</span>
+            git
+        </span>
+        <span class="sidebar-category-name" data-categories="Vue">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Vue
+        </span>
+        <span class="sidebar-category-name" data-categories="实战">
+            <span class="iconfont-archer">&#xe60a;</span>
+            实战
+        </span>
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://sukksa.github.io",
+        root: siteMetaRoot,
+        author: "sukksa"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+        <!-- main func -->
+        <script src="/scripts/main.js"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" onload="window.Fancybox.bind('[data-fancybox]')" defer></script>
+        <!-- algolia -->
+        <!-- busuanzi -->
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+            <!-- <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script> -->
+        <!-- async load share.js -->
+            <script src="/scripts/share.js" async></script>
+        <!-- mermaid -->
+    </body>
+</html>

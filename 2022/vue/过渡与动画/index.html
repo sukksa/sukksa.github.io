@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+<!-- keywords -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="sukksa">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="sukksa">
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    <meta name="description" content="">
+    <meta name="description" content="过渡与动画Vue 中可以通过transition组件来实现过渡效果 Vue 在插入,更新或者移除 DOM 时,提供多种不同方式的应用过渡效果  在 CSS 过渡和动画中自动应用 class 可以配合使用第三方 CSS 动画库，如 Animate.css 在过渡钩子函数中使用 JavaScript 直接操作 DOM 可以配合使用第三方 JavaScript 动画库，如 Velocity.js">
+<meta property="og:type" content="article">
+<meta property="og:title" content="过渡与动画">
+<meta property="og:url" content="https://sukksa.github.io/2022/vue/%E8%BF%87%E6%B8%A1%E4%B8%8E%E5%8A%A8%E7%94%BB/index.html">
+<meta property="og:site_name" content="sukksa blog">
+<meta property="og:description" content="过渡与动画Vue 中可以通过transition组件来实现过渡效果 Vue 在插入,更新或者移除 DOM 时,提供多种不同方式的应用过渡效果  在 CSS 过渡和动画中自动应用 class 可以配合使用第三方 CSS 动画库，如 Animate.css 在过渡钩子函数中使用 JavaScript 直接操作 DOM 可以配合使用第三方 JavaScript 动画库，如 Velocity.js">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-10-05T12:35:27.000Z">
+<meta property="article:modified_time" content="2025-11-26T01:14:32.079Z">
+<meta property="article:author" content="sukksa">
+<meta property="article:tag" content="Vue">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    <title>过渡与动画 · sukksa&#39;s Studio</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .footer-fixed-btn,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(
+            -45deg,
+            #444 0,
+            #444 80px,
+            #333 80px,
+            #333 160px
+        );
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link id="stylesheet-fancybox" rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-base" rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-mobile" rel="preload" href="/css/mobile.css" as="style" onload="this.onload=null;this.rel='stylesheet';this.media='screen and (max-width: 960px)'">
+    <link id="stylesheet-theme-dark" rel="preload" href="/css/dark.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script"> -->
+    <link rel="preload" href="/lib/jquery.min.js" as="script">
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    <!-- 百度统计  -->
+    <!-- 谷歌统计  -->
+    <!-- Google tag (gtag.js) -->
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script> -->
+    <script src="/lib/jquery.min.js"></script>
+    <script src=""></script>
+    <!-- <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script> -->
+        <body class="post-body">
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        <div class="header-sidebar-menu">
+            <div style="padding-left: 1px;">&#xe775;</div>
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href="/">sukksa's Studio</a>
+        </span>
+    </div>
+    <!-- toggle banner -->
+    <div class="banner">
+        <div class="blog-title header-element">
+            <a href="/">sukksa&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">过渡与动画</a>
+        </div>
+    </div>
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- donate button -->
+
+    <!-- back to top button -->
+    <div class="footer-fixed-btn footer-fixed-btn--hidden back-top">
+        <div>&#xe639;</div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="    height:50vh;
+">
+    <!-- 主页  -->
+    <!-- 404页  -->
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.png)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+                过渡与动画
+            <!-- 404 -->
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            <!-- 404 -->
+        </p>
+        <!-- 文章页 meta -->
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                    <div class="post-intro-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="Vue">Vue</a>
+</div>
+
+                <!-- 文章字数统计 -->
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">3.4k</span>阅读时长: <span class="post-count reading-time">16 min</span></span>
+                    </div>
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2022-10-05</span>
+                    <!-- busuanzi -->
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    <!-- 文章分享 -->
+                    <!-- <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span> -->
+                </div>
+            </div>
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="过渡与动画"><a href="#过渡与动画" class="headerlink" title="过渡与动画"></a>过渡与动画</h1><p><strong>Vue 中可以通过<code>transition</code>组件来实现过渡效果 Vue 在插入,更新或者移除 DOM 时,提供多种不同方式的应用过渡效果</strong></p>
+<ul>
+<li>在 CSS 过渡和动画中自动应用 class</li>
+<li>可以配合使用第三方 CSS 动画库，如 Animate.css</li>
+<li>在过渡钩子函数中使用 JavaScript 直接操作 DOM</li>
+<li>可以配合使用第三方 JavaScript 动画库，如 Velocity.js</li>
+</ul>
+<span id="more"></span>
+
+<h2 id="过渡的类名"><a href="#过渡的类名" class="headerlink" title="过渡的类名"></a>过渡的类名</h2><h3 id="自身实现的类名"><a href="#自身实现的类名" class="headerlink" title="自身实现的类名"></a>自身实现的类名</h3><p><strong>这些类名是 transition 组件中自定好的,在使用的时候只需要在 CSS 中写入特定的类名和样式就可以了</strong></p>
+<ul>
+<li><code>v-enter</code>：定义进入过渡的开始状态。在元素被插入之前生效，此时元素还没有进入过渡，在元素被插入之后的下一帧移除</li>
+<li><code>v-enter-active</code>：定义进入过渡生效时的状态。在整个进入过渡的阶段中应用，在元素被插入之前生效，在过渡&#x2F;动画完成之后移除。这个类可以被用来定义进入过渡的过程时间，延迟和曲线函数</li>
+<li><code>v-enter-to</code>: 定义进入过渡的结束状态。在元素被插入之后下一帧生效 (与此同时 <code>v-enter</code> 被移除)，在过渡&#x2F;动画完成之后移除</li>
+<li><code>v-leave</code>: 定义离开过渡的开始状态。在离开过渡被触发时立刻生效，下一帧被移除</li>
+<li><code>v-leave-active</code>：定义离开过渡生效时的状态。在整个离开过渡的阶段中应用，在离开过渡被触发时立刻生效，在过渡&#x2F;动画完成之后移除。这个类可以被用来定义离开过渡的过程时间，延迟和曲线函数</li>
+<li><code>v-leave-to</code>:定义离开过渡的结束状态。在离开过渡被触发之后下一帧生效 (与此同时 <code>v-leave</code> 被删除)，在过渡&#x2F;动画完成之后移除</li>
+</ul>
+<p><strong>注:</strong></p>
+<ul>
+<li><strong>一般都是使用 <code>v-enter</code>,<code>v-leave-to</code> 与 <code>v-enter-active</code> 和 <code>v-leave-active</code> 的组合</strong></li>
+<li>对于这些在过渡中切换的类名来说,如果使用一个没有名字的 <code>&lt;transition&gt;</code>,则 <code>v-</code> 是这些类名的默认前缀,如果使用了 <code>&lt;transition name=&quot;my-transition&quot;&gt;</code>,那么 <code>v-enter</code> 会替换为 <code>my-transition-enter</code>,通过这个可以绑定:<code>name</code> 实现动态过渡的效果</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">&lt;style&gt;</span><br><span class="line">	// 动画进入，离开的样式</span><br><span class="line">    .fade-enter-active,</span><br><span class="line">    .fade-leave-active &#123;</span><br><span class="line">        transition: opacity 0.5s;</span><br><span class="line">    &#125;</span><br><span class="line">    // 动画进入的起点，动画离开的终点</span><br><span class="line">    .fade-enter,</span><br><span class="line">    .fade-leave-to &#123;</span><br><span class="line">        opacity: 0;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line"></span><br><span class="line">&lt;div id=&quot;demo&quot;&gt;</span><br><span class="line">    &lt;button v-on:click=&quot;show = !show&quot;&gt;Toggle&lt;/button&gt;</span><br><span class="line">    &lt;transition name=&quot;fade&quot;&gt;</span><br><span class="line">        &lt;p v-if=&quot;show&quot;&gt;hello&lt;/p&gt;</span><br><span class="line">    &lt;/transition&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    new Vue(&#123;</span><br><span class="line">        el: &#x27;#demo&#x27;,</span><br><span class="line">        data: &#123;</span><br><span class="line">            show: true,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>动画效果同过渡效果，只是在动画中 <code>v-enter</code> 这个类名在插入 DOM 中后不会立刻被删除，而是在<code>animationend</code>事件触发时才会被删除</p>
+<h3 id="自定义过渡的类名"><a href="#自定义过渡的类名" class="headerlink" title="自定义过渡的类名"></a>自定义过渡的类名</h3><p><strong>可以通过引入第三方库实现过渡效果,这时需要使用自定义过渡的类名来加第三方库的过渡效果使用</strong></p>
+<p>可以通过以下特性来自定义过渡类名,这些类名分别也对应着上方的执行时期,它们的优先级高于普通的类名</p>
+<ul>
+<li><code>enter-class</code></li>
+<li><code>enter-active-class</code></li>
+<li><code>enter-to-class</code></li>
+<li><code>leave-class</code></li>
+<li><code>leave-active-class</code></li>
+<li><code>leave-to-class</code></li>
+</ul>
+<p><strong>在这些自定义的属性中可以写入要引入的第三方库的 CSS 样式就能实现效果</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;link</span><br><span class="line">    href=&quot;https://cdn.jsdelivr.net/npm/animate.css@3.5.1&quot;</span><br><span class="line">    rel=&quot;stylesheet&quot;</span><br><span class="line">    type=&quot;text/css&quot;</span><br><span class="line">/&gt;</span><br><span class="line"></span><br><span class="line">&lt;div id=&quot;example&quot;&gt;</span><br><span class="line">    &lt;button @click=&quot;show = !show&quot;&gt;Toggle render&lt;/button&gt;</span><br><span class="line">    &lt;transition</span><br><span class="line">        name=&quot;custom-classes-transition&quot;</span><br><span class="line">        enter-active-class=&quot;animated tada&quot;</span><br><span class="line">        leave-active-class=&quot;animated bounceOutRight&quot;</span><br><span class="line">    &gt;</span><br><span class="line">        &lt;p v-if=&quot;show&quot;&gt;hello&lt;/p&gt;</span><br><span class="line">    &lt;/transition&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">    new Vue(&#123;</span><br><span class="line">        el: &#x27;#example&#x27;,</span><br><span class="line">        data: &#123;</span><br><span class="line">            show: true,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;)</span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot;&gt;</span><br><span class="line">    &lt;head&gt;</span><br><span class="line">        &lt;meta charset=&quot;UTF-8&quot; /&gt;</span><br><span class="line">        &lt;title&gt;过渡与动画&lt;/title&gt;</span><br><span class="line">        &lt;style&gt;</span><br><span class="line">            .fade1-enter,</span><br><span class="line">            .fade1-leave-to &#123;</span><br><span class="line">                opacity: 0;</span><br><span class="line">            &#125;</span><br><span class="line">            .fade1-enter-active,</span><br><span class="line">            .fade1-leave-active &#123;</span><br><span class="line">                transition: opacity 1s;</span><br><span class="line">            &#125;</span><br><span class="line">            .fade2-enter &#123;</span><br><span class="line">                opacity: 0;</span><br><span class="line">                transform: translateX(-20px);</span><br><span class="line">            &#125;</span><br><span class="line">            .fade2-leave-to &#123;</span><br><span class="line">                opacity: 0;</span><br><span class="line">                transform: translateX(20px);</span><br><span class="line">            &#125;</span><br><span class="line">            .fade2-enter-active,</span><br><span class="line">            .fade2-leave-active &#123;</span><br><span class="line">                transition: all 3s;</span><br><span class="line">            &#125;</span><br><span class="line">        &lt;/style&gt;</span><br><span class="line">    &lt;/head&gt;</span><br><span class="line">    &lt;body&gt;</span><br><span class="line">        &lt;!--</span><br><span class="line">        1. vue动画的理解</span><br><span class="line">            操作css的transition或animation</span><br><span class="line">            vue会给目标元素添加/移除特定的class</span><br><span class="line">        2. 基本过渡动画的编码</span><br><span class="line">            1). 在目标元素外包裹&lt;transition name=&quot;xxx&quot;&gt;</span><br><span class="line">            2). 定义class样式</span><br><span class="line">                1&gt;. 指定过渡样式: transition</span><br><span class="line">                2&gt;. 指定隐藏时的样式: opacity/其它</span><br><span class="line">        3. 过渡的类名</span><br><span class="line">            xxx-enter-active: 指定显示的transition</span><br><span class="line">            xxx-leave-active: 指定隐藏的transition</span><br><span class="line">            xxx-enter: 指定隐藏时的样式</span><br><span class="line">    --&gt;</span><br><span class="line">        &lt;div id=&quot;app1&quot;&gt;</span><br><span class="line">            &lt;button @click=&quot;isShow = !isShow&quot;&gt;Destroy&lt;/button&gt;</span><br><span class="line">            &lt;transition name=&quot;fade1&quot;&gt;</span><br><span class="line">                &lt;p v-if=&quot;isShow&quot;&gt;Hello&lt;/p&gt;</span><br><span class="line">            &lt;/transition&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">        &lt;div id=&quot;app2&quot;&gt;</span><br><span class="line">            &lt;button @click=&quot;isShow = !isShow&quot;&gt;Destroy&lt;/button&gt;</span><br><span class="line">            &lt;transition name=&quot;fade2&quot;&gt;</span><br><span class="line">                &lt;p v-if=&quot;isShow&quot;&gt;Hello&lt;/p&gt;</span><br><span class="line">            &lt;/transition&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">        &lt;script type=&quot;text/javascript&quot; src=&quot;./vue.js&quot;&gt;&lt;/script&gt;</span><br><span class="line">        &lt;script type=&quot;text/javascript&quot;&gt;</span><br><span class="line">            new Vue(&#123;</span><br><span class="line">                el: &#x27;#app1&#x27;,</span><br><span class="line">                data() &#123;</span><br><span class="line">                    return &#123;</span><br><span class="line">                        isShow: &#x27;false&#x27;,</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;,</span><br><span class="line">            &#125;)</span><br><span class="line">            new Vue(&#123;</span><br><span class="line">                el: &#x27;#app2&#x27;,</span><br><span class="line">                data() &#123;</span><br><span class="line">                    return &#123;</span><br><span class="line">                        isShow: &#x27;false&#x27;,</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;,</span><br><span class="line">            &#125;)</span><br><span class="line">        &lt;/script&gt;</span><br><span class="line">    &lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="初始渲染过渡"><a href="#初始渲染过渡" class="headerlink" title="初始渲染过渡"></a>初始渲染过渡</h2><p><strong>为<code>transition</code>组件添加一个简单的属性 appear 就能够实现在刚开始渲染的时候就使用一次<code>enter-active-class</code>来实现开始渲染列表的过渡效果</strong></p>
+<p><strong>初始渲染时也可以使用自定义的 CSS 类名进行初始渲染</strong></p>
+<ul>
+<li><code>appear-class</code> </li>
+<li><code>appear-active-class</code></li>
+<li><code>appear-to-class</code></li>
+</ul>
+<p><strong>注意</strong>:使用自定义类名进行渲染时也需要添加 appear 属性</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">transition</span></span></span><br><span class="line"><span class="tag">    <span class="attr">appear</span></span></span><br><span class="line"><span class="tag">    <span class="attr">appear-class</span>=<span class="string">&quot;custom-appear-class&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">appear-to-class</span>=<span class="string">&quot;custom-appear-to-class&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">appear-active-class</span>=<span class="string">&quot;custom-appear-active-class&quot;</span></span></span><br><span class="line"><span class="tag">&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- ... --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">transition</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--当然也可以使用JS的钩子函数--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">transition</span></span></span><br><span class="line"><span class="tag">    <span class="attr">appear</span></span></span><br><span class="line"><span class="tag">    <span class="attr">v-on:before-appear</span>=<span class="string">&quot;customBeforeAppearHook&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">v-on:appear</span>=<span class="string">&quot;customAppearHook&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">v-on:after-appear</span>=<span class="string">&quot;customAfterAppearHook&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">v-on:appear-cancelled</span>=<span class="string">&quot;customAppearCancelledHook&quot;</span></span></span><br><span class="line"><span class="tag">&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- ... --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">transition</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="显性定义过渡时间"><a href="#显性定义过渡时间" class="headerlink" title="显性定义过渡时间"></a>显性定义过渡时间</h2><p><strong>默认情况下，Vue 会等待其在过渡效果的根元素的第一个 <code>transitionend</code> 或 <code>animationend</code> 事件</strong>。然而也可以不这样设定——比如，我们可以拥有一个精心编排的一系列过渡效果，其中一些嵌套的内部元素相比于过渡效果的根元素有延迟的或更长的过渡效果。</p>
+<p>在这种情况下，<strong>可以用 <code>&lt;transition&gt;</code> 组件上的绑定的 <code>duration</code> 属性定制一个显性的过渡持续时间 (以毫秒为单位)</strong> </p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">transition</span> <span class="attr">:duration</span>=<span class="string">&quot;1000&quot;</span>&gt;</span>...<span class="tag">&lt;/<span class="name">transition</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>可以传入一个对象分别对移入和移除的时间进行设置</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">transition</span> <span class="attr">:duration</span>=<span class="string">&quot;&#123; enter: 500, leave: 800 &#125;&quot;</span>&gt;</span>...<span class="tag">&lt;/<span class="name">transition</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="JS-钩子"><a href="#JS-钩子" class="headerlink" title="JS 钩子"></a>JS 钩子</h2><p><strong>除了通过 CSS 实现过渡效果，还可以用 JS 中的钩子函数实现过渡效果</strong>，这些钩子可以结合 CSS 使用，也可以全部单独使用</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">    <span class="tag">&lt;<span class="name">transition</span></span></span><br><span class="line"><span class="tag">        <span class="attr">v-on:before-enter</span>=<span class="string">&quot;beforeEnter&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">v-on:enter</span>=<span class="string">&quot;enter&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">v-on:after-enter</span>=<span class="string">&quot;afterEnter&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">v-on:enter-cancelled</span>=<span class="string">&quot;enterCancelled&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">v-on:before-leave</span>=<span class="string">&quot;beforeLeave&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">v-on:leave</span>=<span class="string">&quot;leave&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">v-on:after-leave</span>=<span class="string">&quot;afterLeave&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">v-on:leave-cancelled</span>=<span class="string">&quot;leaveCancelled&quot;</span></span></span><br><span class="line"><span class="tag">    &gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- ... --&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">transition</span>&gt;</span></span><br><span class="line">// ----</span><br><span class="line">methods :&#123;</span><br><span class="line">    // --------</span><br><span class="line">    // 进入中</span><br><span class="line">    // --------</span><br><span class="line">    beforeEnter: function (el) &#123;</span><br><span class="line">        // ...</span><br><span class="line">    &#125;,</span><br><span class="line">    // 当与 CSS 结合使用时</span><br><span class="line">    // 回调函数 done 是可选的 enter:</span><br><span class="line">    enter: function(el, done) &#123;</span><br><span class="line">        // ...</span><br><span class="line">        el.offsetWidth</span><br><span class="line">        //玄学操作,不加这个设置全JS样式时,动画不会有过渡效果出现,可以认为是这个操作会强制动画刷新</span><br><span class="line">        done()</span><br><span class="line">        //done()所代表的函数就是下一个结束afterEnter的函数,只有调用了这个回调函数才会执行下面的方法</span><br><span class="line">    &#125;,</span><br><span class="line">    afterEnter: function (el) &#123;</span><br><span class="line">        // ...</span><br><span class="line">    &#125;,</span><br><span class="line">    enterCancelled: function (el) &#123;</span><br><span class="line">        // ...</span><br><span class="line">    &#125;,</span><br><span class="line">    // --------</span><br><span class="line">    // 离开时</span><br><span class="line">    // --------</span><br><span class="line">    beforeLeave: function (el) &#123;</span><br><span class="line">        // ...</span><br><span class="line">    &#125;,</span><br><span class="line">    // 当与 CSS 结合使用时</span><br><span class="line">    // 回调函数 done 是可选的 leave:</span><br><span class="line">    function(el, done) &#123;</span><br><span class="line">        //  ...</span><br><span class="line">        done()</span><br><span class="line">    &#125;,</span><br><span class="line">    afterLeave: function (el) &#123;</span><br><span class="line">        // ...</span><br><span class="line">    &#125;,</span><br><span class="line">    // leaveCancelled 只用于  v-show 中</span><br><span class="line">    leaveCancelled: function (el) &#123;</span><br><span class="line">        // ...</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意:</strong></p>
+<ul>
+<li>推荐对于仅使用 JavaScript 过渡的元素添加 <code>v-bind:css=&quot;false&quot;</code>，Vue 会跳过 CSS 的检测。这也可以避免过渡过程中 CSS 的影响</li>
+<li>当只用 JavaScript 过渡的时候，<strong>在 <code>enter</code> 和 <code>leave</code> 中必须使用 <code>done</code> 进行回调</strong>。否则，它们将被同步调用，过渡会立即完成。</li>
+</ul>
+<h2 id="多个元素过渡"><a href="#多个元素过渡" class="headerlink" title="多个元素过渡"></a>多个元素过渡</h2><p>对于原生标签可以使用 <code>v-if</code>和<code>v-else</code> 来实现多标签过渡效果</p>
+<p><strong>注意</strong>:当有相同标签名的元素切换时，需要通过 <code>key</code> 特性设置唯一的值来标记以让 Vue 区分它们，否则 Vue 为了效率只会替换相同标签内部的内容</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">transition</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">v-if</span>=<span class="string">&quot;isEditing&quot;</span> <span class="attr">key</span>=<span class="string">&quot;save&quot;</span>&gt;</span>Save<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">v-else</span> <span class="attr">key</span>=<span class="string">&quot;edit&quot;</span>&gt;</span>Edit<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">transition</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--也可以也可以通过给同一个元素的 key 特性设置不同的状态来代替 v-if 和 v-else--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">transition</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">v-bind:key</span>=<span class="string">&quot;isEditing&quot;</span>&gt;</span></span><br><span class="line">        &#123;&#123; isEditing ? &#x27;Save&#x27; : &#x27;Edit&#x27; &#125;&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">transition</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>过渡模式</strong></p>
+<p><strong>通过 mode 属性来定义多个元素过渡时的过渡模式</strong></p>
+<ul>
+<li><strong>in-out</strong>：新元素先进行过渡，完成之后当前元素过渡离开</li>
+<li><strong>out-in</strong>：当前元素先进行过渡，完成之后新元素过渡进入</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">transition</span> <span class="attr">mode</span>=<span class="string">&quot;out-in&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">transition</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="列表过渡"><a href="#列表过渡" class="headerlink" title="列表过渡"></a>列表过渡</h2><p><strong>渲染一整个列表时,如用 <code>v-for</code> 来渲染,就需要使用<code>&lt; transition-group&gt;</code> 组件</strong>、</p>
+<p><strong>注意:</strong></p>
+<ul>
+<li>不同于 <code>&lt; transition&gt;</code>组件，<code>&lt; transition-group&gt;</code>组件会以一个真实元素呈现,默认为一个 <code>&lt;span&gt;</code>标签,可以通过 tag 特性更换为其他元素 **如:**内部是 <code>li</code> 列表,那么可以用<code>&lt;transition-grounp tag=&quot;ul&quot;&gt;</code>来让该组件被渲染时表现为 <code>ul</code></li>
+<li>过渡模式不可用，因为不再相互切换特有的元素</li>
+<li>内部元素必须要有提供唯一的 <code>key</code> 属性值</li>
+</ul>
+<h3 id="添加与删除列表"><a href="#添加与删除列表" class="headerlink" title="添加与删除列表"></a>添加与删除列表</h3><p><strong>通过对一个<code>transiton-grounp</code>用过渡的类名和实现当个成员在过渡时的效果</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">    <span class="selector-class">.list-item</span> &#123;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">display</span>: inline-block;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">margin-right</span>: <span class="number">10px</span>;</span></span><br><span class="line"><span class="language-css">    &#125;</span></span><br><span class="line"><span class="language-css">    <span class="selector-class">.list-enter-active</span>,</span></span><br><span class="line"><span class="language-css">    <span class="selector-class">.list-leave-active</span> &#123;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">transition</span>: all <span class="number">1s</span>;</span></span><br><span class="line"><span class="language-css">    &#125;</span></span><br><span class="line"><span class="language-css">    <span class="selector-class">.list-enter</span>, <span class="selector-class">.list-leave-to</span></span></span><br><span class="line"><span class="language-css">    <span class="comment">/* .list-leave-active for below version 2.1.8 */</span> &#123;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">opacity</span>: <span class="number">0</span>;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">transform</span>: <span class="built_in">translateY</span>(<span class="number">30px</span>);</span></span><br><span class="line"><span class="language-css">    &#125;</span></span><br><span class="line"><span class="language-css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;list-demo&quot;</span> <span class="attr">class</span>=<span class="string">&quot;demo&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">v-on:click</span>=<span class="string">&quot;add&quot;</span>&gt;</span>Add<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">v-on:click</span>=<span class="string">&quot;remove&quot;</span>&gt;</span>Remove<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">transition-group</span> <span class="attr">name</span>=<span class="string">&quot;list&quot;</span> <span class="attr">tag</span>=<span class="string">&quot;p&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">span</span> <span class="attr">v-for</span>=<span class="string">&quot;item in items&quot;</span> <span class="attr">v-bind:key</span>=<span class="string">&quot;item&quot;</span> <span class="attr">class</span>=<span class="string">&quot;list-item&quot;</span>&gt;</span></span><br><span class="line">            &#123;&#123; item &#125;&#125;</span><br><span class="line">        <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">transition-group</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">el</span>: <span class="string">&#x27;#list-demo&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">data</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">items</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>],</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">nextNum</span>: <span class="number">10</span>,</span></span><br><span class="line"><span class="language-javascript">        &#125;,</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">methods</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">randomIndex</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">                <span class="keyword">return</span> <span class="title class_">Math</span>.<span class="title function_">floor</span>(<span class="title class_">Math</span>.<span class="title function_">random</span>() * <span class="variable language_">this</span>.<span class="property">items</span>.<span class="property">length</span>)</span></span><br><span class="line"><span class="language-javascript">            &#125;,</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">add</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">                <span class="variable language_">this</span>.<span class="property">items</span>.<span class="title function_">splice</span>(<span class="variable language_">this</span>.<span class="title function_">randomIndex</span>(), <span class="number">0</span>, <span class="variable language_">this</span>.<span class="property">nextNum</span>++)</span></span><br><span class="line"><span class="language-javascript">            &#125;,</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">remove</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">                <span class="variable language_">this</span>.<span class="property">items</span>.<span class="title function_">splice</span>(<span class="variable language_">this</span>.<span class="title function_">randomIndex</span>(), <span class="number">1</span>)</span></span><br><span class="line"><span class="language-javascript">            &#125;,</span></span><br><span class="line"><span class="language-javascript">        &#125;,</span></span><br><span class="line"><span class="language-javascript">    &#125;)</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="排序过渡列表"><a href="#排序过渡列表" class="headerlink" title="排序过渡列表"></a>排序过渡列表</h3><p><strong>上方的添加与删除列表只会对进行操作的成员自身产生过渡效果，对组件中的其他成员没有过渡效果,如果要想通过过渡效果进行添加,需要使用 <code>v-move</code> 的类名写入 CSS 样式</strong>，该效果会在组件的成员改变其定位的时候起作用，所以要想起过渡效果还需要在过渡时将元素的定位改变为绝对定位，也可以通过 <code>name</code> 属性来自定义前缀，也能通过 <code>move-class</code> 属性 CSS 效果</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">    <span class="selector-class">.flip-list-move</span> &#123;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">transition</span>: transform <span class="number">1s</span>;</span></span><br><span class="line"><span class="language-css">    &#125;</span></span><br><span class="line"><span class="language-css"></span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.14.1/lodash.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;flip-list-demo&quot;</span> <span class="attr">class</span>=<span class="string">&quot;demo&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">v-on:click</span>=<span class="string">&quot;shuffle&quot;</span>&gt;</span>Shuffle<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">transition-group</span> <span class="attr">name</span>=<span class="string">&quot;flip-list&quot;</span> <span class="attr">tag</span>=<span class="string">&quot;ul&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span> <span class="attr">v-for</span>=<span class="string">&quot;item in items&quot;</span> <span class="attr">v-bind:key</span>=<span class="string">&quot;item&quot;</span>&gt;</span>&#123;&#123; item &#125;&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">transition-group</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">el</span>: <span class="string">&#x27;#flip-list-demo&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">data</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">items</span>: [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>],</span></span><br><span class="line"><span class="language-javascript">        &#125;,</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">methods</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">shuffle</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">                <span class="variable language_">this</span>.<span class="property">items</span> = _.<span class="title function_">shuffle</span>(<span class="variable language_">this</span>.<span class="property">items</span>)</span></span><br><span class="line"><span class="language-javascript">            &#125;,</span></span><br><span class="line"><span class="language-javascript">        &#125;,</span></span><br><span class="line"><span class="language-javascript">    &#125;)</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="交错过渡列表"><a href="#交错过渡列表" class="headerlink" title="交错过渡列表"></a>交错过渡列表</h3><p><strong>通过 JS 钩子来实现列表的过渡效果,使 <code>data</code> 属性与 JS 进行数据通信,就可以实现列表的交错过渡效果</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;staggered-list-demo&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">v-model</span>=<span class="string">&quot;query&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">transition-group</span></span></span><br><span class="line"><span class="tag">        <span class="attr">name</span>=<span class="string">&quot;staggered-fade&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">tag</span>=<span class="string">&quot;ul&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">v-bind:css</span>=<span class="string">&quot;false&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">v-on:before-enter</span>=<span class="string">&quot;beforeEnter&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">v-on:enter</span>=<span class="string">&quot;enter&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">v-on:leave</span>=<span class="string">&quot;leave&quot;</span></span></span><br><span class="line"><span class="tag">    &gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">li</span></span></span><br><span class="line"><span class="tag">            <span class="attr">v-for</span>=<span class="string">&quot;(item, index) in computedList&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">v-bind:key</span>=<span class="string">&quot;item.msg&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">v-bind:data-index</span>=<span class="string">&quot;index&quot;</span></span></span><br><span class="line"><span class="tag">        &gt;</span></span><br><span class="line">            &#123;&#123; item.msg &#125;&#125;</span><br><span class="line">        <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">transition-group</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">new</span> <span class="title class_">Vue</span>(&#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">el</span>: <span class="string">&#x27;#staggered-list-demo&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">data</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">query</span>: <span class="string">&#x27;&#x27;</span>,</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">list</span>: [</span></span><br><span class="line"><span class="language-javascript">                &#123; <span class="attr">msg</span>: <span class="string">&#x27;Bruce Lee&#x27;</span> &#125;,</span></span><br><span class="line"><span class="language-javascript">                &#123; <span class="attr">msg</span>: <span class="string">&#x27;Jackie Chan&#x27;</span> &#125;,</span></span><br><span class="line"><span class="language-javascript">                &#123; <span class="attr">msg</span>: <span class="string">&#x27;Chuck Norris&#x27;</span> &#125;,</span></span><br><span class="line"><span class="language-javascript">                &#123; <span class="attr">msg</span>: <span class="string">&#x27;Jet Li&#x27;</span> &#125;,</span></span><br><span class="line"><span class="language-javascript">                &#123; <span class="attr">msg</span>: <span class="string">&#x27;Kung Fury&#x27;</span> &#125;,</span></span><br><span class="line"><span class="language-javascript">            ],</span></span><br><span class="line"><span class="language-javascript">        &#125;,</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">computed</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">computedList</span>: <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">                <span class="keyword">var</span> vm = <span class="variable language_">this</span></span></span><br><span class="line"><span class="language-javascript">                <span class="keyword">return</span> <span class="variable language_">this</span>.<span class="property">list</span>.<span class="title function_">filter</span>(<span class="keyword">function</span> (<span class="params">item</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">                    <span class="keyword">return</span> (</span></span><br><span class="line"><span class="language-javascript">                        item.<span class="property">msg</span></span></span><br><span class="line"><span class="language-javascript">                            .<span class="title function_">toLowerCase</span>()</span></span><br><span class="line"><span class="language-javascript">                            .<span class="title function_">indexOf</span>(vm.<span class="property">query</span>.<span class="title function_">toLowerCase</span>()) !== -<span class="number">1</span></span></span><br><span class="line"><span class="language-javascript">                    )</span></span><br><span class="line"><span class="language-javascript">                &#125;)</span></span><br><span class="line"><span class="language-javascript">            &#125;,</span></span><br><span class="line"><span class="language-javascript">        &#125;,</span></span><br><span class="line"><span class="language-javascript">        <span class="attr">methods</span>: &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">beforeEnter</span>: <span class="keyword">function</span> (<span class="params">el</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">                el.<span class="property">style</span>.<span class="property">opacity</span> = <span class="number">0</span></span></span><br><span class="line"><span class="language-javascript">                el.<span class="property">style</span>.<span class="property">height</span> = <span class="number">0</span></span></span><br><span class="line"><span class="language-javascript">            &#125;,</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">enter</span>: <span class="keyword">function</span> (<span class="params">el, done</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">                <span class="keyword">var</span> delay = el.<span class="property">dataset</span>.<span class="property">index</span> * <span class="number">150</span></span></span><br><span class="line"><span class="language-javascript">                <span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">                    <span class="title class_">Velocity</span>(</span></span><br><span class="line"><span class="language-javascript">                        el,</span></span><br><span class="line"><span class="language-javascript">                        &#123; <span class="attr">opacity</span>: <span class="number">1</span>, <span class="attr">height</span>: <span class="string">&#x27;1.6em&#x27;</span> &#125;,</span></span><br><span class="line"><span class="language-javascript">                        &#123; <span class="attr">complete</span>: done &#125;</span></span><br><span class="line"><span class="language-javascript">                    )</span></span><br><span class="line"><span class="language-javascript">                &#125;, delay)</span></span><br><span class="line"><span class="language-javascript">            &#125;,</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">leave</span>: <span class="keyword">function</span> (<span class="params">el, done</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">                <span class="keyword">var</span> delay = el.<span class="property">dataset</span>.<span class="property">index</span> * <span class="number">150</span></span></span><br><span class="line"><span class="language-javascript">                <span class="built_in">setTimeout</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">                    <span class="title class_">Velocity</span>(</span></span><br><span class="line"><span class="language-javascript">                        el,</span></span><br><span class="line"><span class="language-javascript">                        &#123; <span class="attr">opacity</span>: <span class="number">0</span>, <span class="attr">height</span>: <span class="number">0</span> &#125;,</span></span><br><span class="line"><span class="language-javascript">                        &#123; <span class="attr">complete</span>: done &#125;</span></span><br><span class="line"><span class="language-javascript">                    )</span></span><br><span class="line"><span class="language-javascript">                &#125;, delay)</span></span><br><span class="line"><span class="language-javascript">            &#125;,</span></span><br><span class="line"><span class="language-javascript">        &#125;,</span></span><br><span class="line"><span class="language-javascript">    &#125;)</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+    </article>
+    <!-- license -->
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://sukksa.github.io">sukksa</a>
+            <p>原文链接：<a href="https://sukksa.github.io/2022/vue/%E8%BF%87%E6%B8%A1%E4%B8%8E%E5%8A%A8%E7%94%BB/">https://sukksa.github.io/2022/vue/%E8%BF%87%E6%B8%A1%E4%B8%8E%E5%8A%A8%E7%94%BB/</a>
+            <!-- <p>发表日期：<a href="https://sukksa.github.io/2022/vue/%E8%BF%87%E6%B8%A1%E4%B8%8E%E5%8A%A8%E7%94%BB/">October 5th 2022, 8:35:27 pm</a>
+            <p>更新日期：<a href="https://sukksa.github.io/2022/vue/%E8%BF%87%E6%B8%A1%E4%B8%8E%E5%8A%A8%E7%94%BB/">November 26th 2025, 9:14:32 am</a> -->
+            <p>发表日期：<a href="https://sukksa.github.io/2022/vue/%E8%BF%87%E6%B8%A1%E4%B8%8E%E5%8A%A8%E7%94%BB/">2022-10-05 20:35:27</a>
+            <p>更新日期：<a href="https://sukksa.github.io/2022/vue/%E8%BF%87%E6%B8%A1%E4%B8%8E%E5%8A%A8%E7%94%BB/">2025-11-26 09:14:32</a>
+        </div>
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2022/vue/%E7%BB%84%E4%BB%B6/" title="Vue 组件">
+                    <div class="nextTitle">Vue 组件</div>
+                </a>
+        </li>
+        <li class="previous">
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2022/ES6/Promise/" title="Promise">
+                    <div class="prevTitle">Promise</div>
+                </a>
+        </li>
+    </ul>
+    <!-- comment -->
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+            
+            
+            
+            <!-- utteranc评论 -->
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+            
+            
+            
+        </div>
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    <!-- Mathjax -->
+</main>
+
+                <!-- profile -->
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+        <div class="social">
+                            <a href="mailto:2450553074@qq.com" class="iconfont-archer email" title="email" ></a>
+                <a href="//github.com/sukksa" class="iconfont-archer github" target="_blank" title="github"></a>
+                <a href="https://space.bilibili.com/74396531" class="iconfont-archer bilibili" target="_blank" title="bilibili"></a>
+
+        </div>
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    <!-- 不蒜子  -->
+        <div class="busuanzi-container">
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+        </div>
+</footer>
+
+        </div>
+        <!-- toc -->
+            <div class="toc-wrapper toc-wrapper-loding" style=    top:50vh;
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%87%E6%B8%A1%E4%B8%8E%E5%8A%A8%E7%94%BB"><span class="toc-number">1.</span> <span class="toc-text">过渡与动画</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%87%E6%B8%A1%E7%9A%84%E7%B1%BB%E5%90%8D"><span class="toc-number">1.1.</span> <span class="toc-text">过渡的类名</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E8%BA%AB%E5%AE%9E%E7%8E%B0%E7%9A%84%E7%B1%BB%E5%90%8D"><span class="toc-number">1.1.1.</span> <span class="toc-text">自身实现的类名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E8%BF%87%E6%B8%A1%E7%9A%84%E7%B1%BB%E5%90%8D"><span class="toc-number">1.1.2.</span> <span class="toc-text">自定义过渡的类名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B"><span class="toc-number">1.1.3.</span> <span class="toc-text">实例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E6%B8%B2%E6%9F%93%E8%BF%87%E6%B8%A1"><span class="toc-number">1.2.</span> <span class="toc-text">初始渲染过渡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%BE%E6%80%A7%E5%AE%9A%E4%B9%89%E8%BF%87%E6%B8%A1%E6%97%B6%E9%97%B4"><span class="toc-number">1.3.</span> <span class="toc-text">显性定义过渡时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JS-%E9%92%A9%E5%AD%90"><span class="toc-number">1.4.</span> <span class="toc-text">JS 钩子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E4%B8%AA%E5%85%83%E7%B4%A0%E8%BF%87%E6%B8%A1"><span class="toc-number">1.5.</span> <span class="toc-text">多个元素过渡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%97%E8%A1%A8%E8%BF%87%E6%B8%A1"><span class="toc-number">1.6.</span> <span class="toc-text">列表过渡</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E4%B8%8E%E5%88%A0%E9%99%A4%E5%88%97%E8%A1%A8"><span class="toc-number">1.6.1.</span> <span class="toc-text">添加与删除列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%92%E5%BA%8F%E8%BF%87%E6%B8%A1%E5%88%97%E8%A1%A8"><span class="toc-number">1.6.2.</span> <span class="toc-text">排序过渡列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A4%E9%94%99%E8%BF%87%E6%B8%A1%E5%88%97%E8%A1%A8"><span class="toc-number">1.6.3.</span> <span class="toc-text">交错过渡列表</span></a></li></ol></li></ol></li></ol>
+            </div>
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 62
+        </div>
+        <!-- search  -->
+    </div>
+    <div class="post-archive">
+            <div class="archive-year"> 2025 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/26</span>
+            <a class="archive-post-title" href="/2025/hello-world/">Hello World</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/26</span>
+            <a class="archive-post-title" href="/2025/other/%E5%B0%86Hexo%E6%8F%90%E4%BA%A4%E5%88%B0%E4%BB%93%E5%BA%93/">将Hexo提交到仓库</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/note/%E3%80%8A%E7%BD%AA%E4%B8%8E%E7%BD%9A%E3%80%8B/">《罪与罚》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/other/%E4%BB%8E%E7%8E%B0%E6%9C%89%E7%9A%84%E4%BB%93%E5%BA%93%E5%88%87%E6%8D%A2%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E4%BB%93%E5%BA%93/">从现有git仓库切换到另一个仓库</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/cesium/%E5%8F%AA%E6%98%BE%E7%A4%BA%E6%9F%90%E4%B8%AA%E5%8C%BA%E5%9F%9F/">仅显示某个行政区划（cesium 挖孔）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2025/cesium/%E7%AC%AC%E4%B8%80%E4%B8%AAcesium%E9%A1%B9%E7%9B%AE/">第一个cesium项目</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E6%B3%A2%E6%B5%AA/">使用着色器绘制波浪</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E5%9B%BE%E6%A1%88/">使用着色器绘制图案</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%9D%80%E8%89%B2%E5%99%A8%E7%A8%8B%E5%BA%8F/">第一个 shader 程序</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span>
+            <a class="archive-post-title" href="/2025/Threejs/Threejs%20Modules/">THREE Modules</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2025/other/%E5%A6%82%E4%BD%95%E7%A7%BB%E9%99%A4%20GitHub%20%E4%B8%AD%E7%9A%84%20contributors/">如何移除 GitHub 中的 contributors</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vuex/">Vuex</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E6%8F%92%E4%BB%B6/">Vue 插件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vue-router/">vue-router</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/mixin/">Mixin (混入)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E8%84%9A%E6%89%8B%E6%9E%B6/">Vue 脚手架</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/%E7%BB%84%E4%BB%B6%E9%97%B4%E9%80%9A%E4%BF%A1/">组件间通信</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/%E6%8C%89%E9%94%AE%E4%BF%AE%E9%A5%B0%E7%AC%A6/">按键修饰符</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span>
+            <a class="archive-post-title" href="/2022/vue/%E7%BB%84%E4%BB%B6/">Vue 组件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span>
+            <a class="archive-post-title" href="/2022/vue/%E8%BF%87%E6%B8%A1%E4%B8%8E%E5%8A%A8%E7%94%BB/">过渡与动画</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span>
+            <a class="archive-post-title" href="/2022/ES6/Promise/">Promise</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E6%8C%87%E4%BB%A4/">Vue 基本指令</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">Vue 生命周期</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/29</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E5%AE%9E%E4%BE%8B%E5%AF%B9%E8%B1%A1/">Vue实例对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span>
+            <a class="archive-post-title" href="/2022/ES6/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%89%A9%E5%B1%95/">字符串的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span>
+            <a class="archive-post-title" href="/2022/ES6/Moudle%20%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%AE%9E%E7%8E%B0/">Module 的加载实现</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/21</span>
+            <a class="archive-post-title" href="/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/">Module 模块化</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span>
+            <a class="archive-post-title" href="/2022/ES6/%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%89%A9%E5%B1%95/">对象的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2022/ES6/Class%E7%9A%84%E7%BB%A7%E6%89%BF/">Class的基本用法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2022/ES6/Class%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">Class的基本用法</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/18</span>
+            <a class="archive-post-title" href="/2021/ES6/set%E4%B8%8Emap/">set 与 map</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/05</span>
+            <a class="archive-post-title" href="/2021/Ajax/Ajax%E8%B7%A8%E5%9F%9F%E8%AF%B7%E6%B1%82/">Ajax跨域</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2021/Ajax/Fetch/">Fetch</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2021/Ajax/Axios/">Axios</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/22</span>
+            <a class="archive-post-title" href="/2021/Ajax/%E5%8E%9F%E7%94%9FAjax/">原生Ajax</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span>
+            <a class="archive-post-title" href="/2021/node/node/">node</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span>
+            <a class="archive-post-title" href="/2021/less/less/">less</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/11</span>
+            <a class="archive-post-title" href="/2021/ES6/Symbol/">Symbol</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/08</span>
+            <a class="archive-post-title" href="/2021/ES6/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A9%E5%B1%95/">函数的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2021/ES6/%E5%8F%98%E9%87%8F%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC/">变量解构赋值</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2021/ES6/ES6%E7%AE%80%E4%BB%8B/">ES6简介</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2021/ES6/let%E4%B8%8Econst/">let与const</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/26</span>
+            <a class="archive-post-title" href="/2021/%E5%AE%9E%E6%88%98/jQuery%E8%BD%AE%E6%92%AD%E5%9B%BE/">jQuery轮播图</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E6%8F%92%E4%BB%B6/">jQuery插件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E5%8A%A8%E7%94%BB/">jQuery动画</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/21</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E4%BA%8B%E4%BB%B6/">jQuery事件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E4%BF%AE%E6%94%B9DOM%E7%BB%93%E6%9E%84/">jQuery修改DOM结构</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E6%93%8D%E4%BD%9CDOM/">jQuery操作DOM元素</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E9%80%89%E6%8B%A9%E5%99%A8/">jQuery选择器</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E7%AE%80%E4%BB%8B/">jQuery介绍</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%AF%B9%E8%B1%A1/">对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E7%BA%BF%E7%A8%8B%E6%9C%BA%E5%88%B6%E4%B8%8E%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6/">线程机制与事件机制</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%87%BD%E6%95%B0/">函数</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/DOM/%E4%BA%8B%E4%BB%B6/">事件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%8F%98%E9%87%8F%E4%B8%8E%E4%BD%9C%E7%94%A8%E5%9F%9F/">变量与作用域</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/DOM/DOM/">DOM介绍</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/DOM/%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1/">事件对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">基本语法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E6%95%B0%E7%BB%84/">数组</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%96%B9%E6%B3%95/">字符串方法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">类型转换</a>
+        </li>
+            </ul>
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+            <span class="sidebar-tag-name" data-tags="Ajax">
+                <span class="iconfont-archer">&#xe606;</span>
+                Ajax
+            </span>
+            <span class="sidebar-tag-name" data-tags="JavaScript">
+                <span class="iconfont-archer">&#xe606;</span>
+                JavaScript
+            </span>
+            <span class="sidebar-tag-name" data-tags="ES6">
+                <span class="iconfont-archer">&#xe606;</span>
+                ES6
+            </span>
+            <span class="sidebar-tag-name" data-tags="javaScript">
+                <span class="iconfont-archer">&#xe606;</span>
+                javaScript
+            </span>
+            <span class="sidebar-tag-name" data-tags="DOM">
+                <span class="iconfont-archer">&#xe606;</span>
+                DOM
+            </span>
+            <span class="sidebar-tag-name" data-tags="Threejs">
+                <span class="iconfont-archer">&#xe606;</span>
+                Threejs
+            </span>
+            <span class="sidebar-tag-name" data-tags="cesium">
+                <span class="iconfont-archer">&#xe606;</span>
+                cesium
+            </span>
+            <span class="sidebar-tag-name" data-tags="vite">
+                <span class="iconfont-archer">&#xe606;</span>
+                vite
+            </span>
+            <span class="sidebar-tag-name" data-tags="jQuery">
+                <span class="iconfont-archer">&#xe606;</span>
+                jQuery
+            </span>
+            <span class="sidebar-tag-name" data-tags="less">
+                <span class="iconfont-archer">&#xe606;</span>
+                less
+            </span>
+            <span class="sidebar-tag-name" data-tags="node">
+                <span class="iconfont-archer">&#xe606;</span>
+                node
+            </span>
+            <span class="sidebar-tag-name" data-tags="shader">
+                <span class="iconfont-archer">&#xe606;</span>
+                shader
+            </span>
+            <span class="sidebar-tag-name" data-tags="Note">
+                <span class="iconfont-archer">&#xe606;</span>
+                Note
+            </span>
+            <span class="sidebar-tag-name" data-tags="git">
+                <span class="iconfont-archer">&#xe606;</span>
+                git
+            </span>
+            <span class="sidebar-tag-name" data-tags="Vue">
+                <span class="iconfont-archer">&#xe606;</span>
+                Vue
+            </span>
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+        <span class="sidebar-category-name" data-categories="Ajax">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Ajax
+        </span>
+        <span class="sidebar-category-name" data-categories="ES6">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ES6
+        </span>
+        <span class="sidebar-category-name" data-categories="DOM">
+            <span class="iconfont-archer">&#xe60a;</span>
+            DOM
+        </span>
+        <span class="sidebar-category-name" data-categories="Threejs">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Threejs
+        </span>
+        <span class="sidebar-category-name" data-categories="cesium">
+            <span class="iconfont-archer">&#xe60a;</span>
+            cesium
+        </span>
+        <span class="sidebar-category-name" data-categories="jQuery">
+            <span class="iconfont-archer">&#xe60a;</span>
+            jQuery
+        </span>
+        <span class="sidebar-category-name" data-categories="javaScript">
+            <span class="iconfont-archer">&#xe60a;</span>
+            javaScript
+        </span>
+        <span class="sidebar-category-name" data-categories="less">
+            <span class="iconfont-archer">&#xe60a;</span>
+            less
+        </span>
+        <span class="sidebar-category-name" data-categories="node">
+            <span class="iconfont-archer">&#xe60a;</span>
+            node
+        </span>
+        <span class="sidebar-category-name" data-categories="shader">
+            <span class="iconfont-archer">&#xe60a;</span>
+            shader
+        </span>
+        <span class="sidebar-category-name" data-categories="note">
+            <span class="iconfont-archer">&#xe60a;</span>
+            note
+        </span>
+        <span class="sidebar-category-name" data-categories="git">
+            <span class="iconfont-archer">&#xe60a;</span>
+            git
+        </span>
+        <span class="sidebar-category-name" data-categories="Vue">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Vue
+        </span>
+        <span class="sidebar-category-name" data-categories="实战">
+            <span class="iconfont-archer">&#xe60a;</span>
+            实战
+        </span>
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://sukksa.github.io",
+        root: siteMetaRoot,
+        author: "sukksa"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+        <!-- main func -->
+        <script src="/scripts/main.js"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" onload="window.Fancybox.bind('[data-fancybox]')" defer></script>
+        <!-- algolia -->
+        <!-- busuanzi -->
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+            <!-- <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script> -->
+        <!-- async load share.js -->
+            <script src="/scripts/share.js" async></script>
+        <!-- mermaid -->
+    </body>
+</html>

@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+<!-- keywords -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="sukksa">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="sukksa">
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    <meta name="description" content="">
+    <meta name="description" content="set 与 mapset基本用法ES6 提供了新的数据结构 Set。它类似于数组，但是成员的值都是唯一的，没有重复的值。 Set 本身是一个构造函数，用来生成 Set 数据结构。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="set 与 map">
+<meta property="og:url" content="https://sukksa.github.io/2021/ES6/set%E4%B8%8Emap/index.html">
+<meta property="og:site_name" content="sukksa blog">
+<meta property="og:description" content="set 与 mapset基本用法ES6 提供了新的数据结构 Set。它类似于数组，但是成员的值都是唯一的，没有重复的值。 Set 本身是一个构造函数，用来生成 Set 数据结构。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-12-18T01:11:59.000Z">
+<meta property="article:modified_time" content="2025-11-26T01:14:32.066Z">
+<meta property="article:author" content="sukksa">
+<meta property="article:tag" content="ES6">
+<meta property="article:tag" content="javaScript">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    <title>set 与 map · sukksa&#39;s Studio</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .footer-fixed-btn,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(
+            -45deg,
+            #444 0,
+            #444 80px,
+            #333 80px,
+            #333 160px
+        );
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link id="stylesheet-fancybox" rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-base" rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-mobile" rel="preload" href="/css/mobile.css" as="style" onload="this.onload=null;this.rel='stylesheet';this.media='screen and (max-width: 960px)'">
+    <link id="stylesheet-theme-dark" rel="preload" href="/css/dark.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script"> -->
+    <link rel="preload" href="/lib/jquery.min.js" as="script">
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    <!-- 百度统计  -->
+    <!-- 谷歌统计  -->
+    <!-- Google tag (gtag.js) -->
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script> -->
+    <script src="/lib/jquery.min.js"></script>
+    <script src=""></script>
+    <!-- <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script> -->
+        <body class="post-body">
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        <div class="header-sidebar-menu">
+            <div style="padding-left: 1px;">&#xe775;</div>
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href="/">sukksa's Studio</a>
+        </span>
+    </div>
+    <!-- toggle banner -->
+    <div class="banner">
+        <div class="blog-title header-element">
+            <a href="/">sukksa&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">set 与 map</a>
+        </div>
+    </div>
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- donate button -->
+
+    <!-- back to top button -->
+    <div class="footer-fixed-btn footer-fixed-btn--hidden back-top">
+        <div>&#xe639;</div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="    height:50vh;
+">
+    <!-- 主页  -->
+    <!-- 404页  -->
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.png)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+                set 与 map
+            <!-- 404 -->
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            <!-- 404 -->
+        </p>
+        <!-- 文章页 meta -->
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                    <div class="post-intro-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="ES6">ES6</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="javaScript">javaScript</a>
+</div>
+
+                <!-- 文章字数统计 -->
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.5k</span>阅读时长: <span class="post-count reading-time">10 min</span></span>
+                    </div>
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2021-12-18</span>
+                    <!-- busuanzi -->
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    <!-- 文章分享 -->
+                    <!-- <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span> -->
+                </div>
+            </div>
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="set-与-map"><a href="#set-与-map" class="headerlink" title="set 与 map"></a>set 与 map</h1><h2 id="set"><a href="#set" class="headerlink" title="set"></a>set</h2><h3 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h3><p>ES6 提供了新的数据结构 Set。它类似于数组，<strong>但是成员的值都是唯一的，没有重复的值</strong>。</p>
+<p>Set 本身是一个构造函数，用来生成 Set 数据结构。</p>
+<span id="more"></span>
+
+<h4 id="set-结构的声明"><a href="#set-结构的声明" class="headerlink" title="set 结构的声明"></a>set 结构的声明</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> s = <span class="keyword">new</span> <span class="title class_">Set</span>()</span><br><span class="line"><span class="keyword">let</span> s2 = <span class="keyword">new</span> <span class="title class_">Set</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>])</span><br></pre></td></tr></table></figure>
+
+<h4 id="set-的初始化"><a href="#set-的初始化" class="headerlink" title="set 的初始化"></a>set 的初始化</h4><p>Set 函数可以接受一个数组(或者具有 iterable 接口的其他数据结构)作为参数，用来初始化</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line"><span class="keyword">let</span> s = <span class="keyword">new</span> <span class="title class_">Set</span>(arr)</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> s2 = <span class="keyword">new</span> <span class="title class_">Set</span>()</span><br><span class="line">arr.<span class="title function_">forEach</span>(<span class="function">(<span class="params">x</span>) =&gt;</span> s.<span class="title function_">add</span>(x))</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> s3 = <span class="keyword">new</span> <span class="title class_">Set</span>(<span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&quot;div&quot;</span>))</span><br></pre></td></tr></table></figure>
+
+<h4 id="set-转换为数组"><a href="#set-转换为数组" class="headerlink" title="set 转换为数组"></a>set 转换为数组</h4><p>使用<code>...</code>扩展运算符或<code>Array.from</code>方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> s = <span class="keyword">new</span> <span class="title class_">Set</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>])</span><br><span class="line"><span class="keyword">let</span> arr = [...s]</span><br><span class="line"><span class="keyword">let</span> arr2 = <span class="title class_">Array</span>.<span class="title function_">from</span>(set)</span><br></pre></td></tr></table></figure>
+
+<p>因此有两种数组去重的方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> s = <span class="keyword">new</span> <span class="title class_">Set</span>([<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">2</span>])</span><br><span class="line"><span class="keyword">let</span> arr = [...s]</span><br><span class="line"><span class="keyword">let</span> arr2 = <span class="title class_">Array</span>.<span class="title function_">from</span>(s)</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="注"><a href="#注" class="headerlink" title="注"></a>注</h4><p>向 Set 加入值的时候，不会发生类型转换，所以5和”5”是两个不同的值。Set 内部判断两个值是否不同，使用的算法叫做“Same-value-zero equality”，它类似于精确相等运算符(&#x3D;&#x3D;&#x3D;)，主要的区别是NaN等于自身，而精确相等运算符认为NaN不等于自身。 </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> set = <span class="keyword">new</span> <span class="title class_">Set</span>()</span><br><span class="line"><span class="keyword">let</span> a = <span class="title class_">NaN</span></span><br><span class="line"><span class="keyword">let</span> b = <span class="title class_">NaN</span></span><br><span class="line">set.<span class="title function_">add</span>(a)</span><br><span class="line">set.<span class="title function_">add</span>(b)</span><br><span class="line"><span class="comment">// Set &#123;NaN&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码向 Set 实例添加了两个NaN，但是只能加入一个。这表明，在 Set 内部，两个NaN是相等.另外，两个对象总是不相等的</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> set = <span class="keyword">new</span> <span class="title class_">Set</span>()</span><br><span class="line"></span><br><span class="line">set.<span class="title function_">add</span>(&#123;&#125;)</span><br><span class="line">set.<span class="property">size</span> <span class="comment">// 1</span></span><br><span class="line"></span><br><span class="line">set.<span class="title function_">add</span>(&#123;&#125;)</span><br><span class="line">set.<span class="property">size</span> <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Set-实例的属性和方法"><a href="#Set-实例的属性和方法" class="headerlink" title="Set 实例的属性和方法"></a>Set 实例的属性和方法</h3><p>属性：</p>
+<ul>
+<li><code>Set.prototype.constructor</code>: 构造函数，默认就是Set函数。</li>
+<li><code>Set.prototype.size</code>: 返回Set实例的成员总数。</li>
+</ul>
+<p>方法：<br>Set 实例的方法分为两大类: 操作方法(用于操作数据)和遍历方法(用于遍历成员)。下面先介绍四个操作方法</p>
+<ul>
+<li><code>add(value)</code>: 添加某个值，返回 Set 结构本身。 </li>
+<li><code>delete(value)</code>: 删除某个值，返回一个布尔值，表示删除是否成功。 </li>
+<li><code>has(value)</code>: 返回一个布尔值，表示该值是否为Set的成员。 </li>
+<li><code>clear()</code>: 清除所有成员，没有返回值。</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">s.<span class="title function_">add</span>(<span class="number">1</span>).<span class="title function_">add</span>(<span class="number">2</span>).<span class="title function_">add</span>(<span class="number">2</span>)</span><br><span class="line">s.<span class="property">size</span> <span class="comment">// 2</span></span><br><span class="line"></span><br><span class="line">s.<span class="title function_">has</span>(<span class="number">1</span>) <span class="comment">// true</span></span><br><span class="line">s.<span class="title function_">has</span>(<span class="number">2</span>) <span class="comment">// true</span></span><br><span class="line">s.<span class="title function_">has</span>(<span class="number">3</span>) <span class="comment">// false</span></span><br><span class="line"></span><br><span class="line">s.<span class="title function_">delete</span>(<span class="number">2</span>)</span><br><span class="line">s.<span class="title function_">has</span>(<span class="number">2</span>) <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="遍历操作"><a href="#遍历操作" class="headerlink" title="遍历操作"></a>遍历操作</h3><p>Set 结构的实例有四个遍历方法，可以用于遍历成员。</p>
+<ul>
+<li><code>keys()</code>: 返回键名的遍历器</li>
+<li><code>values()</code>: 返回键值的遍历器</li>
+<li><code>entries()</code>: 返回键值对的遍历器</li>
+<li><code>forEach()</code>: 使用回调函数遍历每个成员</li>
+</ul>
+<p>需要特别指出的是，<strong>Set的遍历顺序就是插入顺序</strong>。这个特性有时非常有用，比如使用 Set 保存一个回调函数列表，调用时就能保证按照添加顺序调用。</p>
+<h4 id="keys-，values-，entries"><a href="#keys-，values-，entries" class="headerlink" title="keys()，values()，entries()"></a><code>keys()</code>，<code>values()</code>，<code>entries()</code></h4><p>以上三个方法的返回值都是遍历器对象。由于 Set 结构没有键名，只有键值(或者说键名和键值是同一个值)，所以<code>keys()</code>方法和<code>values()</code>方法的行为完全一致</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> set = <span class="keyword">new</span> <span class="title class_">Set</span>([<span class="string">&quot;red&quot;</span>, <span class="string">&quot;green&quot;</span>, <span class="string">&quot;blue&quot;</span>]);</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> item <span class="keyword">of</span> set.<span class="title function_">keys</span>()) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(item);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// red</span></span><br><span class="line"><span class="comment">// green</span></span><br><span class="line"><span class="comment">// blue</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> item <span class="keyword">of</span> set.<span class="title function_">values</span>()) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(item);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// red</span></span><br><span class="line"><span class="comment">// green</span></span><br><span class="line"><span class="comment">// blue</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> item <span class="keyword">of</span> set.<span class="title function_">entries</span>()) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(item);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// [&quot;red&quot;, &quot;red&quot;]</span></span><br><span class="line"><span class="comment">// [&quot;green&quot;, &quot;green&quot;]</span></span><br><span class="line"><span class="comment">// [&quot;blue&quot;, &quot;blue&quot;]</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码中，<code>entries()</code>方法返回的遍历器，同时包括键名和键值，所以每次输出一个数组，它的两个成员完全相等。</p>
+<p>Set 结构的实例默认可遍历，它的默认遍历器生成函数就是它的<code>values</code>方法</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Set</span>.<span class="property"><span class="keyword">prototype</span></span>[<span class="title class_">Symbol</span>.<span class="property">iterator</span>] === <span class="title class_">Set</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">values</span>  <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="forEach"><a href="#forEach" class="headerlink" title="forEach()"></a><code>forEach()</code></h4><p>Set 结构的实例与数组一样，也拥有<code>forEach</code>方法，用于对每个成员执行某种操作，没有返回值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">   set = <span class="keyword">new</span> <span class="title class_">Set</span>([<span class="string">&quot;red&quot;</span>, <span class="string">&quot;bule&quot;</span>, <span class="string">&quot;black&quot;</span>])</span><br><span class="line">   set.<span class="title function_">forEach</span>(<span class="function">(<span class="params">value, key</span>) =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(key + <span class="string">&quot; : &quot;</span> + value))</span><br><span class="line"><span class="comment">// red : red</span></span><br><span class="line"><span class="comment">// bule : bule</span></span><br><span class="line"><span class="comment">// black : black</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码说明，<code>forEach</code>方法的参数就是一个处理函数。该函数的参数与数组的<code>forEach</code>一致，依次为键值、键名、集合本身(上例省略了该参数)。这里需要注意，Set 结构的键名就是键值(两者是同一个值)，因此第一个参数与第二个参数的值永远都是一样的。<br>另外，<code>forEach</code>方法还可以有第二个参数，表示绑定处理函数内部的<code>this</code>对象</p>
+<h4 id="遍历的应用"><a href="#遍历的应用" class="headerlink" title="遍历的应用"></a>遍历的应用</h4><p>实现并集(Union)、交集(Intersect)和差集(Difference)</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> s = <span class="keyword">new</span> <span class="title class_">Set</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])</span><br><span class="line"><span class="keyword">let</span> s2 = <span class="keyword">new</span> <span class="title class_">Set</span>([<span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">// 并集</span></span><br><span class="line"><span class="keyword">let</span> union = <span class="keyword">new</span> <span class="title class_">Set</span>([...s, ...s2])</span><br><span class="line"><span class="comment">//交集</span></span><br><span class="line"><span class="keyword">let</span> intersect = <span class="keyword">new</span> <span class="title class_">Set</span>([...s].<span class="title function_">filter</span>(<span class="function"><span class="params">num</span> =&gt;</span> s2.<span class="title function_">has</span>(num)))</span><br><span class="line"><span class="comment">//差集</span></span><br><span class="line"><span class="keyword">let</span> difference = <span class="keyword">new</span> <span class="title class_">Set</span>([...s].<span class="title function_">filter</span>(<span class="function"><span class="params">num</span> =&gt;</span> !s2.<span class="title function_">has</span>(num)))</span><br></pre></td></tr></table></figure>
+
+<p>如果想在遍历操作中，同步改变原来的 Set 结构，目前没有直接的方法，但有两种变通方法。一种是利用原 Set 结构映射出一个新的结构，然后赋值给原来的 Set 结构；另一种是利用<code>Array.from()</code>方法。 </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 方法一</span></span><br><span class="line"><span class="keyword">let</span> set = <span class="keyword">new</span> <span class="title class_">Set</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line">set = <span class="keyword">new</span> <span class="title class_">Set</span>([...set].<span class="title function_">map</span>(<span class="function"><span class="params">val</span> =&gt;</span> val * <span class="number">2</span>));</span><br><span class="line"><span class="comment">// set的值是2, 4, 6</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法二</span></span><br><span class="line"><span class="keyword">let</span> set = <span class="keyword">new</span> <span class="title class_">Set</span>([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]);</span><br><span class="line">set = <span class="keyword">new</span> <span class="title class_">Set</span>(<span class="title class_">Array</span>.<span class="title function_">from</span>(set, <span class="function"><span class="params">val</span> =&gt;</span> val * <span class="number">2</span>));</span><br><span class="line"><span class="comment">// set的值是2, 4, 6</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="map"><a href="#map" class="headerlink" title="map"></a>map</h2><p>JavaScript 的对象(Object)，本质上是键值对的集合(Hash 结构)，但是传统上只能用字符串当作键。这给它的使用带来了很大的限制</p>
+<p>ES6 提供了 Map 数据结构。它类似于对象，也是键值对的集合，但是“键”的范围不限于字符串，各种类型的值(包括对象)都可以当作键。也就是说，Object 结构提供了“字符串—值”的对应，Map 结构提供了“值—值”的对应，是一种更完善的 Hash 结构实现。如果您需要“键值对”的数据结构，Map 比 Object 更合适。</p>
+<h3 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h3><h4 id="map-创建"><a href="#map-创建" class="headerlink" title="map 创建"></a>map 创建</h4><p>作为构造函数，Map 也可以接受一个数组作为参数。该<strong>数组的成员是一个个表示键值对的数组</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">   <span class="keyword">let</span> m = <span class="keyword">new</span> <span class="title class_">Map</span>([</span><br><span class="line">       [<span class="string">&quot;name&quot;</span>, <span class="string">&quot;tom&quot;</span>],</span><br><span class="line">       [<span class="string">&quot;age&quot;</span>, <span class="number">18</span>]</span><br><span class="line">   ])</span><br><span class="line">m.<span class="property">size</span> <span class="comment">//2</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码在新建 Map 实例时，就指定了两个键<code>name</code>和<code>age</code>，相当于下面代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">let item = [</span><br><span class="line">    [&#x27;name&#x27;, &#x27;tom&#x27;],</span><br><span class="line">    [&#x27;age&#x27;, 18],</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">let m = new Map()</span><br><span class="line">item.forEach(([key, value]) =&gt; m.set(key, value))</span><br></pre></td></tr></table></figure>
+
+<p>不仅仅是数组，任何具有 Iterator 接口、且每个成员都是一个双元素的数组的数据结构都可以当作Map构造函数的参数。这就是说，Set和Map都可以用来生成新的 Map。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">   <span class="keyword">let</span> s = <span class="keyword">new</span> <span class="title class_">Set</span>([</span><br><span class="line">       [<span class="string">&quot;name&quot;</span>, <span class="string">&quot;tom&quot;</span>],</span><br><span class="line">       [<span class="string">&quot;age&quot;</span>, <span class="number">18</span>]</span><br><span class="line">   ])</span><br><span class="line">   </span><br><span class="line">   <span class="keyword">let</span> m = <span class="keyword">new</span> <span class="title class_">Map</span>(s)</span><br><span class="line"><span class="keyword">let</span> m2 = <span class="keyword">new</span> <span class="title class_">Map</span>(m)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(m == m2) <span class="comment">//false</span></span><br></pre></td></tr></table></figure>
+
+<p>同样的值的两个实例，在 Map 结构中被视为两个键</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> map = <span class="keyword">new</span> <span class="title class_">Map</span>()</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> k1 = [<span class="string">&#x27;a&#x27;</span>]</span><br><span class="line"><span class="keyword">const</span> k2 = [<span class="string">&#x27;a&#x27;</span>]</span><br><span class="line"></span><br><span class="line">map.<span class="title function_">set</span>(k1, <span class="number">111</span>).<span class="title function_">set</span>(k2, <span class="number">222</span>)</span><br><span class="line"></span><br><span class="line">map.<span class="title function_">get</span>(k1) <span class="comment">// 111</span></span><br><span class="line">map.<span class="title function_">get</span>(k2) <span class="comment">// 222</span></span><br></pre></td></tr></table></figure>
+
+<p>变量k1和k2的值是一样的，但是它们在 Map 结构中被视为两个键<br>由上可知，Map 的键实际上是跟内存地址绑定的，只要内存地址不一样，就视为两个键。这就解决了同名属性碰撞(clash)的问题，我们扩展别人的库的时候，如果使用对象作为键名，就不用担心自己的属性与原作者的属性同名</p>
+<h3 id="map-的属性和操作方法"><a href="#map-的属性和操作方法" class="headerlink" title="map 的属性和操作方法"></a>map 的属性和操作方法</h3><h4 id="size-属性"><a href="#size-属性" class="headerlink" title="size 属性"></a><code>size</code> 属性</h4><p><code>size</code>属性返回map的成员总数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> let map = new Map()</span><br><span class="line"> map.set(&quot;foo&quot;, 1)</span><br><span class="line"> map.set(&quot;bar&quot;, 2)</span><br><span class="line">// map.size == 3</span><br></pre></td></tr></table></figure>
+
+<h4 id="set-key-value"><a href="#set-key-value" class="headerlink" title="set(key, value)"></a><code>set(key, value)</code></h4><p><code>set</code>方法设置键名<code>key</code>对应的键值为value<code>，</code>然后返回整个 Map 结构。如果<code>key</code>已经有值，则键值会被更新，否则就新生成该键</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> m = <span class="keyword">new</span> <span class="title class_">Map</span>()</span><br><span class="line"><span class="keyword">let</span> a = <span class="string">&quot;abc&quot;</span></span><br><span class="line">m.<span class="title function_">set</span>(a, <span class="number">3</span>) <span class="comment">//键是变量</span></span><br><span class="line">m.<span class="title function_">set</span>(<span class="string">&quot;edition&quot;</span>, <span class="number">6</span>) <span class="comment">// 键是字符串</span></span><br><span class="line">m.<span class="title function_">set</span>(<span class="number">262</span>, <span class="string">&quot;standard&quot;</span>) <span class="comment">// 键是数值</span></span><br><span class="line">m.<span class="title function_">set</span>(<span class="literal">undefined</span>, <span class="string">&quot;nah&quot;</span>) <span class="comment">// 键是 undefined</span></span><br></pre></td></tr></table></figure>
+
+<p><code>set()</code>方法返回的是当前的Map对象，因此可以采用链式写法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> a = <span class="string">&quot;abc&quot;</span></span><br><span class="line"><span class="keyword">const</span> m = <span class="keyword">new</span> <span class="title class_">Map</span>().<span class="title function_">set</span>(a, <span class="number">3</span>).<span class="title function_">set</span>(<span class="string">&quot;edition&quot;</span>, <span class="number">6</span>).<span class="title function_">set</span>(<span class="number">262</span>, <span class="string">&quot;standard&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="get-key"><a href="#get-key" class="headerlink" title="get(key)"></a><code>get(key)</code></h4><p><code>get()</code> 方法读取key所对应的键值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">let</span> map = <span class="keyword">new</span> <span class="title class_">Map</span>([</span><br><span class="line">     [<span class="string">&quot;foo&quot;</span>, <span class="number">1</span>]</span><br><span class="line"> ])</span><br><span class="line">map.<span class="title function_">get</span>(<span class="string">&quot;foo&quot;</span>) <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="has-key"><a href="#has-key" class="headerlink" title="has(key)"></a><code>has(key)</code></h4><p><code>has()</code>方法返回一个布尔值，表示某个键是否在当前 Map 对象之中</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">let</span> map = <span class="keyword">new</span> <span class="title class_">Map</span>([</span><br><span class="line">     [<span class="string">&quot;foo&quot;</span>, <span class="number">1</span>]</span><br><span class="line"> ])</span><br><span class="line">map.<span class="title function_">has</span>(<span class="string">&quot;foo&quot;</span>) <span class="comment">// true</span></span><br><span class="line">map.<span class="title function_">has</span>(<span class="string">&quot;bar&quot;</span>) <span class="comment">//false</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="delete-key"><a href="#delete-key" class="headerlink" title="delete(key)"></a><code>delete(key)</code></h4><p><code>delete()</code>方法删除某个键，返回<code>true</code>。如果删除失败，返回false</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> map = <span class="keyword">new</span> <span class="title class_">Map</span>([</span><br><span class="line">    [<span class="string">&quot;foo&quot;</span>, <span class="number">1</span>]</span><br><span class="line">])</span><br><span class="line">map.<span class="title function_">delete</span>(<span class="string">&quot;foo&quot;</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(map.<span class="title function_">has</span>(<span class="string">&quot;foo&quot;</span>)) <span class="comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="clear"><a href="#clear" class="headerlink" title="clear()"></a><code>clear()</code></h4><p><code>clear()</code>方法清除所有成员，没有返回值</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> map = <span class="keyword">new</span> <span class="title class_">Map</span>([</span><br><span class="line">     [<span class="string">&quot;foo&quot;</span>, <span class="number">1</span>],</span><br><span class="line">     [<span class="string">&quot;bar&quot;</span>, <span class="number">2</span>]</span><br><span class="line"> ])</span><br><span class="line"> map.<span class="title function_">clear</span>()</span><br><span class="line"> map.<span class="property">size</span> <span class="comment">//0</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="map-的遍历操作"><a href="#map-的遍历操作" class="headerlink" title="map 的遍历操作"></a>map 的遍历操作</h3><p>Map 结构原生提供三个遍历器生成函数和一个遍历方法。 </p>
+<ul>
+<li><code>keys()</code>: 返回键名的遍历器。 </li>
+<li><code>values()</code>: 返回键值的遍历器。 </li>
+<li><code>entries()</code>: 返回所有成员的遍历器。 </li>
+<li><code>forEach()</code>: 遍历 Map 的所有成员</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> map = <span class="keyword">new</span> <span class="title class_">Map</span>([</span><br><span class="line">    [<span class="string">&quot;foo&quot;</span>, <span class="number">1</span>],</span><br><span class="line">    [<span class="string">&quot;bar&quot;</span>, <span class="number">2</span>]</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">of</span> map.<span class="title function_">keys</span>()) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(key)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// foo , bar </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> value <span class="keyword">of</span> map.<span class="title function_">values</span>()) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(value)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 1 , 2</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> item <span class="keyword">of</span> map.<span class="title function_">entries</span>()) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(item)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// [&quot;foo&quot;, 1] , [&quot;bar&quot;, 2]</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> [key, value] <span class="keyword">of</span> map.<span class="title function_">entries</span>()) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(key, value)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// [&quot;foo&quot;, 1] , [&quot;bar&quot;, 2]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 等同于使用map.entries()</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">const</span> [key, value] <span class="keyword">of</span> map) &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(key, value);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// [&quot;foo&quot;, 1] , [&quot;bar&quot;, 2]</span></span><br></pre></td></tr></table></figure>
+
+<p>上面代码最后的那个例子，表示 Map 结构的默认遍历器接口(<code>Symbol.iterator</code>属性)，就是<code>entries()</code>方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">map[Symbol.iterator] === map.entries</span><br><span class="line">// true</span><br></pre></td></tr></table></figure>
+
+<p>结合数组的<code>map</code>方法、<code>filter</code>方法，可以实现 Map 的遍历和过滤(Map 本身没有<code>map</code>和<code>filter</code>方法)。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> map0 = <span class="keyword">new</span> <span class="title class_">Map</span>().<span class="title function_">set</span>(<span class="number">1</span>, <span class="string">&quot;a&quot;</span>).<span class="title function_">set</span>(<span class="number">2</span>, <span class="string">&quot;b&quot;</span>).<span class="title function_">set</span>(<span class="number">3</span>, <span class="string">&quot;c&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> map1 = <span class="keyword">new</span> <span class="title class_">Map</span>([...map0].<span class="title function_">filter</span>(<span class="function">(<span class="params">[k, v]</span>) =&gt;</span> k &lt; <span class="number">3</span>))</span><br><span class="line"><span class="comment">// 产生 Map 结构 &#123;1 =&gt; &#x27;a&#x27;, 2 =&gt; &#x27;b&#x27;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> map2 = <span class="keyword">new</span> <span class="title class_">Map</span>([...map0].<span class="title function_">map</span>(<span class="function">(<span class="params">[k, v]</span>) =&gt;</span> [k * <span class="number">2</span>, <span class="string">&quot;_&quot;</span> + v]))</span><br><span class="line"><span class="comment">// 产生 Map 结构 &#123;2 =&gt; &#x27;_a&#x27;, 4 =&gt; &#x27;_b&#x27;, 6 =&gt; &#x27;_c&#x27;&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+    </article>
+    <!-- license -->
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://sukksa.github.io">sukksa</a>
+            <p>原文链接：<a href="https://sukksa.github.io/2021/ES6/set%E4%B8%8Emap/">https://sukksa.github.io/2021/ES6/set%E4%B8%8Emap/</a>
+            <!-- <p>发表日期：<a href="https://sukksa.github.io/2021/ES6/set%E4%B8%8Emap/">December 18th 2021, 9:11:59 am</a>
+            <p>更新日期：<a href="https://sukksa.github.io/2021/ES6/set%E4%B8%8Emap/">November 26th 2025, 9:14:32 am</a> -->
+            <p>发表日期：<a href="https://sukksa.github.io/2021/ES6/set%E4%B8%8Emap/">2021-12-18 09:11:59</a>
+            <p>更新日期：<a href="https://sukksa.github.io/2021/ES6/set%E4%B8%8Emap/">2025-11-26 09:14:32</a>
+        </div>
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2022/ES6/Class%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/" title="Class的基本用法">
+                    <div class="nextTitle">Class的基本用法</div>
+                </a>
+        </li>
+        <li class="previous">
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2021/Ajax/Ajax%E8%B7%A8%E5%9F%9F%E8%AF%B7%E6%B1%82/" title="Ajax跨域">
+                    <div class="prevTitle">Ajax跨域</div>
+                </a>
+        </li>
+    </ul>
+    <!-- comment -->
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+            
+            
+            
+            <!-- utteranc评论 -->
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+            
+            
+            
+        </div>
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    <!-- Mathjax -->
+</main>
+
+                <!-- profile -->
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+        <div class="social">
+                            <a href="mailto:2450553074@qq.com" class="iconfont-archer email" title="email" ></a>
+                <a href="//github.com/sukksa" class="iconfont-archer github" target="_blank" title="github"></a>
+                <a href="https://space.bilibili.com/74396531" class="iconfont-archer bilibili" target="_blank" title="bilibili"></a>
+
+        </div>
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    <!-- 不蒜子  -->
+        <div class="busuanzi-container">
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+        </div>
+</footer>
+
+        </div>
+        <!-- toc -->
+            <div class="toc-wrapper toc-wrapper-loding" style=    top:50vh;
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#set-%E4%B8%8E-map"><span class="toc-number">1.</span> <span class="toc-text">set 与 map</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#set"><span class="toc-number">1.1.</span> <span class="toc-text">set</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-number">1.1.1.</span> <span class="toc-text">基本用法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#set-%E7%BB%93%E6%9E%84%E7%9A%84%E5%A3%B0%E6%98%8E"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">set 结构的声明</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#set-%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">set 的初始化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#set-%E8%BD%AC%E6%8D%A2%E4%B8%BA%E6%95%B0%E7%BB%84"><span class="toc-number">1.1.1.3.</span> <span class="toc-text">set 转换为数组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A8"><span class="toc-number">1.1.1.4.</span> <span class="toc-text">注</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Set-%E5%AE%9E%E4%BE%8B%E7%9A%84%E5%B1%9E%E6%80%A7%E5%92%8C%E6%96%B9%E6%B3%95"><span class="toc-number">1.1.2.</span> <span class="toc-text">Set 实例的属性和方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%81%8D%E5%8E%86%E6%93%8D%E4%BD%9C"><span class="toc-number">1.1.3.</span> <span class="toc-text">遍历操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#keys-%EF%BC%8Cvalues-%EF%BC%8Centries"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">keys()，values()，entries()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#forEach"><span class="toc-number">1.1.3.2.</span> <span class="toc-text">forEach()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%81%8D%E5%8E%86%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-number">1.1.3.3.</span> <span class="toc-text">遍历的应用</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#map"><span class="toc-number">1.2.</span> <span class="toc-text">map</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-number">1.2.1.</span> <span class="toc-text">基本使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#map-%E5%88%9B%E5%BB%BA"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">map 创建</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#map-%E7%9A%84%E5%B1%9E%E6%80%A7%E5%92%8C%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95"><span class="toc-number">1.2.2.</span> <span class="toc-text">map 的属性和操作方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#size-%E5%B1%9E%E6%80%A7"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">size 属性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#set-key-value"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">set(key, value)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#get-key"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">get(key)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#has-key"><span class="toc-number">1.2.2.4.</span> <span class="toc-text">has(key)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#delete-key"><span class="toc-number">1.2.2.5.</span> <span class="toc-text">delete(key)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#clear"><span class="toc-number">1.2.2.6.</span> <span class="toc-text">clear()</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#map-%E7%9A%84%E9%81%8D%E5%8E%86%E6%93%8D%E4%BD%9C"><span class="toc-number">1.2.3.</span> <span class="toc-text">map 的遍历操作</span></a></li></ol></li></ol></li></ol>
+            </div>
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 62
+        </div>
+        <!-- search  -->
+    </div>
+    <div class="post-archive">
+            <div class="archive-year"> 2025 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/26</span>
+            <a class="archive-post-title" href="/2025/hello-world/">Hello World</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/26</span>
+            <a class="archive-post-title" href="/2025/other/%E5%B0%86Hexo%E6%8F%90%E4%BA%A4%E5%88%B0%E4%BB%93%E5%BA%93/">将Hexo提交到仓库</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/note/%E3%80%8A%E7%BD%AA%E4%B8%8E%E7%BD%9A%E3%80%8B/">《罪与罚》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/other/%E4%BB%8E%E7%8E%B0%E6%9C%89%E7%9A%84%E4%BB%93%E5%BA%93%E5%88%87%E6%8D%A2%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E4%BB%93%E5%BA%93/">从现有git仓库切换到另一个仓库</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/cesium/%E5%8F%AA%E6%98%BE%E7%A4%BA%E6%9F%90%E4%B8%AA%E5%8C%BA%E5%9F%9F/">仅显示某个行政区划（cesium 挖孔）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2025/cesium/%E7%AC%AC%E4%B8%80%E4%B8%AAcesium%E9%A1%B9%E7%9B%AE/">第一个cesium项目</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E6%B3%A2%E6%B5%AA/">使用着色器绘制波浪</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E5%9B%BE%E6%A1%88/">使用着色器绘制图案</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%9D%80%E8%89%B2%E5%99%A8%E7%A8%8B%E5%BA%8F/">第一个 shader 程序</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span>
+            <a class="archive-post-title" href="/2025/Threejs/Threejs%20Modules/">THREE Modules</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2025/other/%E5%A6%82%E4%BD%95%E7%A7%BB%E9%99%A4%20GitHub%20%E4%B8%AD%E7%9A%84%20contributors/">如何移除 GitHub 中的 contributors</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vuex/">Vuex</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E6%8F%92%E4%BB%B6/">Vue 插件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vue-router/">vue-router</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/mixin/">Mixin (混入)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E8%84%9A%E6%89%8B%E6%9E%B6/">Vue 脚手架</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/%E7%BB%84%E4%BB%B6%E9%97%B4%E9%80%9A%E4%BF%A1/">组件间通信</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/%E6%8C%89%E9%94%AE%E4%BF%AE%E9%A5%B0%E7%AC%A6/">按键修饰符</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span>
+            <a class="archive-post-title" href="/2022/vue/%E7%BB%84%E4%BB%B6/">Vue 组件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span>
+            <a class="archive-post-title" href="/2022/vue/%E8%BF%87%E6%B8%A1%E4%B8%8E%E5%8A%A8%E7%94%BB/">过渡与动画</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span>
+            <a class="archive-post-title" href="/2022/ES6/Promise/">Promise</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E6%8C%87%E4%BB%A4/">Vue 基本指令</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">Vue 生命周期</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/29</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E5%AE%9E%E4%BE%8B%E5%AF%B9%E8%B1%A1/">Vue实例对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span>
+            <a class="archive-post-title" href="/2022/ES6/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%89%A9%E5%B1%95/">字符串的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span>
+            <a class="archive-post-title" href="/2022/ES6/Moudle%20%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%AE%9E%E7%8E%B0/">Module 的加载实现</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/21</span>
+            <a class="archive-post-title" href="/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/">Module 模块化</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span>
+            <a class="archive-post-title" href="/2022/ES6/%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%89%A9%E5%B1%95/">对象的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2022/ES6/Class%E7%9A%84%E7%BB%A7%E6%89%BF/">Class的基本用法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2022/ES6/Class%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">Class的基本用法</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/18</span>
+            <a class="archive-post-title" href="/2021/ES6/set%E4%B8%8Emap/">set 与 map</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/05</span>
+            <a class="archive-post-title" href="/2021/Ajax/Ajax%E8%B7%A8%E5%9F%9F%E8%AF%B7%E6%B1%82/">Ajax跨域</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2021/Ajax/Fetch/">Fetch</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2021/Ajax/Axios/">Axios</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/22</span>
+            <a class="archive-post-title" href="/2021/Ajax/%E5%8E%9F%E7%94%9FAjax/">原生Ajax</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span>
+            <a class="archive-post-title" href="/2021/node/node/">node</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span>
+            <a class="archive-post-title" href="/2021/less/less/">less</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/11</span>
+            <a class="archive-post-title" href="/2021/ES6/Symbol/">Symbol</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/08</span>
+            <a class="archive-post-title" href="/2021/ES6/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A9%E5%B1%95/">函数的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2021/ES6/%E5%8F%98%E9%87%8F%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC/">变量解构赋值</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2021/ES6/ES6%E7%AE%80%E4%BB%8B/">ES6简介</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2021/ES6/let%E4%B8%8Econst/">let与const</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/26</span>
+            <a class="archive-post-title" href="/2021/%E5%AE%9E%E6%88%98/jQuery%E8%BD%AE%E6%92%AD%E5%9B%BE/">jQuery轮播图</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E6%8F%92%E4%BB%B6/">jQuery插件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E5%8A%A8%E7%94%BB/">jQuery动画</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/21</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E4%BA%8B%E4%BB%B6/">jQuery事件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E4%BF%AE%E6%94%B9DOM%E7%BB%93%E6%9E%84/">jQuery修改DOM结构</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E6%93%8D%E4%BD%9CDOM/">jQuery操作DOM元素</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E9%80%89%E6%8B%A9%E5%99%A8/">jQuery选择器</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E7%AE%80%E4%BB%8B/">jQuery介绍</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%AF%B9%E8%B1%A1/">对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E7%BA%BF%E7%A8%8B%E6%9C%BA%E5%88%B6%E4%B8%8E%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6/">线程机制与事件机制</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%87%BD%E6%95%B0/">函数</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/DOM/%E4%BA%8B%E4%BB%B6/">事件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%8F%98%E9%87%8F%E4%B8%8E%E4%BD%9C%E7%94%A8%E5%9F%9F/">变量与作用域</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/DOM/DOM/">DOM介绍</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/DOM/%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1/">事件对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">基本语法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E6%95%B0%E7%BB%84/">数组</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%96%B9%E6%B3%95/">字符串方法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">类型转换</a>
+        </li>
+            </ul>
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+            <span class="sidebar-tag-name" data-tags="Ajax">
+                <span class="iconfont-archer">&#xe606;</span>
+                Ajax
+            </span>
+            <span class="sidebar-tag-name" data-tags="JavaScript">
+                <span class="iconfont-archer">&#xe606;</span>
+                JavaScript
+            </span>
+            <span class="sidebar-tag-name" data-tags="ES6">
+                <span class="iconfont-archer">&#xe606;</span>
+                ES6
+            </span>
+            <span class="sidebar-tag-name" data-tags="javaScript">
+                <span class="iconfont-archer">&#xe606;</span>
+                javaScript
+            </span>
+            <span class="sidebar-tag-name" data-tags="DOM">
+                <span class="iconfont-archer">&#xe606;</span>
+                DOM
+            </span>
+            <span class="sidebar-tag-name" data-tags="Threejs">
+                <span class="iconfont-archer">&#xe606;</span>
+                Threejs
+            </span>
+            <span class="sidebar-tag-name" data-tags="cesium">
+                <span class="iconfont-archer">&#xe606;</span>
+                cesium
+            </span>
+            <span class="sidebar-tag-name" data-tags="vite">
+                <span class="iconfont-archer">&#xe606;</span>
+                vite
+            </span>
+            <span class="sidebar-tag-name" data-tags="jQuery">
+                <span class="iconfont-archer">&#xe606;</span>
+                jQuery
+            </span>
+            <span class="sidebar-tag-name" data-tags="less">
+                <span class="iconfont-archer">&#xe606;</span>
+                less
+            </span>
+            <span class="sidebar-tag-name" data-tags="node">
+                <span class="iconfont-archer">&#xe606;</span>
+                node
+            </span>
+            <span class="sidebar-tag-name" data-tags="shader">
+                <span class="iconfont-archer">&#xe606;</span>
+                shader
+            </span>
+            <span class="sidebar-tag-name" data-tags="Note">
+                <span class="iconfont-archer">&#xe606;</span>
+                Note
+            </span>
+            <span class="sidebar-tag-name" data-tags="git">
+                <span class="iconfont-archer">&#xe606;</span>
+                git
+            </span>
+            <span class="sidebar-tag-name" data-tags="Vue">
+                <span class="iconfont-archer">&#xe606;</span>
+                Vue
+            </span>
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+        <span class="sidebar-category-name" data-categories="Ajax">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Ajax
+        </span>
+        <span class="sidebar-category-name" data-categories="ES6">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ES6
+        </span>
+        <span class="sidebar-category-name" data-categories="DOM">
+            <span class="iconfont-archer">&#xe60a;</span>
+            DOM
+        </span>
+        <span class="sidebar-category-name" data-categories="Threejs">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Threejs
+        </span>
+        <span class="sidebar-category-name" data-categories="cesium">
+            <span class="iconfont-archer">&#xe60a;</span>
+            cesium
+        </span>
+        <span class="sidebar-category-name" data-categories="jQuery">
+            <span class="iconfont-archer">&#xe60a;</span>
+            jQuery
+        </span>
+        <span class="sidebar-category-name" data-categories="javaScript">
+            <span class="iconfont-archer">&#xe60a;</span>
+            javaScript
+        </span>
+        <span class="sidebar-category-name" data-categories="less">
+            <span class="iconfont-archer">&#xe60a;</span>
+            less
+        </span>
+        <span class="sidebar-category-name" data-categories="node">
+            <span class="iconfont-archer">&#xe60a;</span>
+            node
+        </span>
+        <span class="sidebar-category-name" data-categories="shader">
+            <span class="iconfont-archer">&#xe60a;</span>
+            shader
+        </span>
+        <span class="sidebar-category-name" data-categories="note">
+            <span class="iconfont-archer">&#xe60a;</span>
+            note
+        </span>
+        <span class="sidebar-category-name" data-categories="git">
+            <span class="iconfont-archer">&#xe60a;</span>
+            git
+        </span>
+        <span class="sidebar-category-name" data-categories="Vue">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Vue
+        </span>
+        <span class="sidebar-category-name" data-categories="实战">
+            <span class="iconfont-archer">&#xe60a;</span>
+            实战
+        </span>
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://sukksa.github.io",
+        root: siteMetaRoot,
+        author: "sukksa"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+        <!-- main func -->
+        <script src="/scripts/main.js"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" onload="window.Fancybox.bind('[data-fancybox]')" defer></script>
+        <!-- algolia -->
+        <!-- busuanzi -->
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+            <!-- <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script> -->
+        <!-- async load share.js -->
+            <script src="/scripts/share.js" async></script>
+        <!-- mermaid -->
+    </body>
+</html>

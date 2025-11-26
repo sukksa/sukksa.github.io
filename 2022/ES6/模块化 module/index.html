@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+<!-- keywords -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="sukksa">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="sukksa">
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    <meta name="description" content="">
+    <meta name="description" content="模块化 module基本概述历史上，JavaScript 一直没有模块(module)体系，无法将一个大程序拆分成互相依赖的小文件，再用简单的方法拼装起来。其他语言都有这项功能，比如 Ruby 的require、Python 的import，甚至就连 CSS 都有@import，但是 JavaScript 任何这方面的支持都没有，这对开发大型的、复杂的项目形成了巨大障碍。 在 ES6 之前，社区制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Module 模块化">
+<meta property="og:url" content="https://sukksa.github.io/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/index.html">
+<meta property="og:site_name" content="sukksa blog">
+<meta property="og:description" content="模块化 module基本概述历史上，JavaScript 一直没有模块(module)体系，无法将一个大程序拆分成互相依赖的小文件，再用简单的方法拼装起来。其他语言都有这项功能，比如 Ruby 的require、Python 的import，甚至就连 CSS 都有@import，但是 JavaScript 任何这方面的支持都没有，这对开发大型的、复杂的项目形成了巨大障碍。 在 ES6 之前，社区制">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-21T07:32:08.000Z">
+<meta property="article:modified_time" content="2025-11-26T01:14:32.068Z">
+<meta property="article:author" content="sukksa">
+<meta property="article:tag" content="ES6">
+<meta property="article:tag" content="javaScript">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    <title>Module 模块化 · sukksa&#39;s Studio</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .footer-fixed-btn,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(
+            -45deg,
+            #444 0,
+            #444 80px,
+            #333 80px,
+            #333 160px
+        );
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link id="stylesheet-fancybox" rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-base" rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-mobile" rel="preload" href="/css/mobile.css" as="style" onload="this.onload=null;this.rel='stylesheet';this.media='screen and (max-width: 960px)'">
+    <link id="stylesheet-theme-dark" rel="preload" href="/css/dark.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script"> -->
+    <link rel="preload" href="/lib/jquery.min.js" as="script">
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    <!-- 百度统计  -->
+    <!-- 谷歌统计  -->
+    <!-- Google tag (gtag.js) -->
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script> -->
+    <script src="/lib/jquery.min.js"></script>
+    <script src=""></script>
+    <!-- <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script> -->
+        <body class="post-body">
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        <div class="header-sidebar-menu">
+            <div style="padding-left: 1px;">&#xe775;</div>
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href="/">sukksa's Studio</a>
+        </span>
+    </div>
+    <!-- toggle banner -->
+    <div class="banner">
+        <div class="blog-title header-element">
+            <a href="/">sukksa&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">Module 模块化</a>
+        </div>
+    </div>
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- donate button -->
+
+    <!-- back to top button -->
+    <div class="footer-fixed-btn footer-fixed-btn--hidden back-top">
+        <div>&#xe639;</div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="    height:50vh;
+">
+    <!-- 主页  -->
+    <!-- 404页  -->
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.png)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+                Module 模块化
+            <!-- 404 -->
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            <!-- 404 -->
+        </p>
+        <!-- 文章页 meta -->
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                    <div class="post-intro-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="ES6">ES6</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="javaScript">javaScript</a>
+</div>
+
+                <!-- 文章字数统计 -->
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">4.4k</span>阅读时长: <span class="post-count reading-time">17 min</span></span>
+                    </div>
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2022-07-21</span>
+                    <!-- busuanzi -->
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    <!-- 文章分享 -->
+                    <!-- <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span> -->
+                </div>
+            </div>
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="模块化-module"><a href="#模块化-module" class="headerlink" title="模块化 module"></a>模块化 module</h1><h2 id="基本概述"><a href="#基本概述" class="headerlink" title="基本概述"></a>基本概述</h2><p>历史上，JavaScript 一直没有模块(<code>module</code>)体系，无法将一个大程序拆分成互相依赖的小文件，再用简单的方法拼装起来。其他语言都有这项功能，比如 Ruby 的<code>require</code>、Python 的<code>import</code>，甚至就连 CSS 都有<code>@import</code>，但是 JavaScript 任何这方面的支持都没有，这对开发大型的、复杂的项目形成了巨大障碍。</p>
+<p>在 ES6 之前，社区制定了一些模块加载方案，最主要的有 CommonJS 和 AMD 两种。前者用于服务器，后者用于浏览器。ES6 在语言标准的层面上，实现了模块功能，而且实现得相当简单，完全可以取代 CommonJS 和 AMD 规范，成为浏览器和服务器通用的模块解决方案</p>
+<span id="more"></span>
+<pre><code>    // CommonJS模块
+    let &#123; stat, exists, readFile &#125; = require(&#39;fs&#39;)
+
+    // 等同于
+    let _fs = require(&#39;fs&#39;)
+    let stat = _fs.stat
+    let exists = _fs.exists
+    let readfile = _fs.readfile
+</code></pre>
+<p>上面代码的实质是整体加载<code>fs</code>模块(即加载<code>fs</code>的所有方法)，生成一个对象(<code>_fs</code>)，然后再从这个对象上面读取 3 个方法。这种加载称为“<strong>运行时加载</strong>”，因为只有运行时才能得到这个对象，导致完全没办法在编译时做“静态优化”</p>
+<p>ES6 模块不是对象，而是通过<code>export</code>命令显式指定输出的代码，再通过<code>import</code>命令输入</p>
+<pre><code>    // ES6模块
+    import &#123; stat, exists, readFile &#125; from &quot;fs&quot;
+</code></pre>
+<p>上面代码的实质是从fs模块加载 3 个方法，其他方法不加载。这种加载称为“<strong>编译时加载</strong>”或者静态加载，即 ES6 可以在编译时就完成模块加载，效率要比 CommonJS 模块的加载方式高。当然，这也导致了没法引用 ES6 模块本身，因为它不是对象</p>
+<p>由于 ES6 模块是编译时加载，使得静态分析成为可能。有了它，就能进一步拓宽 JavaScript 的语法，比如引入宏(<code>macro</code>)和类型检验(<code>type system</code>)这些只能靠静态分析实现的功能。<br>除了静态加载带来的各种好处，ES6 模块还有以下好处。 </p>
+<ul>
+<li>不再需要UMD模块格式了，将来服务器和浏览器都会支持 ES6 模块格式。目前，通过各种工具库，其实已经做到了这一点。 </li>
+<li>将来浏览器的新 API 就能用模块格式提供，不再必须做成全局变量或者<code>navigator</code>对象的属性。 </li>
+<li>不再需要对象作为命名空间(比如<code>Math</code>对象)，未来这些功能可以通过模块提供。</li>
+</ul>
+<h2 id="严格模式"><a href="#严格模式" class="headerlink" title="严格模式"></a>严格模式</h2><p>ES6 的模块自动采用严格模式，不管您有没有在模块头部加上<code>&quot;use strict&quot;</code>。</p>
+<p>严格模式主要有以下限制。 </p>
+<ul>
+<li>变量必须声明后再使用 </li>
+<li>函数的参数不能有同名属性，否则报错 </li>
+<li>不能使用<code>with</code>语句 不能对只读属性赋值，否则报错 </li>
+<li>不能使用前缀 0 表示八进制数，否则报错 </li>
+<li>不能删除不可删除的属性，否则报错 </li>
+<li>不能删除变量<code>delete prop</code>，会报错，只能删除属性<code>delete global[prop]</code> </li>
+<li><code>eval</code>不会在它的外层作用域引入变量 </li>
+<li><code>eval</code>和<code>arguments</code>不能被重新赋值 </li>
+<li><code>arguments</code>不会自动反映函数参数的变化 </li>
+<li>不能使用<code>arguments.callee</code> </li>
+<li>不能使用<code>arguments.caller </code></li>
+<li>禁止<code>this</code>指向全局对象 </li>
+<li>不能使用<code>fn.caller</code>和<code>fn.arguments</code>获取函数调用的堆栈 </li>
+<li>增加了保留字(比如<code>protected</code>、<code>static</code>和<code>interface</code>)</li>
+</ul>
+<p>上面这些限制，模块都必须遵守。<br>其中，尤其需要注意<code>this</code>的限制。ES6 模块之中，顶层的<code>this</code>指向<code>undefined</code>，即不应该在顶层代码使用<code>this</code></p>
+<h2 id="export-命令"><a href="#export-命令" class="headerlink" title="export 命令"></a>export 命令</h2><p>模块功能主要由两个命令构成: <code>export</code>和<code>import</code>。</p>
+<ul>
+<li><code>export</code>命令用于规定模块的对外接口</li>
+<li><code>import</code>命令用于输入其他模块提供的功能。</li>
+</ul>
+<p>一个模块就是一个独立的文件。该文件内部的所有变量，外部无法获取。<br>如果您希望外部能够读取模块内部的某个变量，就必须使用<code>export</code>关键字输出该变量。</p>
+<h3 id="分别暴露"><a href="#分别暴露" class="headerlink" title="分别暴露"></a>分别暴露</h3><p>下面是一个 JS 文件，里面使用<code>export</code>命令输出变量，在每个需要暴露的变量前加上<code>export</code>关键字</p>
+<pre><code>    // profile.js
+    export var firstName = &#39;Michael&#39;
+    export var lastName = &#39;Jackson&#39;
+    export function fun() &#123;
+        console.log(&quot;fun&quot;);
+    &#125;
+</code></pre>
+<p>上面代码是<code>profile.js</code>文件，保存了用户信息。ES6 将其视为一个模块，里面用<code>export</code>命令对外部输出了三个变量</p>
+<h3 id="统一暴露"><a href="#统一暴露" class="headerlink" title="统一暴露"></a>统一暴露</h3><p>在<code>export</code>命令后面，使用大括号指定所要输出的一组变量。它与前一种写法(直接放置在<code>var</code>语句前)是等价的</p>
+<pre><code>    // profile.js
+    var firstName = &#39;Michael&#39;
+    var lastName = &#39;Jackson&#39;
+    function fun() &#123;
+        console.log(&quot;fun&quot;);
+    &#125;
+
+    export &#123; firstName, lastName, fun &#125;
+</code></pre>
+<h3 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h3><ul>
+<li><p>通常情况下，<code>export</code>输出的变量就是本来的名字，但是可以使用<code>as</code>关键字重命名</p>
+<pre><code>  function v1() &#123;&#125;
+  function v2() &#123;&#125;
+
+  export &#123; 
+      v1 as streamV1, 
+      v2 as streamV2, 
+      v2 as streamLatestVersion 
+  &#125;
+</code></pre>
+<p>  上面代码使用<code>as</code>关键字，重命名了函数<code>v1</code>和<code>v2</code>的对外接口。重命名后，<code>v2</code>可以用不同的名字输出两次</p>
+</li>
+<li><p><code>export</code>语句输出的接口，与其对应的值是动态绑定关系，即通过该接口，可以取到模块内部实时的值</p>
+<pre><code>  export var foo = &#39;bar&#39;
+  setTimeout(() =&gt; (foo = &#39;baz&#39;), 500)
+</code></pre>
+<p>  上面代码输出变量<code>foo</code>，值为<code>bar</code>，500 毫秒之后变成<code>baz</code></p>
+</li>
+</ul>
+<h2 id="import-命令"><a href="#import-命令" class="headerlink" title="import 命令"></a>import 命令</h2><p>使用<code>export</code>命令定义了模块的对外接口以后，其他 JS 文件就可以通过<code>import</code>命令加载这个模块</p>
+<h3 id="解构赋值形式"><a href="#解构赋值形式" class="headerlink" title="解构赋值形式"></a>解构赋值形式</h3><p><code>import</code>命令接受一对大括号，里面指定要从其他模块导入的变量名。大括号里面的变量名，必须与被导入模块(profile.js)对外接口的名称相同。类似于解构赋值的形式</p>
+<pre><code>    import &#123; firstName, lastName, fun &#125; from &quot;./profile.js&quot;
+</code></pre>
+<p>如果想为输入的变量重新取一个名字，<code>import</code>命令要使用<code>as</code>关键字，将输入的变量重命名</p>
+<pre><code>    import &#123; lastName as surname &#125; from &quot;./profile.js&quot;
+</code></pre>
+<h3 id="整体加载形式"><a href="#整体加载形式" class="headerlink" title="整体加载形式"></a>整体加载形式</h3><p>除了指定加载某个输出值，还可以使用整体加载，即用星号(<code>*</code>)指定一个对象，所有输出值都加载在这个对象上面</p>
+<pre><code>    import * as info from &#39;./profile.js&#39;
+</code></pre>
+<p>注意，模块整体加载所在的那个对象，应该是可以静态分析的，所以不允许运行时改变。<br>下面的写法都是不允许</p>
+<pre><code>    import * as info from &#39;./profile.js&#39;
+    info.firstName = &#39;a&#39;
+    // Cannot assign to read only property &#39;firstName&#39; of object &#39;[object Module]&#39;
+</code></pre>
+<h2 id="export-default-命令"><a href="#export-default-命令" class="headerlink" title="export default 命令"></a>export default 命令</h2><p>从前面的例子可以看出，使用<code>import</code>命令的时候，用户需要知道所要加载的变量名或函数名，否则无法加载。但是，用户肯定希望快速上手，未必愿意阅读文档，去了解模块有哪些属性和方法。 </p>
+<p>为了给用户提供方便，让他们不用阅读文档就能加载模块，就要用到<code>export default</code>命令，为模块指定默认输出</p>
+<pre><code>    // export-default.js
+    export default function () &#123;
+        console.log(&#39;foo&#39;)
+    &#125;
+</code></pre>
+<p>其他模块加载该模块时，<code>import</code>命令可以为该匿名函数指定任意名字</p>
+<pre><code>    // import-default.js
+    import customName from &#39;./export-default&#39;
+    customName() // &#39;foo&#39;
+</code></pre>
+<p>上面代码的<code>import</code>命令，可以用任意名称指向<code>export-default.js</code>输出的方法，这时就不需要知道原模块输出的函数名。需要注意的是，这时<code>import</code>命令后面，不使用大括号</p>
+<p><code>export default</code>命令用在非匿名函数前，也是可以的</p>
+<pre><code>    // export-default.js
+    export default function foo() &#123;
+        console.log(&#39;foo&#39;)
+    &#125;
+
+    // 或者写成
+
+    function foo() &#123;
+        console.log(&#39;foo&#39;)
+    &#125;
+
+    export default foo
+</code></pre>
+<p>上面代码中，<code>foo</code>函数的函数名<code>foo</code>，在模块外部是无效的。加载的时候，视同匿名函数加载</p>
+<hr>
+<p>下面比较一下默认输出和正常输出</p>
+<pre><code>    // 第一组
+    export default function crc32() &#123;
+        // 输出
+        // ...
+    &#125;
+
+    import crc32 from &#39;crc32&#39; // 输入
+
+    // 第二组
+    export function crc32() &#123;
+        // 输出
+        // ...
+    &#125;
+
+    import &#123; crc32 &#125; from &#39;crc32&#39; // 输入
+</code></pre>
+<p>上面代码的两组写法，第一组是使用<code>export default</code>时，对应的<code>import</code>语句不需要使用大括号；第二组是不使用<code>export default</code>时，对应的<code>import</code>语句需要使用大括号。 </p>
+<p><code>export default</code>命令用于指定模块的默认输出。显然，一个模块只能有一个默认输出，因此<code>export default</code>命令只能使用一次。所以，<code>import</code> 命令后面才不用加大括号，因为只可能唯一对应<code>export default</code>命令。 </p>
+<p>本质上，<code>export default</code>就是输出一个叫做<code>default</code>的变量或方法，然后系统允许您为它取任意名字</p>
+<p>所以，下面的写法是有效的</p>
+<pre><code>    // modules.js
+    function add(x, y) &#123;
+        return x * y
+    &#125;
+    export &#123; add as default &#125;
+    // 等同于
+    // export default add
+
+    // app.js
+    import &#123; default as foo &#125; from &#39;modules&#39;
+    // 等同于
+    // import foo from &#39;modules&#39;
+</code></pre>
+<p>正是因为<code>export default</code>命令其实只是输出一个叫做<code>default</code>的变量，所以它后面不能跟变量声明语句</p>
+<pre><code>    // 正确
+    export var a = 1
+
+    // 正确
+    var a = 1
+    export default a
+
+    // 错误
+    export default var a = 1
+</code></pre>
+<hr>
+<p>例：<br>有了<code>export default</code>命令，输入模块时就非常直观了，以输入 lodash 模块为例</p>
+<pre><code>    import _ from &quot;lodash&quot;
+</code></pre>
+<p>如果想在一条import语句中，同时输入默认方法和其他接口，可以写成下面这样</p>
+<pre><code>    import _, &#123; each, each as forEach &#125; from &quot;lodash&quot;
+</code></pre>
+<p>对应上面代码的<code>export</code>语句如下。</p>
+<pre><code>    export default function (obj) &#123;&#125;
+
+    export function each(obj, iterator, context) &#123;&#125;
+
+    export &#123; each as forEach &#125;
+</code></pre>
+<p>上面代码的最后一行的意思是，暴露出<code>forEach</code>接口，默认指向<code>each</code>接口，即<code>forEach</code>和<code>each</code>指向同一个方法</p>
+<p><code>export default</code>也可以用来输出类</p>
+<pre><code>    // MyClass.js
+    export default class &#123;&#125;
+
+    // main.js
+    import MyClass from &#39;MyClass&#39;
+    let o = new MyClass()
+</code></pre>
+<h2 id="export-与-import-的复合写法"><a href="#export-与-import-的复合写法" class="headerlink" title="export 与 import 的复合写法"></a>export 与 import 的复合写法</h2><p>如果在一个模块之中，先输入后输出同一个模块，<code>import</code>语句可以与<code>export</code>语句写在一起</p>
+<pre><code>    export &#123; foo, bar &#125; from &#39;my_module&#39;
+
+    // 可以简单理解为
+    import &#123; foo, bar &#125; from &#39;my_module&#39;
+    export &#123; foo, bar &#125;
+</code></pre>
+<p>上面代码中，<code>export</code>和<code>import</code>语句可以结合在一起，写成一行。但需要注意的是，写成一行以后，<code>foo</code>和<code>bar</code>实际上并没有被导入当前模块，只是相当于对外转发了这两个接口，导致当前模块不能直接使用<code>foo</code>和<code>bar</code></p>
+<p>上面代码中，<code>export</code>和<code>import</code>语句可以结合在一起，写成一行。<br>但需要注意的是，写成一行以后，<code>foo</code>和<code>bar</code>实际上并没有被导入当前模块，只是相当于对外转发了这两个接口，导致当前模块不能直接使用<code>foo</code>和<code>bar</code></p>
+<p>模块的接口改名和整体输出，也可以采用这种写法</p>
+<pre><code>    // 接口改名
+    export &#123; foo as myFoo &#125; from &quot;my_module&quot;
+    
+    // 整体输出
+    export * from &quot;my_module&quot;
+</code></pre>
+<p>默认接口的写法如下</p>
+<pre><code>    export &#123; default &#125; from &quot;foo&quot;
+</code></pre>
+<p>具名接口改为默认接口的写法如下</p>
+<pre><code>    export &#123; es6 as default &#125; from &#39;./someModule&#39;
+
+    // 等同于
+    import &#123; es6 &#125; from &#39;./someModule&#39;
+    export default es6
+</code></pre>
+<p>默认接口也可以改名为具名接口</p>
+<pre><code>    export &#123; default as es6 &#125; from &#39;./someModule&#39;
+</code></pre>
+<p>下面三种import语句，没有对应的复合写法。</p>
+<pre><code>    import * as someIdentifier from &#39;someModule&#39;
+    import someIdentifier from &#39;someModule&#39;
+    import someIdentifier, &#123; namedIdentifier &#125; from &#39;someModule&#39;
+</code></pre>
+<h2 id="模块的继承"><a href="#模块的继承" class="headerlink" title="模块的继承"></a>模块的继承</h2><p>模块之间也可以继承。</p>
+<p>假设有一个<code>circleplus</code>模块，继承了<code>circle</code>模块</p>
+<pre><code>    // circleplus.js
+
+    export * from &#39;circle&#39;
+    export var e = 2.71828182846
+    export default function (x) &#123;
+        return Math.exp(x)
+    &#125;
+</code></pre>
+<p>上面代码中的<code>export *</code>，表示再输出<code>circle</code>模块的所有属性和方法。注意，<code>export *</code>命令会忽略<code>circle</code>模块的<code>default</code>方法。然后，上面代码又输出了自定义的<code>e</code>变量和默认方法</p>
+<p>这时，也可以将circle的属性或方法，改名后再输出</p>
+<pre><code>    // circleplus.js
+
+    export &#123; area as circleArea &#125; from &#39;circle&#39;
+</code></pre>
+<p>上面代码表示，只输出<code>circle</code>模块的<code>area</code>方法，且将其改名为<code>circleArea</code></p>
+<p>加载上面模块的写法如下</p>
+<pre><code>    // main.js
+
+    import * as math from &#39;circleplus&#39;
+    import exp from &#39;circleplus&#39;
+    console.log(exp(math.e))
+</code></pre>
+<p>上面代码中的<code>import exp</code>表示，将<code>circleplus</code>模块的默认方法加载为<code>exp</code>方法</p>
+<h2 id="跨模块常量"><a href="#跨模块常量" class="headerlink" title="跨模块常量"></a>跨模块常量</h2><p>由于<code>const</code>声明的常量只在当前代码块有效，如果想设置跨模块的常量(即跨多个文件)，或者说一个值要被多个模块共享，可以采用下面的写法</p>
+<pre><code>    // constants.js 模块
+    export const A = 1
+    export const B = 3
+    export const C = 4
+
+    // test1.js 模块
+    import * as constants from &#39;./constants&#39;
+    console.log(constants.A) // 1
+    console.log(constants.B) // 3
+
+    // test2.js 模块
+    import &#123; A, B &#125; from &#39;./constants&#39;
+    console.log(A) // 1
+    console.log(B) // 3
+</code></pre>
+<p>如果要使用的常量非常多，可以建一个专门的<code>constants</code>目录，将各种常量写在不同的文件里面，保存在该目录下</p>
+<pre><code>    // constants/db.js
+    export const db = &#123;
+        url: &#39;https://my.couchdbserver.local:5984&#39;,
+        admin_username: &#39;admin&#39;,
+        admin_password: &#39;admin password&#39;,
+    &#125;
+
+    // constants/user.js
+    export const users = [&#39;root&#39;, &#39;admin&#39;, &#39;staff&#39;, &#39;ceo&#39;, &#39;chief&#39;, &#39;moderator&#39;]
+</code></pre>
+<p>然后，将这些文件输出的常量，合并在<code>index.js</code>里面</p>
+<pre><code>    // constants/index.js
+    export &#123; db &#125; from &#39;./db&#39;
+    export &#123; users &#125; from &#39;./users&#39;
+</code></pre>
+<p>使用的时候，直接加载<code>index.js</code>就可以了。</p>
+<pre><code>    // script.js
+    import &#123; db, users &#125; from &quot;./constants/index&quot;
+</code></pre>
+<h2 id="import"><a href="#import" class="headerlink" title="import()"></a>import()</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>前面介绍过，<code>import</code>命令会被 JavaScript 引擎静态分析，先于模块内的其他语句执行(<code>import</code>命令叫做“连接” binding 其实更合适)。所以，下面的代码会报错</p>
+<pre><code>    // 报错
+    if (x === 2) &#123;
+        import MyModual from &#39;./myModual&#39;
+    &#125;
+</code></pre>
+<p>上面代码中，引擎处理<code>import</code>语句是在编译时，这时不会去分析或执行if语句，所以<code>import</code>语句放在<code>if</code>代码块之中毫无意义，因此会报句法错误，而不是执行时错误。<br>也就是说，<code>import</code>和<code>export</code>命令只能在模块的顶层，不能在代码块之中(比如，在if代码块之中，或在函数之中)。<br>这样的设计，固然有利于编译器提高效率，但也导致无法在运行时加载模块。在语法上，条件加载就不可能实现。<br>如果<code>import</code>命令要取代 Node 的<code>require</code>方法，这就形成了一个障碍。因为<code>require</code>是运行时加载模块，<code>import</code>命令无法取代<code>require</code>的动态加载功能。</p>
+<pre><code>    const path = &#39;./&#39; + fileName
+    const myModual = require(path)
+</code></pre>
+<p>上面的语句就是动态加载，<code>require</code>到底加载哪一个模块，只有运行时才知道。<code>import</code>命令做不到这一点</p>
+<p>因此，有一个提案，建议引入<code>import()</code>函数，完成动态加载</p>
+<pre><code>    import(specifier)
+</code></pre>
+<p>上面代码中，<code>import</code>函数的参数<code>specifier</code>，指定所要加载的模块的位置。<code>import</code>命令能够接受什么参数，<code>import()</code>函数就能接受什么参数，两者区别主要是后者为动态加载</p>
+<hr>
+<p><code>import()</code>返回一个 Promise 对象。下面是一个例子。</p>
+<pre><code>    const main = document.querySelector(&#39;main&#39;)
+
+    import(`./section-modules/$&#123;someVariable&#125;.js`)
+        .then((module) =&gt; &#123;
+            module.loadPageInto(main)
+        &#125;)
+        .catch((err) =&gt; &#123;
+            main.textContent = err.message
+        &#125;)
+</code></pre>
+<p><code>import()</code>函数可以用在任何地方，不仅仅是模块，非模块的脚本也可以使用。它是运行时执行，也就是说，什么时候运行到这一句，就会加载指定的模块。另外，<code>import()</code>函数与所加载的模块没有静态连接关系，这点也是与<code>import</code>语句不相同。<code>import()</code>类似于 Node 的<code>require</code>方法，<strong>区别主要是前者是异步加载，后者是同步加载</strong></p>
+<h3 id="适用场合"><a href="#适用场合" class="headerlink" title="适用场合"></a>适用场合</h3><p>下面是<code>import()</code>的一些适用场合</p>
+<h4 id="按需加载"><a href="#按需加载" class="headerlink" title="按需加载"></a>按需加载</h4><p><code>import()</code>可以在需要的时候，再加载某个模块</p>
+<pre><code>    button.addEventListener(&#39;click&#39;, (event) =&gt; &#123;
+        import(&#39;./dialogBox.js&#39;)
+            .then((dialogBox) =&gt; &#123;
+                dialogBox.open()
+            &#125;)
+            .catch((error) =&gt; &#123;
+                /* Error handling */
+            &#125;)
+    &#125;)
+</code></pre>
+<p>上面代码中，<code>import()</code>方法放在<code>click</code>事件的监听函数之中，只有用户点击了按钮，才会加载这个模块</p>
+<h4 id="条件加载"><a href="#条件加载" class="headerlink" title="条件加载"></a>条件加载</h4><p><code>import()</code>可以放在<code>if</code>代码块，根据不同的情况，加载不同的模块</p>
+<pre><code>    if (condition) &#123;
+        import(&#39;moduleA&#39;).then()
+    &#125; else &#123;
+        import(&#39;moduleB&#39;).then()
+    &#125;
+</code></pre>
+<p>上面代码中，如果满足条件，就加载模块 A，否则加载模块 B</p>
+<h4 id="动态的模块路径"><a href="#动态的模块路径" class="headerlink" title="动态的模块路径"></a>动态的模块路径</h4><p><code>import()</code>允许模块路径动态生成</p>
+<pre><code>    import(f()).then()
+</code></pre>
+<p>上面代码中，根据函数<code>f</code>的返回结果，加载不同的模块</p>
+<h3 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h3><p><code>import()</code>加载模块成功以后，这个模块会作为一个对象，当作<code>then</code>方法的参数。因此，可以使用对象解构赋值的语法，获取输出接口</p>
+<pre><code>    import(&#39;./myModule.js&#39;).then((&#123; export1, export2 &#125;) =&gt; &#123;
+        // ...·
+    &#125;)
+</code></pre>
+<p>上面代码中，<code>export1</code>和<code>export2</code>都是<code>myModule.js</code>的输出接口，可以解构获得。</p>
+<p>如果模块有<code>default</code>输出接口，可以用参数直接获得</p>
+<pre><code>    import(&#39;./myModule.js&#39;).then((myModule) =&gt; &#123;
+        console.log(myModule.default)
+    &#125;)
+
+    //上面的代码也可以使用具名输入的形式
+    import(&#39;./myModule.js&#39;).then((&#123; default: theDefault &#125;) =&gt; &#123;
+        console.log(theDefault)
+    &#125;)
+</code></pre>
+<p>如果想同时加载多个模块，可以采用下面的写法</p>
+<pre><code>    Promise.all([
+        import(&#39;./module1.js&#39;), 
+        import(&#39;./module2.js&#39;), 
+        import(&#39;./module3.js&#39;)])
+    .then(([module1, module2, module3]) =&gt; &#123;
+
+    &#125;)
+</code></pre>
+<p><code>import()</code>也可以用在 async 函数之中。</p>
+<pre><code>    async function main() &#123;
+        const myModule = await import(&#39;./myModule.js&#39;)
+        const &#123; export1, export2 &#125; = await import(&#39;./myModule.js&#39;)
+        const [module1, module2, module3] = await Promise.all([
+            import(&#39;./module1.js&#39;),
+            import(&#39;./module2.js&#39;),
+            import(&#39;./module3.js&#39;),
+        ])
+    &#125;
+    main()
+</code></pre>
+
+    </article>
+    <!-- license -->
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://sukksa.github.io">sukksa</a>
+            <p>原文链接：<a href="https://sukksa.github.io/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/">https://sukksa.github.io/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/</a>
+            <!-- <p>发表日期：<a href="https://sukksa.github.io/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/">July 21st 2022, 3:32:08 pm</a>
+            <p>更新日期：<a href="https://sukksa.github.io/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/">November 26th 2025, 9:14:32 am</a> -->
+            <p>发表日期：<a href="https://sukksa.github.io/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/">2022-07-21 15:32:08</a>
+            <p>更新日期：<a href="https://sukksa.github.io/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/">2025-11-26 09:14:32</a>
+        </div>
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2022/ES6/Moudle%20%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%AE%9E%E7%8E%B0/" title="Module 的加载实现">
+                    <div class="nextTitle">Module 的加载实现</div>
+                </a>
+        </li>
+        <li class="previous">
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2022/ES6/%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%89%A9%E5%B1%95/" title="对象的扩展">
+                    <div class="prevTitle">对象的扩展</div>
+                </a>
+        </li>
+    </ul>
+    <!-- comment -->
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+            
+            
+            
+            <!-- utteranc评论 -->
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+            
+            
+            
+        </div>
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    <!-- Mathjax -->
+</main>
+
+                <!-- profile -->
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+        <div class="social">
+                            <a href="mailto:2450553074@qq.com" class="iconfont-archer email" title="email" ></a>
+                <a href="//github.com/sukksa" class="iconfont-archer github" target="_blank" title="github"></a>
+                <a href="https://space.bilibili.com/74396531" class="iconfont-archer bilibili" target="_blank" title="bilibili"></a>
+
+        </div>
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    <!-- 不蒜子  -->
+        <div class="busuanzi-container">
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+        </div>
+</footer>
+
+        </div>
+        <!-- toc -->
+            <div class="toc-wrapper toc-wrapper-loding" style=    top:50vh;
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E5%8C%96-module"><span class="toc-number">1.</span> <span class="toc-text">模块化 module</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E8%BF%B0"><span class="toc-number">1.1.</span> <span class="toc-text">基本概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%A5%E6%A0%BC%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">严格模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#export-%E5%91%BD%E4%BB%A4"><span class="toc-number">1.3.</span> <span class="toc-text">export 命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%88%AB%E6%9A%B4%E9%9C%B2"><span class="toc-number">1.3.1.</span> <span class="toc-text">分别暴露</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%9F%E4%B8%80%E6%9A%B4%E9%9C%B2"><span class="toc-number">1.3.2.</span> <span class="toc-text">统一暴露</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F"><span class="toc-number">1.3.3.</span> <span class="toc-text">注意</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#import-%E5%91%BD%E4%BB%A4"><span class="toc-number">1.4.</span> <span class="toc-text">import 命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC%E5%BD%A2%E5%BC%8F"><span class="toc-number">1.4.1.</span> <span class="toc-text">解构赋值形式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B4%E4%BD%93%E5%8A%A0%E8%BD%BD%E5%BD%A2%E5%BC%8F"><span class="toc-number">1.4.2.</span> <span class="toc-text">整体加载形式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#export-default-%E5%91%BD%E4%BB%A4"><span class="toc-number">1.5.</span> <span class="toc-text">export default 命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#export-%E4%B8%8E-import-%E7%9A%84%E5%A4%8D%E5%90%88%E5%86%99%E6%B3%95"><span class="toc-number">1.6.</span> <span class="toc-text">export 与 import 的复合写法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E7%9A%84%E7%BB%A7%E6%89%BF"><span class="toc-number">1.7.</span> <span class="toc-text">模块的继承</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%A8%E6%A8%A1%E5%9D%97%E5%B8%B8%E9%87%8F"><span class="toc-number">1.8.</span> <span class="toc-text">跨模块常量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#import"><span class="toc-number">1.9.</span> <span class="toc-text">import()</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">1.9.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E5%90%88"><span class="toc-number">1.9.2.</span> <span class="toc-text">适用场合</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%89%E9%9C%80%E5%8A%A0%E8%BD%BD"><span class="toc-number">1.9.2.1.</span> <span class="toc-text">按需加载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E5%8A%A0%E8%BD%BD"><span class="toc-number">1.9.2.2.</span> <span class="toc-text">条件加载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E7%9A%84%E6%A8%A1%E5%9D%97%E8%B7%AF%E5%BE%84"><span class="toc-number">1.9.2.3.</span> <span class="toc-text">动态的模块路径</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E7%82%B9"><span class="toc-number">1.9.3.</span> <span class="toc-text">注意点</span></a></li></ol></li></ol></li></ol>
+            </div>
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 62
+        </div>
+        <!-- search  -->
+    </div>
+    <div class="post-archive">
+            <div class="archive-year"> 2025 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/26</span>
+            <a class="archive-post-title" href="/2025/hello-world/">Hello World</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/26</span>
+            <a class="archive-post-title" href="/2025/other/%E5%B0%86Hexo%E6%8F%90%E4%BA%A4%E5%88%B0%E4%BB%93%E5%BA%93/">将Hexo提交到仓库</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/note/%E3%80%8A%E7%BD%AA%E4%B8%8E%E7%BD%9A%E3%80%8B/">《罪与罚》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/other/%E4%BB%8E%E7%8E%B0%E6%9C%89%E7%9A%84%E4%BB%93%E5%BA%93%E5%88%87%E6%8D%A2%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E4%BB%93%E5%BA%93/">从现有git仓库切换到另一个仓库</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/cesium/%E5%8F%AA%E6%98%BE%E7%A4%BA%E6%9F%90%E4%B8%AA%E5%8C%BA%E5%9F%9F/">仅显示某个行政区划（cesium 挖孔）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2025/cesium/%E7%AC%AC%E4%B8%80%E4%B8%AAcesium%E9%A1%B9%E7%9B%AE/">第一个cesium项目</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E6%B3%A2%E6%B5%AA/">使用着色器绘制波浪</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E5%9B%BE%E6%A1%88/">使用着色器绘制图案</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%9D%80%E8%89%B2%E5%99%A8%E7%A8%8B%E5%BA%8F/">第一个 shader 程序</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span>
+            <a class="archive-post-title" href="/2025/Threejs/Threejs%20Modules/">THREE Modules</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2025/other/%E5%A6%82%E4%BD%95%E7%A7%BB%E9%99%A4%20GitHub%20%E4%B8%AD%E7%9A%84%20contributors/">如何移除 GitHub 中的 contributors</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vuex/">Vuex</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E6%8F%92%E4%BB%B6/">Vue 插件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vue-router/">vue-router</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/mixin/">Mixin (混入)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E8%84%9A%E6%89%8B%E6%9E%B6/">Vue 脚手架</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/%E7%BB%84%E4%BB%B6%E9%97%B4%E9%80%9A%E4%BF%A1/">组件间通信</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/%E6%8C%89%E9%94%AE%E4%BF%AE%E9%A5%B0%E7%AC%A6/">按键修饰符</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span>
+            <a class="archive-post-title" href="/2022/vue/%E7%BB%84%E4%BB%B6/">Vue 组件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span>
+            <a class="archive-post-title" href="/2022/vue/%E8%BF%87%E6%B8%A1%E4%B8%8E%E5%8A%A8%E7%94%BB/">过渡与动画</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span>
+            <a class="archive-post-title" href="/2022/ES6/Promise/">Promise</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E6%8C%87%E4%BB%A4/">Vue 基本指令</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">Vue 生命周期</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/29</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E5%AE%9E%E4%BE%8B%E5%AF%B9%E8%B1%A1/">Vue实例对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span>
+            <a class="archive-post-title" href="/2022/ES6/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%89%A9%E5%B1%95/">字符串的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span>
+            <a class="archive-post-title" href="/2022/ES6/Moudle%20%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%AE%9E%E7%8E%B0/">Module 的加载实现</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/21</span>
+            <a class="archive-post-title" href="/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/">Module 模块化</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span>
+            <a class="archive-post-title" href="/2022/ES6/%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%89%A9%E5%B1%95/">对象的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2022/ES6/Class%E7%9A%84%E7%BB%A7%E6%89%BF/">Class的基本用法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2022/ES6/Class%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">Class的基本用法</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/18</span>
+            <a class="archive-post-title" href="/2021/ES6/set%E4%B8%8Emap/">set 与 map</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/05</span>
+            <a class="archive-post-title" href="/2021/Ajax/Ajax%E8%B7%A8%E5%9F%9F%E8%AF%B7%E6%B1%82/">Ajax跨域</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2021/Ajax/Fetch/">Fetch</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2021/Ajax/Axios/">Axios</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/22</span>
+            <a class="archive-post-title" href="/2021/Ajax/%E5%8E%9F%E7%94%9FAjax/">原生Ajax</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span>
+            <a class="archive-post-title" href="/2021/node/node/">node</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span>
+            <a class="archive-post-title" href="/2021/less/less/">less</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/11</span>
+            <a class="archive-post-title" href="/2021/ES6/Symbol/">Symbol</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/08</span>
+            <a class="archive-post-title" href="/2021/ES6/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A9%E5%B1%95/">函数的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2021/ES6/%E5%8F%98%E9%87%8F%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC/">变量解构赋值</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2021/ES6/ES6%E7%AE%80%E4%BB%8B/">ES6简介</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2021/ES6/let%E4%B8%8Econst/">let与const</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/26</span>
+            <a class="archive-post-title" href="/2021/%E5%AE%9E%E6%88%98/jQuery%E8%BD%AE%E6%92%AD%E5%9B%BE/">jQuery轮播图</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E6%8F%92%E4%BB%B6/">jQuery插件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E5%8A%A8%E7%94%BB/">jQuery动画</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/21</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E4%BA%8B%E4%BB%B6/">jQuery事件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E4%BF%AE%E6%94%B9DOM%E7%BB%93%E6%9E%84/">jQuery修改DOM结构</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E6%93%8D%E4%BD%9CDOM/">jQuery操作DOM元素</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E9%80%89%E6%8B%A9%E5%99%A8/">jQuery选择器</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E7%AE%80%E4%BB%8B/">jQuery介绍</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%AF%B9%E8%B1%A1/">对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E7%BA%BF%E7%A8%8B%E6%9C%BA%E5%88%B6%E4%B8%8E%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6/">线程机制与事件机制</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%87%BD%E6%95%B0/">函数</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/DOM/%E4%BA%8B%E4%BB%B6/">事件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%8F%98%E9%87%8F%E4%B8%8E%E4%BD%9C%E7%94%A8%E5%9F%9F/">变量与作用域</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/DOM/DOM/">DOM介绍</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/DOM/%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1/">事件对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">基本语法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E6%95%B0%E7%BB%84/">数组</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%96%B9%E6%B3%95/">字符串方法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">类型转换</a>
+        </li>
+            </ul>
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+            <span class="sidebar-tag-name" data-tags="Ajax">
+                <span class="iconfont-archer">&#xe606;</span>
+                Ajax
+            </span>
+            <span class="sidebar-tag-name" data-tags="JavaScript">
+                <span class="iconfont-archer">&#xe606;</span>
+                JavaScript
+            </span>
+            <span class="sidebar-tag-name" data-tags="ES6">
+                <span class="iconfont-archer">&#xe606;</span>
+                ES6
+            </span>
+            <span class="sidebar-tag-name" data-tags="javaScript">
+                <span class="iconfont-archer">&#xe606;</span>
+                javaScript
+            </span>
+            <span class="sidebar-tag-name" data-tags="DOM">
+                <span class="iconfont-archer">&#xe606;</span>
+                DOM
+            </span>
+            <span class="sidebar-tag-name" data-tags="Threejs">
+                <span class="iconfont-archer">&#xe606;</span>
+                Threejs
+            </span>
+            <span class="sidebar-tag-name" data-tags="cesium">
+                <span class="iconfont-archer">&#xe606;</span>
+                cesium
+            </span>
+            <span class="sidebar-tag-name" data-tags="vite">
+                <span class="iconfont-archer">&#xe606;</span>
+                vite
+            </span>
+            <span class="sidebar-tag-name" data-tags="jQuery">
+                <span class="iconfont-archer">&#xe606;</span>
+                jQuery
+            </span>
+            <span class="sidebar-tag-name" data-tags="less">
+                <span class="iconfont-archer">&#xe606;</span>
+                less
+            </span>
+            <span class="sidebar-tag-name" data-tags="node">
+                <span class="iconfont-archer">&#xe606;</span>
+                node
+            </span>
+            <span class="sidebar-tag-name" data-tags="shader">
+                <span class="iconfont-archer">&#xe606;</span>
+                shader
+            </span>
+            <span class="sidebar-tag-name" data-tags="Note">
+                <span class="iconfont-archer">&#xe606;</span>
+                Note
+            </span>
+            <span class="sidebar-tag-name" data-tags="git">
+                <span class="iconfont-archer">&#xe606;</span>
+                git
+            </span>
+            <span class="sidebar-tag-name" data-tags="Vue">
+                <span class="iconfont-archer">&#xe606;</span>
+                Vue
+            </span>
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+        <span class="sidebar-category-name" data-categories="Ajax">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Ajax
+        </span>
+        <span class="sidebar-category-name" data-categories="ES6">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ES6
+        </span>
+        <span class="sidebar-category-name" data-categories="DOM">
+            <span class="iconfont-archer">&#xe60a;</span>
+            DOM
+        </span>
+        <span class="sidebar-category-name" data-categories="Threejs">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Threejs
+        </span>
+        <span class="sidebar-category-name" data-categories="cesium">
+            <span class="iconfont-archer">&#xe60a;</span>
+            cesium
+        </span>
+        <span class="sidebar-category-name" data-categories="jQuery">
+            <span class="iconfont-archer">&#xe60a;</span>
+            jQuery
+        </span>
+        <span class="sidebar-category-name" data-categories="javaScript">
+            <span class="iconfont-archer">&#xe60a;</span>
+            javaScript
+        </span>
+        <span class="sidebar-category-name" data-categories="less">
+            <span class="iconfont-archer">&#xe60a;</span>
+            less
+        </span>
+        <span class="sidebar-category-name" data-categories="node">
+            <span class="iconfont-archer">&#xe60a;</span>
+            node
+        </span>
+        <span class="sidebar-category-name" data-categories="shader">
+            <span class="iconfont-archer">&#xe60a;</span>
+            shader
+        </span>
+        <span class="sidebar-category-name" data-categories="note">
+            <span class="iconfont-archer">&#xe60a;</span>
+            note
+        </span>
+        <span class="sidebar-category-name" data-categories="git">
+            <span class="iconfont-archer">&#xe60a;</span>
+            git
+        </span>
+        <span class="sidebar-category-name" data-categories="Vue">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Vue
+        </span>
+        <span class="sidebar-category-name" data-categories="实战">
+            <span class="iconfont-archer">&#xe60a;</span>
+            实战
+        </span>
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://sukksa.github.io",
+        root: siteMetaRoot,
+        author: "sukksa"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+        <!-- main func -->
+        <script src="/scripts/main.js"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" onload="window.Fancybox.bind('[data-fancybox]')" defer></script>
+        <!-- algolia -->
+        <!-- busuanzi -->
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+            <!-- <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script> -->
+        <!-- async load share.js -->
+            <script src="/scripts/share.js" async></script>
+        <!-- mermaid -->
+    </body>
+</html>

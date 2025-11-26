@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+<!-- keywords -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="sukksa">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="sukksa">
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    <meta name="description" content="">
+    <meta name="description" content="SymbolES5 的对象属性名都是字符串，这容易造成属性名的冲突。如在对象中添加一个方法，这个方法名有可能导致重名，引起冲突 ES6 引入了一种新的原始数据类型 Symbol，表示独一无二的值。它是 JavaScript 语言的第七种数据类型 对象的属性名现在可以有两种类型，一种是原来就有的字符串，另一种就是新增的 Symbol 类型。凡是属性名属于 Symbol 类型，就都是独一无二的，可以保">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Symbol">
+<meta property="og:url" content="https://sukksa.github.io/2021/ES6/Symbol/index.html">
+<meta property="og:site_name" content="sukksa blog">
+<meta property="og:description" content="SymbolES5 的对象属性名都是字符串，这容易造成属性名的冲突。如在对象中添加一个方法，这个方法名有可能导致重名，引起冲突 ES6 引入了一种新的原始数据类型 Symbol，表示独一无二的值。它是 JavaScript 语言的第七种数据类型 对象的属性名现在可以有两种类型，一种是原来就有的字符串，另一种就是新增的 Symbol 类型。凡是属性名属于 Symbol 类型，就都是独一无二的，可以保">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-11T06:08:35.000Z">
+<meta property="article:modified_time" content="2025-11-26T01:14:32.066Z">
+<meta property="article:author" content="sukksa">
+<meta property="article:tag" content="ES6">
+<meta property="article:tag" content="javaScript">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    <title>Symbol · sukksa&#39;s Studio</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .footer-fixed-btn,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(
+            -45deg,
+            #444 0,
+            #444 80px,
+            #333 80px,
+            #333 160px
+        );
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link id="stylesheet-fancybox" rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-base" rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-mobile" rel="preload" href="/css/mobile.css" as="style" onload="this.onload=null;this.rel='stylesheet';this.media='screen and (max-width: 960px)'">
+    <link id="stylesheet-theme-dark" rel="preload" href="/css/dark.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script"> -->
+    <link rel="preload" href="/lib/jquery.min.js" as="script">
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    <!-- 百度统计  -->
+    <!-- 谷歌统计  -->
+    <!-- Google tag (gtag.js) -->
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script> -->
+    <script src="/lib/jquery.min.js"></script>
+    <script src=""></script>
+    <!-- <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script> -->
+        <body class="post-body">
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        <div class="header-sidebar-menu">
+            <div style="padding-left: 1px;">&#xe775;</div>
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href="/">sukksa's Studio</a>
+        </span>
+    </div>
+    <!-- toggle banner -->
+    <div class="banner">
+        <div class="blog-title header-element">
+            <a href="/">sukksa&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">Symbol</a>
+        </div>
+    </div>
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- donate button -->
+
+    <!-- back to top button -->
+    <div class="footer-fixed-btn footer-fixed-btn--hidden back-top">
+        <div>&#xe639;</div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="    height:50vh;
+">
+    <!-- 主页  -->
+    <!-- 404页  -->
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.png)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+                Symbol
+            <!-- 404 -->
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            <!-- 404 -->
+        </p>
+        <!-- 文章页 meta -->
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                    <div class="post-intro-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="ES6">ES6</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="javaScript">javaScript</a>
+</div>
+
+                <!-- 文章字数统计 -->
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">2.7k</span>阅读时长: <span class="post-count reading-time">12 min</span></span>
+                    </div>
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2021-11-11</span>
+                    <!-- busuanzi -->
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    <!-- 文章分享 -->
+                    <!-- <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span> -->
+                </div>
+            </div>
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="Symbol"><a href="#Symbol" class="headerlink" title="Symbol"></a>Symbol</h1><p>ES5 的对象属性名都是字符串，这容易造成属性名的冲突。如在对象中添加一个方法，这个方法名有可能导致重名，引起冲突</p>
+<p>ES6 引入了一种新的原始数据类型 <code>Symbol</code>，表示独一无二的值。它是 JavaScript 语言的第七种数据类型</p>
+<p>对象的属性名现在可以有两种类型，一种是原来就有的字符串，另一种就是新增的 Symbol 类型。凡是属性名属于 <code>Symbol</code> 类型，就都是独一无二的，可以保证不会与其他属性名产生冲突</p>
+<span id="more"></span>
+
+<h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><p>声明方式:</p>
+<pre><code>    let s = Symbol()
+    console.log(s, typeof s) // Symbol() &#39;symbol&#39;
+</code></pre>
+<p><code>Symbol</code> 函数前不能使用 <code>new</code> 命令，否则会报错。这是因为生成的 Symbol 是一个原始类型的值，不是对象。也就是说，由于 <code>Symbol</code> 值不是对象，所以不能添加属性。基本上，它是一种类似于字符串的数据类型</p>
+<p><code>Symbol</code>函数可以接受一个字符串作为参数，表示对 <code>Symbol</code> 实例的描述，主要是为了在控制台显示，或者转为字符串时，比较容易区分</p>
+<pre><code>    let s1 = Symbol(&quot;s1&quot;);
+    let s2 = Symbol(&quot;s2&quot;);
+
+    console.log(s1) // Symbol(s1)
+    console.log(s2) // Symbol(s2)
+
+    console.log(s1.toString()) // &quot;Symbol(s1)&quot;
+    console.log(s2.toString()) // &quot;Symbol(s2)&quot;
+</code></pre>
+<p>如果 <code>Symbol</code> 的参数是一个对象，就会调用该对象的<code>toString()</code>方法，将其转为字符串，然后才生成一个 <code>Symbol</code> 值</p>
+<pre><code>    const obj = &#123;
+        name: &quot;obj&quot;,
+        toString: function() &#123;
+            return this.name
+        &#125;
+    &#125;
+
+    let s = Symbol(obj)
+    console.log(s) //Symbol(obj)
+</code></pre>
+<p>注，<code>Symbol</code>函数的参数只是表示对当前 <code>Symbol</code> 值的描述，因此相同参数的<code>Symbol</code>函数的返回值是不相等的</p>
+<pre><code>    // 没有参数的情况
+    let s1 = Symbol()
+    let s2 = Symbol()
+    
+    s1 === s2 // false
+    
+    // 有参数的情况
+    let s1 = Symbol(&quot;s&quot;)
+    let s2 = Symbol(&quot;s&quot;)
+    
+    s1 === s2 // false
+</code></pre>
+<p><code>Symbol</code> 值不能与其他类型的值进行运算和比较，会报错</p>
+<pre><code>    let s = Symbol(&quot;s&quot;)
+    let result = s + 100
+    // TypeError: Cannot convert a Symbol value to a number
+</code></pre>
+<h2 id="Symbol-for"><a href="#Symbol-for" class="headerlink" title="Symbol.for()"></a>Symbol.for()</h2><p>有时，我们希望重新使用同一个 Symbol 值，<code>Symbol.for()</code>方法可以做到这一点。它接受一个字符串作为参数，然后搜索有没有以该参数作为名称的 <code>Symbol</code> 值。如果有，就返回这个 <code>Symbol</code> 值，否则就新建并返回一个以该字符串为名称的 <code>Symbol</code> 值</p>
+<pre><code>    Symbol.for(&quot;foo&quot;) // 创建一个 symbol 并放入 symbol 注册表中，键为 &quot;foo&quot;
+    Symbol.for(&quot;foo&quot;) // 从 symbol 注册表中读取键为&quot;foo&quot;的 symbol
+    Symbol.for(&quot;foo&quot;) === Symbol.for(&quot;foo&quot;) // true
+
+    Symbol(&quot;bar&quot;) === Symbol(&quot;bar&quot;) // false，Symbol() 函数每次都会返回新的一个 symbol
+    
+    var sym = Symbol.for(&quot;mario&quot;)
+    sym.toString()
+    // &quot;Symbol(mario)&quot;，mario 既是该 symbol 在 symbol 注册表中的键名，又是该 symbol 自身的描述字符串
+</code></pre>
+<p><code>Symbol.for()</code>与<code>Symbol()</code>这两种写法，都会生成新的 <code>Symbol</code>。它们的区别是，前者会被登记在全局环境中供搜索，后者不会。<code>Symbol.for()</code>不会每次调用就返回一个新的 <code>Symbol</code> 类型的值，而是会先检查给定的key是否已经存在，如果不存在才会新建一个值</p>
+<h2 id="Symbol-keyFor"><a href="#Symbol-keyFor" class="headerlink" title="Symbol.keyFor()"></a>Symbol.keyFor()</h2><p><code>Symbol.keyFor()</code>方法返回一个已登记的 <code>Symbol</code> 类型值的 key</p>
+<pre><code>    let s1 = Symbol.for(&quot;foo&quot;)
+    Symbol.keyFor(s1) // &quot;foo&quot;
+    
+    let s2 = Symbol(&quot;foo&quot;)
+    Symbol.keyFor(s2) // undefined
+</code></pre>
+<p>变量<code>s2</code>属于未登记的 <code>Symbol</code> 值，所以返回<code>undefined</code></p>
+<p>需要注意的是，<code>Symbol.for()</code>为 Symbol 值登记的名字，是全局环境的，可以在不同的 iframe 或 service worker 中取到同一个值</p>
+<pre><code>    iframe = document.createElement(&quot;iframe&quot;)
+    iframe.src = String(window.location)
+    document.body.appendChild(iframe)
+    
+    iframe.contentWindow.Symbol.for(&quot;foo&quot;) === Symbol.for(&quot;foo&quot;)	// true
+</code></pre>
+<h2 id="内置的-Symbol-值"><a href="#内置的-Symbol-值" class="headerlink" title="内置的 Symbol 值"></a>内置的 Symbol 值</h2><p>除了定义自己使用的 Symbol 值以外，ES6 还提供了 11 个内置的 Symbol 值，指向语言内部使用的方法</p>
+<h3 id="Symbol-hasInstance"><a href="#Symbol-hasInstance" class="headerlink" title="Symbol.hasInstance"></a>Symbol.hasInstance</h3><p>对象的<code>Symbol.hasInstance</code>属性，指向一个内部方法。当其他对象使用<code>instanceof</code>运算符，判断是否为该对象的实例时，会调用这个方法。比如，<code>foo instanceof Foo</code>在语言内部，实际调用的是<code>Foo[Symbol.hasInstance](foo)</code></p>
+<pre><code>    class MyClass &#123;
+        [Symbol.hasInstance](foo) &#123;
+            return foo instanceof Array;
+        &#125;
+    &#125;
+
+    [1, 2, 3] instanceof new MyClass(); // true
+</code></pre>
+<p>上面代码中，<code>MyClass</code>是一个类，<code>new MyClass()</code>会返回一个实例。该实例的<code>Symbol.hasInstance()</code>方法，会在进行<code>instanceof</code>运算时自动调用，判断左侧的运算子是否为<code>Array</code>的实例</p>
+<h3 id="Symbol-isConcatSpreadable"><a href="#Symbol-isConcatSpreadable" class="headerlink" title="Symbol.isConcatSpreadable"></a>Symbol.isConcatSpreadable</h3><p>对象的<code>Symbol.isConcatSpreadable</code>属性等于一个布尔值，表示该对象用于<code>Array.prototype.concat()</code>时，是否可以展开</p>
+<pre><code>    let arr1 = [&quot;c&quot;, &quot;d&quot;];
+    [&quot;a&quot;, &quot;b&quot;].concat(arr1, &quot;e&quot;); // [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;]
+    arr1[Symbol.isConcatSpreadable]; // undefined
+
+    let arr2 = [&quot;c&quot;, &quot;d&quot;];
+    arr2[Symbol.isConcatSpreadable] = false;
+    [&quot;a&quot;, &quot;b&quot;].concat(arr2, &quot;e&quot;); // [&#39;a&#39;, &#39;b&#39;, [&#39;c&#39;,&#39;d&#39;], &#39;e&#39;]
+</code></pre>
+<p>上面代码说明，数组的默认行为是可以展开，<code>Symbol.isConcatSpreadable</code>默认等于<code>undefined</code>。该属性等于<code>true</code>时，也有展开的效果</p>
+<p>类似数组的对象正好相反，默认不展开。它的<code>Symbol.isConcatSpreadable</code>属性设为<code>true</code>，才可以展开</p>
+<pre><code>    let obj = &#123;
+        length: 2,
+        0: &quot;c&quot;,
+        1: &quot;d&quot;
+    &#125;;
+    [&quot;a&quot;, &quot;b&quot;].concat(obj, &quot;e&quot;); // [&#39;a&#39;, &#39;b&#39;, obj, &#39;e&#39;]
+
+    obj[Symbol.isConcatSpreadable] = true;
+    [&quot;a&quot;, &quot;b&quot;].concat(obj, &quot;e&quot;); // [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;, &#39;e&#39;]
+</code></pre>
+<h3 id="Symbol-species"><a href="#Symbol-species" class="headerlink" title="Symbol.species"></a>Symbol.species</h3><p>对象的<code>Symbol.species</code>属性，指向一个构造函数。创建衍生对象时，会使用该属性</p>
+<pre><code>    class MyArray extends Array &#123;&#125;
+
+    const a = new MyArray(1, 2, 3);
+    const b = a.map((x) =&gt; x);
+    const c = a.filter((x) =&gt; x &gt; 1);
+
+    b instanceof MyArray; // true
+    c instanceof MyArray; // true
+</code></pre>
+<p>上面代码中，子类<code>MyArray</code>继承了父类<code>Array</code>，a是<code>MyArray</code>的实例，b和c是a的衍生对象。您可能会认为，b和c都是调用数组方法生成的，所以应该是数组(<code>Array</code>的实例)，但实际上它们也是<code>MyArray</code>的实例</p>
+<h3 id="Symbol-match"><a href="#Symbol-match" class="headerlink" title="Symbol.match"></a>Symbol.match</h3><p>对象的<code>Symbol.match</code>属性，指向一个函数。当执行<code>str.match(myObject)</code>时，如果该属性存在，会调用它，返回该方法的返回值</p>
+<pre><code>    String.prototype.match(regexp);
+    // 等同于
+    regexp[Symbol.match](this);
+
+    class MyMatcher &#123;
+        [Symbol.match](string) &#123;
+            return &quot;hello world&quot;.indexOf(string);
+        &#125;
+    &#125;
+
+    &quot;e&quot;.match(new MyMatcher()); // 1
+</code></pre>
+<h3 id="Symbol-replace"><a href="#Symbol-replace" class="headerlink" title="Symbol.replace"></a>Symbol.replace</h3><p>对象的<code>Symbol.replace</code>属性，指向一个方法，当该对象被<code>String.prototype.replace</code>方法调用时，会返回该方法的返回值</p>
+<pre><code>    String.prototype.replace(searchValue, replaceValue);
+    // 等同于
+    searchValue[Symbol.replace](this, replaceValue);
+</code></pre>
+<p>例：</p>
+<pre><code>    const x = &#123;&#125;;
+    x[Symbol.replace] = (...s) =&gt; console.log(s);
+
+    &quot;Hello&quot;.replace(x, &quot;World&quot;); // [&quot;Hello&quot;, &quot;World&quot;]
+</code></pre>
+<p><code>Symbol.replace</code>方法会收到两个参数，第一个参数是<code>replace</code>方法正在作用的对象，上面例子是<code>Hello</code>，第二个参数是替换后的值，上面例子是<code>World</code></p>
+<h3 id="Symbol-search"><a href="#Symbol-search" class="headerlink" title="Symbol.search"></a>Symbol.search</h3><p>对象的<code>Symbol.search</code>属性，指向一个方法，当该对象被<code>String.prototype.search</code>方法调用时，会返回该方法的返回值</p>
+<pre><code>    String.prototype.search(regexp);
+    // 等同于
+    regexp[Symbol.search](this);
+
+    class MySearch &#123;
+        constructor(value) &#123;
+                this.value = value;
+            &#125;
+            [Symbol.search](string) &#123;
+                return string.indexOf(this.value);
+            &#125;
+    &#125;
+    &quot;foobar&quot;.search(new MySearch(&quot;foo&quot;)); // 0
+</code></pre>
+<h3 id="Symbol-split"><a href="#Symbol-split" class="headerlink" title="Symbol.split"></a>Symbol.split</h3><p>对象的<code>Symbol.split</code>属性，指向一个方法，当该对象被<code>String.prototype.split</code>方法调用时，会返回该方法的返回值</p>
+<pre><code>    String.prototype.split(separator, limit);
+    
+    separator[Symbol.split](this, limit);
+</code></pre>
+<p>例：</p>
+<pre><code>    class MySplitter &#123;
+        constructor(value) &#123;
+                this.value = value;
+            &#125;
+            [Symbol.split](string) &#123;
+                let index = string.indexOf(this.value);
+                if (index === -1) &#123;
+                    return string;
+                &#125;
+                return [string.substr(0, index), string.substr(index + this.value.length)];
+            &#125;
+    &#125;
+
+    &quot;foobar&quot;.split(new MySplitter(&quot;foo&quot;));
+    // [&#39;&#39;, &#39;bar&#39;]
+
+    &quot;foobar&quot;.split(new MySplitter(&quot;bar&quot;));
+    // [&#39;foo&#39;, &#39;&#39;]
+
+    &quot;foobar&quot;.split(new MySplitter(&quot;baz&quot;));
+    // &#39;foobar&#39;
+</code></pre>
+<p>上面方法使用<code>Symbol.split</code>方法，重新定义了字符串对象的split方法的行为</p>
+<h3 id="Symbol-iterator"><a href="#Symbol-iterator" class="headerlink" title="Symbol.iterator"></a>Symbol.iterator</h3><p>对象的<code>Symbol.iterator</code>属性，指向该对象的默认遍历器方法</p>
+<pre><code>    const myIterable = &#123;&#125;;
+    myIterable[Symbol.iterator] = function * () &#123;
+        yield 1;
+        yield 2;
+        yield 3;
+    &#125;;
+
+    [...myIterable]; // [1, 2, 3]
+</code></pre>
+<p>对象进行<code>for...of</code>循环时，会调用<code>Symbol.iterator</code>方法，返回该对象的默认遍历器</p>
+<pre><code>    class Collection &#123;
+        *[Symbol.iterator]() &#123;
+            let i = 0;
+            while (this[i] !== undefined) &#123;
+                yield this[i];
+                ++i;
+            &#125;
+        &#125;
+    &#125;
+
+    let myCollection = new Collection();
+    myCollection[0] = 1;
+    myCollection[1] = 2;
+
+    for (let value of myCollection) &#123;
+        console.log(value);
+    &#125;
+    // 1
+    // 2
+</code></pre>
+<h3 id="Symbol-toPrimitive"><a href="#Symbol-toPrimitive" class="headerlink" title="Symbol.toPrimitive"></a>Symbol.toPrimitive</h3><p>对象的<code>Symbol.toPrimitive</code>属性，指向一个方法。该对象被转为原始类型的值时，会调用这个方法，返回该对象对应的原始类型值。<br> <code>Symbol.toPrimitive</code>被调用时，会接受一个字符串参数，表示当前运算的模式，一共有三种模式。 </p>
+<ul>
+<li><p>Number: 该场合需要转成数值 </p>
+</li>
+<li><p>String: 该场合需要转成字符串 </p>
+</li>
+<li><p>Default: 该场合可以转成数值，也可以转成字符串</p>
+<pre><code>  let obj = &#123;
+      [Symbol.toPrimitive](hint) &#123;
+          switch (hint) &#123;
+              case &quot;number&quot;:
+                  return 123;
+              case &quot;string&quot;:
+                  return &quot;str&quot;;
+              case &quot;default&quot;:
+                  return &quot;default&quot;;
+              default:
+                  throw new Error();
+          &#125;
+      &#125;,
+  &#125;;
+
+  2 * obj; // 246
+  3 + obj; // &#39;3default&#39;
+  obj == &quot;default&quot;; // true
+  String(obj); // &#39;str&#39;
+</code></pre>
+</li>
+</ul>
+<h3 id="Symbol-toStringTag"><a href="#Symbol-toStringTag" class="headerlink" title="Symbol.toStringTag"></a>Symbol.toStringTag</h3><p>对象的<code>Symbol.toStringTag</code>属性，指向一个方法。在该对象上面调用<code>Object.prototype.toString</code>方法时，如果这个属性存在，它的返回值会出现在<code>toString()</code>方法返回的字符串之中，表示对象的类型。也就是说，这个属性可以用来定制<code>[object Object]</code>或<code>[object Array]</code>中<code>object</code>后面的那个字符串</p>
+<pre><code>    // 例一
+    (&#123;
+        [Symbol.toStringTag]: &quot;Foo&quot;
+    &#125;.toString());
+    // &quot;[object Foo]&quot;
+
+    // 例二
+    class Collection &#123;
+        get[Symbol.toStringTag]() &#123;
+            return &quot;xxx&quot;;
+        &#125;
+    &#125;
+    let x = new Collection();
+    Object.prototype.toString.call(x); // &quot;[object xxx]&quot;
+</code></pre>
+<p>ES6 新增内置对象的<code>Symbol.toStringTag</code>属性值如下。 </p>
+<ul>
+<li><code>JSON[Symbol.toStringTag]</code>: ‘JSON’ </li>
+<li><code>Math[Symbol.toStringTag]</code>: ‘Math’ </li>
+<li>Module 对象 <code>M[Symbol.toStringTag]</code>: ‘Module’ </li>
+<li><code>ArrayBuffer.prototype[Symbol.toStringTag]</code>: ‘ArrayBuffer’ </li>
+<li><code>DataView.prototype[Symbol.toStringTag]</code>: ‘DataView’ </li>
+<li><code>Map.prototype[Symbol.toStringTag]</code>: ‘Map’ </li>
+<li><code>Promise.prototype[Symbol.toStringTag]</code>: ‘Promise’ </li>
+<li><code>Set.prototype[Symbol.toStringTag]</code>: ‘Set’ </li>
+<li><code>%TypedArray%.prototype[Symbol.toStringTag]</code>: ‘Uint8Array’等 </li>
+<li><code>WeakMap.prototype[Symbol.toStringTag]</code>: ‘WeakMap’ </li>
+<li><code>WeakSet.prototype[Symbol.toStringTag]</code>: ‘WeakSet’ </li>
+<li><code>%MapIteratorPrototype%[Symbol.toStringTag]</code>: ‘Map Iterator’ </li>
+<li><code>%SetIteratorPrototype%[Symbol.toStringTag]</code>: ‘Set Iterator’ </li>
+<li><code>%StringIteratorPrototype%[Symbol.toStringTag]</code>: ‘String Iterator’ </li>
+<li><code>Symbol.prototype[Symbol.toStringTag]</code>: ‘Symbol’ </li>
+<li><code>Generator.prototype[Symbol.toStringTag]</code>: ‘Generator’ </li>
+<li><code>GeneratorFunction.prototype[Symbol.toStringTag]</code>: ‘GeneratorFunction</li>
+</ul>
+<h3 id="Symbol-unscopables"><a href="#Symbol-unscopables" class="headerlink" title="Symbol.unscopables"></a>Symbol.unscopables</h3><p>对象的<code>Symbol.unscopables</code>属性，指向一个对象。该对象指定了使用<code>with</code>关键字时，哪些属性会被<code>with</code>环境排除</p>
+<pre><code>    Array.prototype[Symbol.unscopables];
+    // &#123;
+    //   copyWithin: true,
+    //   entries: true,
+    //   fill: true,
+    //   find: true,
+    //   findIndex: true,
+    //   includes: true,
+    //   keys: true
+    // &#125;
+
+    Object.keys(Array.prototype[Symbol.unscopables]);
+    // [&#39;copyWithin&#39;, &#39;entries&#39;, &#39;fill&#39;, &#39;find&#39;, &#39;findIndex&#39;, &#39;includes&#39;, &#39;keys&#39;]
+</code></pre>
+<p>上面代码说明，数组有 7 个属性，会被with命令排除</p>
+<pre><code>    // 没有 unscopables 时
+    class MyClass &#123;
+        foo() &#123;
+            return 1;
+        &#125;
+    &#125;
+
+    var foo = function () &#123;
+        return 2;
+    &#125;;
+
+    with(MyClass.prototype) &#123;
+        foo(); // 1
+    &#125;
+
+    // 有 unscopables 时
+    class MyClass &#123;
+        foo() &#123;
+            return 1;
+        &#125;
+        get[Symbol.unscopables]() &#123;
+            return &#123;
+                foo: true
+            &#125;;
+        &#125;
+    &#125;
+
+    var foo = function () &#123;
+        return 2;
+    &#125;;
+
+    with(MyClass.prototype) &#123;
+        foo(); // 2
+    &#125;
+</code></pre>
+<p>上面代码通过指定<code>Symbol.unscopables</code>属性，使得<code>with</code>语法块不会在当前作用域寻找<code>foo</code>属性，即<code>foo</code>将指向外层作用域的变量</p>
+
+    </article>
+    <!-- license -->
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://sukksa.github.io">sukksa</a>
+            <p>原文链接：<a href="https://sukksa.github.io/2021/ES6/Symbol/">https://sukksa.github.io/2021/ES6/Symbol/</a>
+            <!-- <p>发表日期：<a href="https://sukksa.github.io/2021/ES6/Symbol/">November 11th 2021, 2:08:35 pm</a>
+            <p>更新日期：<a href="https://sukksa.github.io/2021/ES6/Symbol/">November 26th 2025, 9:14:32 am</a> -->
+            <p>发表日期：<a href="https://sukksa.github.io/2021/ES6/Symbol/">2021-11-11 14:08:35</a>
+            <p>更新日期：<a href="https://sukksa.github.io/2021/ES6/Symbol/">2025-11-26 09:14:32</a>
+        </div>
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+                <div class="nextSlogan">Next Post</div>
+                <a href="/2021/less/less/" title="less">
+                    <div class="nextTitle">less</div>
+                </a>
+        </li>
+        <li class="previous">
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2021/ES6/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A9%E5%B1%95/" title="函数的扩展">
+                    <div class="prevTitle">函数的扩展</div>
+                </a>
+        </li>
+    </ul>
+    <!-- comment -->
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+            
+            
+            
+            <!-- utteranc评论 -->
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+            
+            
+            
+        </div>
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    <!-- Mathjax -->
+</main>
+
+                <!-- profile -->
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+        <div class="social">
+                            <a href="mailto:2450553074@qq.com" class="iconfont-archer email" title="email" ></a>
+                <a href="//github.com/sukksa" class="iconfont-archer github" target="_blank" title="github"></a>
+                <a href="https://space.bilibili.com/74396531" class="iconfont-archer bilibili" target="_blank" title="bilibili"></a>
+
+        </div>
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    <!-- 不蒜子  -->
+        <div class="busuanzi-container">
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+        </div>
+</footer>
+
+        </div>
+        <!-- toc -->
+            <div class="toc-wrapper toc-wrapper-loding" style=    top:50vh;
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Symbol"><span class="toc-number">1.</span> <span class="toc-text">Symbol</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-number">1.1.</span> <span class="toc-text">基本使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Symbol-for"><span class="toc-number">1.2.</span> <span class="toc-text">Symbol.for()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Symbol-keyFor"><span class="toc-number">1.3.</span> <span class="toc-text">Symbol.keyFor()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E7%BD%AE%E7%9A%84-Symbol-%E5%80%BC"><span class="toc-number">1.4.</span> <span class="toc-text">内置的 Symbol 值</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Symbol-hasInstance"><span class="toc-number">1.4.1.</span> <span class="toc-text">Symbol.hasInstance</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Symbol-isConcatSpreadable"><span class="toc-number">1.4.2.</span> <span class="toc-text">Symbol.isConcatSpreadable</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Symbol-species"><span class="toc-number">1.4.3.</span> <span class="toc-text">Symbol.species</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Symbol-match"><span class="toc-number">1.4.4.</span> <span class="toc-text">Symbol.match</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Symbol-replace"><span class="toc-number">1.4.5.</span> <span class="toc-text">Symbol.replace</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Symbol-search"><span class="toc-number">1.4.6.</span> <span class="toc-text">Symbol.search</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Symbol-split"><span class="toc-number">1.4.7.</span> <span class="toc-text">Symbol.split</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Symbol-iterator"><span class="toc-number">1.4.8.</span> <span class="toc-text">Symbol.iterator</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Symbol-toPrimitive"><span class="toc-number">1.4.9.</span> <span class="toc-text">Symbol.toPrimitive</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Symbol-toStringTag"><span class="toc-number">1.4.10.</span> <span class="toc-text">Symbol.toStringTag</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Symbol-unscopables"><span class="toc-number">1.4.11.</span> <span class="toc-text">Symbol.unscopables</span></a></li></ol></li></ol></li></ol>
+            </div>
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 62
+        </div>
+        <!-- search  -->
+    </div>
+    <div class="post-archive">
+            <div class="archive-year"> 2025 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/26</span>
+            <a class="archive-post-title" href="/2025/hello-world/">Hello World</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/26</span>
+            <a class="archive-post-title" href="/2025/other/%E5%B0%86Hexo%E6%8F%90%E4%BA%A4%E5%88%B0%E4%BB%93%E5%BA%93/">将Hexo提交到仓库</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/note/%E3%80%8A%E7%BD%AA%E4%B8%8E%E7%BD%9A%E3%80%8B/">《罪与罚》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/other/%E4%BB%8E%E7%8E%B0%E6%9C%89%E7%9A%84%E4%BB%93%E5%BA%93%E5%88%87%E6%8D%A2%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E4%BB%93%E5%BA%93/">从现有git仓库切换到另一个仓库</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/cesium/%E5%8F%AA%E6%98%BE%E7%A4%BA%E6%9F%90%E4%B8%AA%E5%8C%BA%E5%9F%9F/">仅显示某个行政区划（cesium 挖孔）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2025/cesium/%E7%AC%AC%E4%B8%80%E4%B8%AAcesium%E9%A1%B9%E7%9B%AE/">第一个cesium项目</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E6%B3%A2%E6%B5%AA/">使用着色器绘制波浪</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E5%9B%BE%E6%A1%88/">使用着色器绘制图案</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%9D%80%E8%89%B2%E5%99%A8%E7%A8%8B%E5%BA%8F/">第一个 shader 程序</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span>
+            <a class="archive-post-title" href="/2025/Threejs/Threejs%20Modules/">THREE Modules</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2025/other/%E5%A6%82%E4%BD%95%E7%A7%BB%E9%99%A4%20GitHub%20%E4%B8%AD%E7%9A%84%20contributors/">如何移除 GitHub 中的 contributors</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vuex/">Vuex</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E6%8F%92%E4%BB%B6/">Vue 插件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vue-router/">vue-router</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/mixin/">Mixin (混入)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E8%84%9A%E6%89%8B%E6%9E%B6/">Vue 脚手架</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/%E7%BB%84%E4%BB%B6%E9%97%B4%E9%80%9A%E4%BF%A1/">组件间通信</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/%E6%8C%89%E9%94%AE%E4%BF%AE%E9%A5%B0%E7%AC%A6/">按键修饰符</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span>
+            <a class="archive-post-title" href="/2022/vue/%E7%BB%84%E4%BB%B6/">Vue 组件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span>
+            <a class="archive-post-title" href="/2022/vue/%E8%BF%87%E6%B8%A1%E4%B8%8E%E5%8A%A8%E7%94%BB/">过渡与动画</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span>
+            <a class="archive-post-title" href="/2022/ES6/Promise/">Promise</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E6%8C%87%E4%BB%A4/">Vue 基本指令</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">Vue 生命周期</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/29</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E5%AE%9E%E4%BE%8B%E5%AF%B9%E8%B1%A1/">Vue实例对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span>
+            <a class="archive-post-title" href="/2022/ES6/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%89%A9%E5%B1%95/">字符串的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span>
+            <a class="archive-post-title" href="/2022/ES6/Moudle%20%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%AE%9E%E7%8E%B0/">Module 的加载实现</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/21</span>
+            <a class="archive-post-title" href="/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/">Module 模块化</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span>
+            <a class="archive-post-title" href="/2022/ES6/%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%89%A9%E5%B1%95/">对象的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2022/ES6/Class%E7%9A%84%E7%BB%A7%E6%89%BF/">Class的基本用法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2022/ES6/Class%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">Class的基本用法</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/18</span>
+            <a class="archive-post-title" href="/2021/ES6/set%E4%B8%8Emap/">set 与 map</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/05</span>
+            <a class="archive-post-title" href="/2021/Ajax/Ajax%E8%B7%A8%E5%9F%9F%E8%AF%B7%E6%B1%82/">Ajax跨域</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2021/Ajax/Fetch/">Fetch</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2021/Ajax/Axios/">Axios</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/22</span>
+            <a class="archive-post-title" href="/2021/Ajax/%E5%8E%9F%E7%94%9FAjax/">原生Ajax</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span>
+            <a class="archive-post-title" href="/2021/node/node/">node</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span>
+            <a class="archive-post-title" href="/2021/less/less/">less</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/11</span>
+            <a class="archive-post-title" href="/2021/ES6/Symbol/">Symbol</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/08</span>
+            <a class="archive-post-title" href="/2021/ES6/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A9%E5%B1%95/">函数的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2021/ES6/%E5%8F%98%E9%87%8F%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC/">变量解构赋值</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2021/ES6/ES6%E7%AE%80%E4%BB%8B/">ES6简介</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2021/ES6/let%E4%B8%8Econst/">let与const</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/26</span>
+            <a class="archive-post-title" href="/2021/%E5%AE%9E%E6%88%98/jQuery%E8%BD%AE%E6%92%AD%E5%9B%BE/">jQuery轮播图</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E6%8F%92%E4%BB%B6/">jQuery插件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E5%8A%A8%E7%94%BB/">jQuery动画</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/21</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E4%BA%8B%E4%BB%B6/">jQuery事件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E4%BF%AE%E6%94%B9DOM%E7%BB%93%E6%9E%84/">jQuery修改DOM结构</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E6%93%8D%E4%BD%9CDOM/">jQuery操作DOM元素</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E9%80%89%E6%8B%A9%E5%99%A8/">jQuery选择器</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E7%AE%80%E4%BB%8B/">jQuery介绍</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%AF%B9%E8%B1%A1/">对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E7%BA%BF%E7%A8%8B%E6%9C%BA%E5%88%B6%E4%B8%8E%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6/">线程机制与事件机制</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%87%BD%E6%95%B0/">函数</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/DOM/%E4%BA%8B%E4%BB%B6/">事件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%8F%98%E9%87%8F%E4%B8%8E%E4%BD%9C%E7%94%A8%E5%9F%9F/">变量与作用域</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/DOM/DOM/">DOM介绍</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/DOM/%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1/">事件对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">基本语法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E6%95%B0%E7%BB%84/">数组</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%96%B9%E6%B3%95/">字符串方法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">类型转换</a>
+        </li>
+            </ul>
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+            <span class="sidebar-tag-name" data-tags="Ajax">
+                <span class="iconfont-archer">&#xe606;</span>
+                Ajax
+            </span>
+            <span class="sidebar-tag-name" data-tags="JavaScript">
+                <span class="iconfont-archer">&#xe606;</span>
+                JavaScript
+            </span>
+            <span class="sidebar-tag-name" data-tags="ES6">
+                <span class="iconfont-archer">&#xe606;</span>
+                ES6
+            </span>
+            <span class="sidebar-tag-name" data-tags="javaScript">
+                <span class="iconfont-archer">&#xe606;</span>
+                javaScript
+            </span>
+            <span class="sidebar-tag-name" data-tags="DOM">
+                <span class="iconfont-archer">&#xe606;</span>
+                DOM
+            </span>
+            <span class="sidebar-tag-name" data-tags="Threejs">
+                <span class="iconfont-archer">&#xe606;</span>
+                Threejs
+            </span>
+            <span class="sidebar-tag-name" data-tags="cesium">
+                <span class="iconfont-archer">&#xe606;</span>
+                cesium
+            </span>
+            <span class="sidebar-tag-name" data-tags="vite">
+                <span class="iconfont-archer">&#xe606;</span>
+                vite
+            </span>
+            <span class="sidebar-tag-name" data-tags="jQuery">
+                <span class="iconfont-archer">&#xe606;</span>
+                jQuery
+            </span>
+            <span class="sidebar-tag-name" data-tags="less">
+                <span class="iconfont-archer">&#xe606;</span>
+                less
+            </span>
+            <span class="sidebar-tag-name" data-tags="node">
+                <span class="iconfont-archer">&#xe606;</span>
+                node
+            </span>
+            <span class="sidebar-tag-name" data-tags="shader">
+                <span class="iconfont-archer">&#xe606;</span>
+                shader
+            </span>
+            <span class="sidebar-tag-name" data-tags="Note">
+                <span class="iconfont-archer">&#xe606;</span>
+                Note
+            </span>
+            <span class="sidebar-tag-name" data-tags="git">
+                <span class="iconfont-archer">&#xe606;</span>
+                git
+            </span>
+            <span class="sidebar-tag-name" data-tags="Vue">
+                <span class="iconfont-archer">&#xe606;</span>
+                Vue
+            </span>
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+        <span class="sidebar-category-name" data-categories="Ajax">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Ajax
+        </span>
+        <span class="sidebar-category-name" data-categories="ES6">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ES6
+        </span>
+        <span class="sidebar-category-name" data-categories="DOM">
+            <span class="iconfont-archer">&#xe60a;</span>
+            DOM
+        </span>
+        <span class="sidebar-category-name" data-categories="Threejs">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Threejs
+        </span>
+        <span class="sidebar-category-name" data-categories="cesium">
+            <span class="iconfont-archer">&#xe60a;</span>
+            cesium
+        </span>
+        <span class="sidebar-category-name" data-categories="jQuery">
+            <span class="iconfont-archer">&#xe60a;</span>
+            jQuery
+        </span>
+        <span class="sidebar-category-name" data-categories="javaScript">
+            <span class="iconfont-archer">&#xe60a;</span>
+            javaScript
+        </span>
+        <span class="sidebar-category-name" data-categories="less">
+            <span class="iconfont-archer">&#xe60a;</span>
+            less
+        </span>
+        <span class="sidebar-category-name" data-categories="node">
+            <span class="iconfont-archer">&#xe60a;</span>
+            node
+        </span>
+        <span class="sidebar-category-name" data-categories="shader">
+            <span class="iconfont-archer">&#xe60a;</span>
+            shader
+        </span>
+        <span class="sidebar-category-name" data-categories="note">
+            <span class="iconfont-archer">&#xe60a;</span>
+            note
+        </span>
+        <span class="sidebar-category-name" data-categories="git">
+            <span class="iconfont-archer">&#xe60a;</span>
+            git
+        </span>
+        <span class="sidebar-category-name" data-categories="Vue">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Vue
+        </span>
+        <span class="sidebar-category-name" data-categories="实战">
+            <span class="iconfont-archer">&#xe60a;</span>
+            实战
+        </span>
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://sukksa.github.io",
+        root: siteMetaRoot,
+        author: "sukksa"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+        <!-- main func -->
+        <script src="/scripts/main.js"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" onload="window.Fancybox.bind('[data-fancybox]')" defer></script>
+        <!-- algolia -->
+        <!-- busuanzi -->
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+            <!-- <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script> -->
+        <!-- async load share.js -->
+            <script src="/scripts/share.js" async></script>
+        <!-- mermaid -->
+    </body>
+</html>
