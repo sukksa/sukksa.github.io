@@ -12,7 +12,7 @@
     <meta name="description" content="">
     <meta property="og:type" content="website">
 <meta property="og:title" content="sukksa blog">
-<meta property="og:url" content="https://sukksa.github.io/tags/JavaScript/index.html">
+<meta property="og:url" content="https://sukksa.github.io/tags/javaScript/index.html">
 <meta property="og:site_name" content="sukksa blog">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="sukksa">
@@ -407,15 +407,20 @@
             <div class="container container-unloaded">
                 <main class="main index-page">
         <article class="index-post">
-            <a class="abstract-title" href="/2021/Ajax/Ajax%E8%B7%A8%E5%9F%9F%E8%AF%B7%E6%B1%82/">
-                <span class="abstract-title-text">Ajax跨域</span>
+            <a class="abstract-title" href="/2022/ES6/Promise/">
+                <span class="abstract-title-text">Promise</span>
             </a>
             <div class="abstract-content">
-                <h1 id="Ajax跨域"><a href="#Ajax跨域" class="headerlink" title="Ajax跨域"></a>Ajax跨域</h1><h2 id="同源策略"><a href="#同源策略" class="headerlink" title="同源策略"></a>同源策略</h2><p>同源策略（Sameoriginpolicy）是一种约定，它是浏览器最核心也最基本的安全功能，如果缺少了同源策略，则浏览器的正常功能可能都会受到影响。可以说Web是构建在同源策略基础之上的，浏览器只是针对同源策略的一种实现。同源策略会阻止一个域的javascript脚本和另外一个域的内容进行交互。<br><strong>所谓同源（即指在同一个域）就是两个页面具有相同的协议（protocol），主机（host）和端口号（port）</strong></p>
+                <h1 id="Promise"><a href="#Promise" class="headerlink" title="Promise"></a>Promise</h1><h2 id="Promise-是什么"><a href="#Promise-是什么" class="headerlink" title="Promise 是什么"></a>Promise 是什么</h2><h3 id="理解-Promise"><a href="#理解-Promise" class="headerlink" title="理解 Promise"></a>理解 Promise</h3><p>Promise 是异步编程的一种解决方案，比传统的解决方案——回调函数和事件——更合理和更强大。它由社区最早提出和实现，ES6 将其写进了语言标准，统一了用法，原生提供了Promise对象。 </p>
+<p>所谓Promise，简单说就是一个容器，里面保存着某个未来才会结束的事件(通常是一个异步操作)的结果。</p>
+<ul>
+<li>从语法上看：<code>Promise</code>是一个构造函数 (自己身上有<code>all</code>、<code>reject</code>、<code>resolve</code>这几个方法，原型上有<code>then</code>、<code>catch</code>等方法)</li>
+<li>功能上看：<code>promise</code>对象用来封装一个异步操作并可以获取其成功&#x2F;失败的结果值</li>
+</ul>
             </div>
             <!-- read more -->
                 <div class="abstract-read-more-button">
-                    <a href="/2021/Ajax/Ajax%E8%B7%A8%E5%9F%9F%E8%AF%B7%E6%B1%82/">
+                    <a href="/2022/ES6/Promise/">
                         <span style="margin-right: 0.2rem;">阅读全文</span>
                         <i class="fas fa-angle-right"></i>
                     </a>
@@ -423,27 +428,31 @@
             <div class="abstract-post-meta">
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2025/11/26">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/12/05</span>
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/10/03</span>
                 </div>
                 <!-- tags -->
                     <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="Ajax">Ajax</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="JavaScript">JavaScript</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="javaScript">javaScript</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="ES6">ES6</a>
 </div>
 
             </div>
         </article>
         <div class="index-post-divider"></div>
         <article class="index-post">
-            <a class="abstract-title" href="/2021/Ajax/Fetch/">
-                <span class="abstract-title-text">Fetch</span>
+            <a class="abstract-title" href="/2022/ES6/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%89%A9%E5%B1%95/">
+                <span class="abstract-title-text">字符串的扩展</span>
             </a>
             <div class="abstract-content">
-                <h1 id="Fetch"><a href="#Fetch" class="headerlink" title="Fetch"></a>Fetch</h1><p>fetch 是一种 HTTP 数据请求的方式，是 XMLHttpRequest 的一种替代方案。fetch 不是 ajax 的进一步封装，而是原生 js。Fetch 函数就是原生 js，没有使用 XMLHttpRequest 对象</p>
+                <h1 id="字符串的扩展"><a href="#字符串的扩展" class="headerlink" title="字符串的扩展"></a>字符串的扩展</h1><h2 id="字符的-Unicode-表示法"><a href="#字符的-Unicode-表示法" class="headerlink" title="字符的 Unicode 表示法"></a>字符的 Unicode 表示法</h2><p>JavaScript 允许采用<code>\uxxxx</code>形式表示一个字符，其中<code>xxxx</code>表示字符的 Unicode 码点。</p>
+<pre><code>    &#39;\u0061&#39;
+    // &quot;a&quot;
+</code></pre>
+<p>但是，这种表示法只限于码点在<code>\u0000~\uFFFF</code>之间的字符。超出这个范围的字符，必须用两个双字节的形式表示</p>
             </div>
             <!-- read more -->
                 <div class="abstract-read-more-button">
-                    <a href="/2021/Ajax/Fetch/">
+                    <a href="/2022/ES6/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%89%A9%E5%B1%95/">
                         <span style="margin-right: 0.2rem;">阅读全文</span>
                         <i class="fas fa-angle-right"></i>
                     </a>
@@ -451,40 +460,28 @@
             <div class="abstract-post-meta">
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2025/11/26">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/11/24</span>
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/07/26</span>
                 </div>
                 <!-- tags -->
                     <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="Ajax">Ajax</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="JavaScript">JavaScript</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="javaScript">javaScript</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="ES6">ES6</a>
 </div>
 
             </div>
         </article>
         <div class="index-post-divider"></div>
         <article class="index-post">
-            <a class="abstract-title" href="/2021/Ajax/Axios/">
-                <span class="abstract-title-text">Axios</span>
+            <a class="abstract-title" href="/2022/ES6/Moudle%20%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%AE%9E%E7%8E%B0/">
+                <span class="abstract-title-text">Module 的加载实现</span>
             </a>
             <div class="abstract-content">
-                <h1 id="Axios"><a href="#Axios" class="headerlink" title="Axios"></a>Axios</h1><h2 id="创建-API"><a href="#创建-API" class="headerlink" title="创建 API"></a>创建 API</h2><h3 id="API-的分类"><a href="#API-的分类" class="headerlink" title="API 的分类"></a>API 的分类</h3><ol>
-<li>REST API: restful （Representational State Transfer (资源)表现层状态转化）<ol>
-<li>发送请求进行CRUD 哪个操作由请求方式来决定</li>
-<li>同一个请求路径可以进行多个操作</li>
-<li>请求方式会用到GET&#x2F;POST&#x2F;PUT&#x2F;DELETE</li>
-</ol>
-</li>
-<li>非REST API: restless<ol>
-<li>请求方式不决定请求的CRUD 操作</li>
-<li>一个请求路径只对应一个操作</li>
-<li>一般只有GET&#x2F;POST</li>
-</ol>
-</li>
-</ol>
+                <h1 id="Module-的加载实现"><a href="#Module-的加载实现" class="headerlink" title="Module 的加载实现"></a>Module 的加载实现</h1><p>本章介绍如何在浏览器和 Node 之中加载 ES6 模块，以及实际开发中经常遇到的一些问题(比如循环加载)</p>
+<h2 id="浏览器加载"><a href="#浏览器加载" class="headerlink" title="浏览器加载"></a>浏览器加载</h2><h3 id="传统方法"><a href="#传统方法" class="headerlink" title="传统方法"></a>传统方法</h3><p>在 HTML 网页中，浏览器通过<code>&lt;script&gt;</code>标签加载 JavaScript 脚本。</p>
             </div>
             <!-- read more -->
                 <div class="abstract-read-more-button">
-                    <a href="/2021/Ajax/Axios/">
+                    <a href="/2022/ES6/Moudle%20%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%AE%9E%E7%8E%B0/">
                         <span style="margin-right: 0.2rem;">阅读全文</span>
                         <i class="fas fa-angle-right"></i>
                     </a>
@@ -492,28 +489,28 @@
             <div class="abstract-post-meta">
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2025/11/26">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/11/24</span>
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/07/23</span>
                 </div>
                 <!-- tags -->
                     <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="Ajax">Ajax</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="JavaScript">JavaScript</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="javaScript">javaScript</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="ES6">ES6</a>
 </div>
 
             </div>
         </article>
         <div class="index-post-divider"></div>
         <article class="index-post">
-            <a class="abstract-title" href="/2021/Ajax/%E5%8E%9F%E7%94%9FAjax/">
-                <span class="abstract-title-text">原生Ajax</span>
+            <a class="abstract-title" href="/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/">
+                <span class="abstract-title-text">Module 模块化</span>
             </a>
             <div class="abstract-content">
-                <h1 id="原生Ajax"><a href="#原生Ajax" class="headerlink" title="原生Ajax"></a>原生Ajax</h1><p>Ajax 全称 Asynchronous JavaScript and XML(异步的 JavaScript 和 XML)，既是一个对象，也是一种方法模式 </p>
-<p>AJAX 是一种用于创建快速动态网页的技术，通过在后台与服务器进行少量数据交换,Ajax 可以使网页实现异步更新。这意味着可以在不重新加载整个网页的情况下，对网页的某部分进行更新，传统的不使用 Ajax 的网页如果需要更新内容,必需重载整个网页</p>
+                <h1 id="模块化-module"><a href="#模块化-module" class="headerlink" title="模块化 module"></a>模块化 module</h1><h2 id="基本概述"><a href="#基本概述" class="headerlink" title="基本概述"></a>基本概述</h2><p>历史上，JavaScript 一直没有模块(<code>module</code>)体系，无法将一个大程序拆分成互相依赖的小文件，再用简单的方法拼装起来。其他语言都有这项功能，比如 Ruby 的<code>require</code>、Python 的<code>import</code>，甚至就连 CSS 都有<code>@import</code>，但是 JavaScript 任何这方面的支持都没有，这对开发大型的、复杂的项目形成了巨大障碍。</p>
+<p>在 ES6 之前，社区制定了一些模块加载方案，最主要的有 CommonJS 和 AMD 两种。前者用于服务器，后者用于浏览器。ES6 在语言标准的层面上，实现了模块功能，而且实现得相当简单，完全可以取代 CommonJS 和 AMD 规范，成为浏览器和服务器通用的模块解决方案</p>
             </div>
             <!-- read more -->
                 <div class="abstract-read-more-button">
-                    <a href="/2021/Ajax/%E5%8E%9F%E7%94%9FAjax/">
+                    <a href="/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/">
                         <span style="margin-right: 0.2rem;">阅读全文</span>
                         <i class="fas fa-angle-right"></i>
                     </a>
@@ -521,18 +518,199 @@
             <div class="abstract-post-meta">
                 <!-- date -->
                 <div class="abstract-date" title="Last updated: 2025/11/26">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/11/22</span>
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/07/21</span>
                 </div>
                 <!-- tags -->
                     <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="Ajax">Ajax</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="JavaScript">JavaScript</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="javaScript">javaScript</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="ES6">ES6</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+        <article class="index-post">
+            <a class="abstract-title" href="/2022/ES6/%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%89%A9%E5%B1%95/">
+                <span class="abstract-title-text">对象的扩展</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="对象的扩展"><a href="#对象的扩展" class="headerlink" title="对象的扩展"></a>对象的扩展</h1><h2 id="属性的简介表示"><a href="#属性的简介表示" class="headerlink" title="属性的简介表示"></a>属性的简介表示</h2><p>ES6 允许直接写入变量和函数，作为对象的属性和方法。这样的书写更加简洁。</p>
+<pre><code>    const foo = &quot;bar&quot;
+    const baz = &#123; foo &#125;
+    baz // &#123;foo: &quot;bar&quot;&#125;
+
+    // 等同于
+    // const baz = &#123; foo: foo &#125;
+</code></pre>
+            </div>
+            <!-- read more -->
+                <div class="abstract-read-more-button">
+                    <a href="/2022/ES6/%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%89%A9%E5%B1%95/">
+                        <span style="margin-right: 0.2rem;">阅读全文</span>
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </div>
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2025/11/26">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/07/19</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="javaScript">javaScript</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="ES6">ES6</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+        <article class="index-post">
+            <a class="abstract-title" href="/2022/ES6/Class%E7%9A%84%E7%BB%A7%E6%89%BF/">
+                <span class="abstract-title-text">Class的基本用法</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="Class的基本用法"><a href="#Class的基本用法" class="headerlink" title="Class的基本用法"></a>Class的基本用法</h1><p>Class 可以通过<code>extends</code>关键字实现继承，这比 ES5 的通过修改原型链实现继承，要清晰和方便很多。</p>
+            </div>
+            <!-- read more -->
+                <div class="abstract-read-more-button">
+                    <a href="/2022/ES6/Class%E7%9A%84%E7%BB%A7%E6%89%BF/">
+                        <span style="margin-right: 0.2rem;">阅读全文</span>
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </div>
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2025/11/26">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/06/25</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="javaScript">javaScript</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="ES6">ES6</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+        <article class="index-post">
+            <a class="abstract-title" href="/2022/ES6/Class%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">
+                <span class="abstract-title-text">Class的基本用法</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="Class的基本用法"><a href="#Class的基本用法" class="headerlink" title="Class的基本用法"></a>Class的基本用法</h1><p>ES6 提供了更接近传统语言的写法，引入了 Class(类)这个概念，作为对象的模板。通过class关键字，可以定义类。<br>基本上，ES6 的class可以看作只是一个语法糖，它的绝大部分功能，ES5 都可以做到，新的class写法只是让对象原型的写法更加清晰、更像面向对象编程的语法而已。</p>
+            </div>
+            <!-- read more -->
+                <div class="abstract-read-more-button">
+                    <a href="/2022/ES6/Class%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">
+                        <span style="margin-right: 0.2rem;">阅读全文</span>
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </div>
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2025/11/26">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/06/24</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="javaScript">javaScript</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="ES6">ES6</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/ES6/set%E4%B8%8Emap/">
+                <span class="abstract-title-text">set 与 map</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="set-与-map"><a href="#set-与-map" class="headerlink" title="set 与 map"></a>set 与 map</h1><h2 id="set"><a href="#set" class="headerlink" title="set"></a>set</h2><h3 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h3><p>ES6 提供了新的数据结构 Set。它类似于数组，<strong>但是成员的值都是唯一的，没有重复的值</strong>。</p>
+<p>Set 本身是一个构造函数，用来生成 Set 数据结构。</p>
+            </div>
+            <!-- read more -->
+                <div class="abstract-read-more-button">
+                    <a href="/2021/ES6/set%E4%B8%8Emap/">
+                        <span style="margin-right: 0.2rem;">阅读全文</span>
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </div>
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2025/11/26">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/12/18</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="javaScript">javaScript</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="ES6">ES6</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/ES6/Symbol/">
+                <span class="abstract-title-text">Symbol</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="Symbol"><a href="#Symbol" class="headerlink" title="Symbol"></a>Symbol</h1><p>ES5 的对象属性名都是字符串，这容易造成属性名的冲突。如在对象中添加一个方法，这个方法名有可能导致重名，引起冲突</p>
+<p>ES6 引入了一种新的原始数据类型 <code>Symbol</code>，表示独一无二的值。它是 JavaScript 语言的第七种数据类型</p>
+<p>对象的属性名现在可以有两种类型，一种是原来就有的字符串，另一种就是新增的 Symbol 类型。凡是属性名属于 <code>Symbol</code> 类型，就都是独一无二的，可以保证不会与其他属性名产生冲突</p>
+            </div>
+            <!-- read more -->
+                <div class="abstract-read-more-button">
+                    <a href="/2021/ES6/Symbol/">
+                        <span style="margin-right: 0.2rem;">阅读全文</span>
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </div>
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2025/11/26">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/11/11</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="javaScript">javaScript</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="ES6">ES6</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+        <article class="index-post">
+            <a class="abstract-title" href="/2021/ES6/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A9%E5%B1%95/">
+                <span class="abstract-title-text">函数的扩展</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="函数的扩展"><a href="#函数的扩展" class="headerlink" title="函数的扩展"></a>函数的扩展</h1><h2 id="函数参数的默认值"><a href="#函数参数的默认值" class="headerlink" title="函数参数的默认值"></a>函数参数的默认值</h2><p>ES6 允许给函数参数赋值初始值</p>
+            </div>
+            <!-- read more -->
+                <div class="abstract-read-more-button">
+                    <a href="/2021/ES6/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A9%E5%B1%95/">
+                        <span style="margin-right: 0.2rem;">阅读全文</span>
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </div>
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2025/11/26">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/11/08</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="javaScript">javaScript</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="ES6">ES6</a>
 </div>
 
             </div>
         </article>
         <div class="index-post-divider"></div>
     <!-- paginator  -->
+        <nav class="page-nav">
+            <span class="page-number current">1</span><a class="page-number" href="/tags/javaScript/page/2/">2</a><a class="page-number" href="/tags/javaScript/page/3/">3</a><a class="extend next" rel="next" href="/tags/javaScript/page/2/">NEXT &gt;</a>
+        </nav>
 </main>
 
                 <!-- profile -->
@@ -770,11 +948,11 @@
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">11/24</span>
-            <a class="archive-post-title" href="/2021/Ajax/Fetch/">Fetch</a>
+            <a class="archive-post-title" href="/2021/Ajax/Axios/">Axios</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">11/24</span>
-            <a class="archive-post-title" href="/2021/Ajax/Axios/">Axios</a>
+            <a class="archive-post-title" href="/2021/Ajax/Fetch/">Fetch</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">11/22</span>
@@ -874,11 +1052,11 @@
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">04/27</span>
-            <a class="archive-post-title" href="/2021/javaScript/%E6%95%B0%E7%BB%84/">数组</a>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%96%B9%E6%B3%95/">字符串方法</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">04/27</span>
-            <a class="archive-post-title" href="/2021/javaScript/%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%96%B9%E6%B3%95/">字符串方法</a>
+            <a class="archive-post-title" href="/2021/javaScript/%E6%95%B0%E7%BB%84/">数组</a>
         </li>
         <li class="archive-post-item">
             <span class="archive-post-date">04/27</span>
@@ -902,25 +1080,25 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 JavaScript
             </span>
-            <span class="sidebar-tag-name" data-tags="ES6">
+            <span class="sidebar-tag-name" data-tags="DOM">
                 <span class="iconfont-archer">&#xe606;</span>
-                ES6
+                DOM
             </span>
             <span class="sidebar-tag-name" data-tags="javaScript">
                 <span class="iconfont-archer">&#xe606;</span>
                 javaScript
             </span>
-            <span class="sidebar-tag-name" data-tags="DOM">
+            <span class="sidebar-tag-name" data-tags="ES6">
                 <span class="iconfont-archer">&#xe606;</span>
-                DOM
-            </span>
-            <span class="sidebar-tag-name" data-tags="Threejs">
-                <span class="iconfont-archer">&#xe606;</span>
-                Threejs
+                ES6
             </span>
             <span class="sidebar-tag-name" data-tags="cesium">
                 <span class="iconfont-archer">&#xe606;</span>
                 cesium
+            </span>
+            <span class="sidebar-tag-name" data-tags="Threejs">
+                <span class="iconfont-archer">&#xe606;</span>
+                Threejs
             </span>
             <span class="sidebar-tag-name" data-tags="vite">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -930,17 +1108,9 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 jQuery
             </span>
-            <span class="sidebar-tag-name" data-tags="less">
-                <span class="iconfont-archer">&#xe606;</span>
-                less
-            </span>
             <span class="sidebar-tag-name" data-tags="node">
                 <span class="iconfont-archer">&#xe606;</span>
                 node
-            </span>
-            <span class="sidebar-tag-name" data-tags="shader">
-                <span class="iconfont-archer">&#xe606;</span>
-                shader
             </span>
             <span class="sidebar-tag-name" data-tags="Note">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -949,6 +1119,14 @@
             <span class="sidebar-tag-name" data-tags="git">
                 <span class="iconfont-archer">&#xe606;</span>
                 git
+            </span>
+            <span class="sidebar-tag-name" data-tags="less">
+                <span class="iconfont-archer">&#xe606;</span>
+                less
+            </span>
+            <span class="sidebar-tag-name" data-tags="shader">
+                <span class="iconfont-archer">&#xe606;</span>
+                shader
             </span>
             <span class="sidebar-tag-name" data-tags="Vue">
                 <span class="iconfont-archer">&#xe606;</span>
@@ -968,41 +1146,33 @@
             <span class="iconfont-archer">&#xe60a;</span>
             Ajax
         </span>
-        <span class="sidebar-category-name" data-categories="ES6">
-            <span class="iconfont-archer">&#xe60a;</span>
-            ES6
-        </span>
         <span class="sidebar-category-name" data-categories="DOM">
             <span class="iconfont-archer">&#xe60a;</span>
             DOM
         </span>
-        <span class="sidebar-category-name" data-categories="Threejs">
+        <span class="sidebar-category-name" data-categories="ES6">
             <span class="iconfont-archer">&#xe60a;</span>
-            Threejs
+            ES6
         </span>
         <span class="sidebar-category-name" data-categories="cesium">
             <span class="iconfont-archer">&#xe60a;</span>
             cesium
         </span>
+        <span class="sidebar-category-name" data-categories="Threejs">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Threejs
+        </span>
         <span class="sidebar-category-name" data-categories="jQuery">
             <span class="iconfont-archer">&#xe60a;</span>
             jQuery
-        </span>
-        <span class="sidebar-category-name" data-categories="javaScript">
-            <span class="iconfont-archer">&#xe60a;</span>
-            javaScript
-        </span>
-        <span class="sidebar-category-name" data-categories="less">
-            <span class="iconfont-archer">&#xe60a;</span>
-            less
         </span>
         <span class="sidebar-category-name" data-categories="node">
             <span class="iconfont-archer">&#xe60a;</span>
             node
         </span>
-        <span class="sidebar-category-name" data-categories="shader">
+        <span class="sidebar-category-name" data-categories="javaScript">
             <span class="iconfont-archer">&#xe60a;</span>
-            shader
+            javaScript
         </span>
         <span class="sidebar-category-name" data-categories="note">
             <span class="iconfont-archer">&#xe60a;</span>
@@ -1012,274 +1182,13 @@
             <span class="iconfont-archer">&#xe60a;</span>
             git
         </span>
-        <span class="sidebar-category-name" data-categories="Vue">
-            <span class="iconfont-archer">&#xe60a;</span>
-            Vue
-        </span>
-        <span class="sidebar-category-name" data-categories="实战">
-            <span class="iconfont-archer">&#xe60a;</span>
-            实战
-        </span>
-    </div>
-    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
-    <div class="sidebar-categories-list"></div>
-</div>
-
-    </div>
-</div>
-
-        <!-- site-meta -->
-        <script>
-    var siteMetaRoot = "/"
-    if (siteMetaRoot === "undefined") {
-        siteMetaRoot = '/'
-    }
-    var siteMeta = {
-        url: "https://sukksa.github.io",
-        root: siteMetaRoot,
-        author: "sukksa"
-    }
-</script>
-
-        <!-- import experimental options here -->
-        <!-- Custom Font -->
-
-        <!-- main func -->
-        <script src="/scripts/main.js"></script>
-        <!-- fancybox -->
-        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" onload="window.Fancybox.bind('[data-fancybox]')" defer></script>
-        <!-- algolia -->
-        <!-- busuanzi -->
-            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
-            <!-- <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script> -->
-        <!-- async load share.js -->
-        <!-- mermaid -->
-    </body>
-</html>
-     </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">11/11</span>
-            <a class="archive-post-title" href="/2021/ES6/Symbol/">Symbol</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">11/08</span>
-            <a class="archive-post-title" href="/2021/ES6/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A9%E5%B1%95/">函数的扩展</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">11/06</span>
-            <a class="archive-post-title" href="/2021/ES6/%E5%8F%98%E9%87%8F%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC/">变量解构赋值</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/30</span>
-            <a class="archive-post-title" href="/2021/ES6/ES6%E7%AE%80%E4%BB%8B/">ES6简介</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/30</span>
-            <a class="archive-post-title" href="/2021/ES6/let%E4%B8%8Econst/">let与const</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/26</span>
-            <a class="archive-post-title" href="/2021/%E5%AE%9E%E6%88%98/jQuery%E8%BD%AE%E6%92%AD%E5%9B%BE/">jQuery轮播图</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/24</span>
-            <a class="archive-post-title" href="/2021/jQuery/jQuery%E6%8F%92%E4%BB%B6/">jQuery插件</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/24</span>
-            <a class="archive-post-title" href="/2021/jQuery/jQuery%E5%8A%A8%E7%94%BB/">jQuery动画</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/21</span>
-            <a class="archive-post-title" href="/2021/jQuery/jQuery%E4%BA%8B%E4%BB%B6/">jQuery事件</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/20</span>
-            <a class="archive-post-title" href="/2021/jQuery/jQuery%E4%BF%AE%E6%94%B9DOM%E7%BB%93%E6%9E%84/">jQuery修改DOM结构</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/20</span>
-            <a class="archive-post-title" href="/2021/jQuery/jQuery%E6%93%8D%E4%BD%9CDOM/">jQuery操作DOM元素</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/19</span>
-            <a class="archive-post-title" href="/2021/jQuery/jQuery%E9%80%89%E6%8B%A9%E5%99%A8/">jQuery选择器</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/19</span>
-            <a class="archive-post-title" href="/2021/jQuery/jQuery%E7%AE%80%E4%BB%8B/">jQuery介绍</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/17</span>
-            <a class="archive-post-title" href="/2021/javaScript/%E5%AF%B9%E8%B1%A1/">对象</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/17</span>
-            <a class="archive-post-title" href="/2021/javaScript/%E7%BA%BF%E7%A8%8B%E6%9C%BA%E5%88%B6%E4%B8%8E%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6/">线程机制与事件机制</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/15</span>
-            <a class="archive-post-title" href="/2021/javaScript/%E5%87%BD%E6%95%B0/">函数</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/15</span>
-            <a class="archive-post-title" href="/2021/DOM/%E4%BA%8B%E4%BB%B6/">事件</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">10/15</span>
-            <a class="archive-post-title" href="/2021/javaScript/%E5%8F%98%E9%87%8F%E4%B8%8E%E4%BD%9C%E7%94%A8%E5%9F%9F/">变量与作用域</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/27</span>
-            <a class="archive-post-title" href="/2021/DOM/DOM/">DOM介绍</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/27</span>
-            <a class="archive-post-title" href="/2021/DOM/%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1/">事件对象</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/27</span>
-            <a class="archive-post-title" href="/2021/javaScript/%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">基本语法</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/27</span>
-            <a class="archive-post-title" href="/2021/javaScript/%E6%95%B0%E7%BB%84/">数组</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/27</span>
-            <a class="archive-post-title" href="/2021/javaScript/%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%96%B9%E6%B3%95/">字符串方法</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/27</span>
-            <a class="archive-post-title" href="/2021/javaScript/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
-        </li>
-        <li class="archive-post-item">
-            <span class="archive-post-date">04/27</span>
-            <a class="archive-post-title" href="/2021/javaScript/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">类型转换</a>
-        </li>
-            </ul>
-    </div>
-</div>
-
-        <div class="sidebar-panel-tags">
-    <div class="sidebar-tags-name">
-            <span class="sidebar-tag-name" data-tags="Ajax">
-                <span class="iconfont-archer">&#xe606;</span>
-                Ajax
-            </span>
-            <span class="sidebar-tag-name" data-tags="JavaScript">
-                <span class="iconfont-archer">&#xe606;</span>
-                JavaScript
-            </span>
-            <span class="sidebar-tag-name" data-tags="ES6">
-                <span class="iconfont-archer">&#xe606;</span>
-                ES6
-            </span>
-            <span class="sidebar-tag-name" data-tags="javaScript">
-                <span class="iconfont-archer">&#xe606;</span>
-                javaScript
-            </span>
-            <span class="sidebar-tag-name" data-tags="DOM">
-                <span class="iconfont-archer">&#xe606;</span>
-                DOM
-            </span>
-            <span class="sidebar-tag-name" data-tags="Threejs">
-                <span class="iconfont-archer">&#xe606;</span>
-                Threejs
-            </span>
-            <span class="sidebar-tag-name" data-tags="cesium">
-                <span class="iconfont-archer">&#xe606;</span>
-                cesium
-            </span>
-            <span class="sidebar-tag-name" data-tags="vite">
-                <span class="iconfont-archer">&#xe606;</span>
-                vite
-            </span>
-            <span class="sidebar-tag-name" data-tags="jQuery">
-                <span class="iconfont-archer">&#xe606;</span>
-                jQuery
-            </span>
-            <span class="sidebar-tag-name" data-tags="less">
-                <span class="iconfont-archer">&#xe606;</span>
-                less
-            </span>
-            <span class="sidebar-tag-name" data-tags="node">
-                <span class="iconfont-archer">&#xe606;</span>
-                node
-            </span>
-            <span class="sidebar-tag-name" data-tags="shader">
-                <span class="iconfont-archer">&#xe606;</span>
-                shader
-            </span>
-            <span class="sidebar-tag-name" data-tags="Note">
-                <span class="iconfont-archer">&#xe606;</span>
-                Note
-            </span>
-            <span class="sidebar-tag-name" data-tags="git">
-                <span class="iconfont-archer">&#xe606;</span>
-                git
-            </span>
-            <span class="sidebar-tag-name" data-tags="Vue">
-                <span class="iconfont-archer">&#xe606;</span>
-                Vue
-            </span>
-    </div>
-    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
-    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
-        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
-    </div> 
-    <div class="sidebar-tags-list"></div>
-</div>
-
-        <div class="sidebar-panel-categories">
-    <div class="sidebar-categories-name">
-        <span class="sidebar-category-name" data-categories="Ajax">
-            <span class="iconfont-archer">&#xe60a;</span>
-            Ajax
-        </span>
-        <span class="sidebar-category-name" data-categories="ES6">
-            <span class="iconfont-archer">&#xe60a;</span>
-            ES6
-        </span>
-        <span class="sidebar-category-name" data-categories="DOM">
-            <span class="iconfont-archer">&#xe60a;</span>
-            DOM
-        </span>
-        <span class="sidebar-category-name" data-categories="Threejs">
-            <span class="iconfont-archer">&#xe60a;</span>
-            Threejs
-        </span>
-        <span class="sidebar-category-name" data-categories="cesium">
-            <span class="iconfont-archer">&#xe60a;</span>
-            cesium
-        </span>
-        <span class="sidebar-category-name" data-categories="jQuery">
-            <span class="iconfont-archer">&#xe60a;</span>
-            jQuery
-        </span>
-        <span class="sidebar-category-name" data-categories="javaScript">
-            <span class="iconfont-archer">&#xe60a;</span>
-            javaScript
-        </span>
         <span class="sidebar-category-name" data-categories="less">
             <span class="iconfont-archer">&#xe60a;</span>
             less
         </span>
-        <span class="sidebar-category-name" data-categories="node">
-            <span class="iconfont-archer">&#xe60a;</span>
-            node
-        </span>
         <span class="sidebar-category-name" data-categories="shader">
             <span class="iconfont-archer">&#xe60a;</span>
             shader
-        </span>
-        <span class="sidebar-category-name" data-categories="note">
-            <span class="iconfont-archer">&#xe60a;</span>
-            note
-        </span>
-        <span class="sidebar-category-name" data-categories="git">
-            <span class="iconfont-archer">&#xe60a;</span>
-            git
         </span>
         <span class="sidebar-category-name" data-categories="Vue">
             <span class="iconfont-archer">&#xe60a;</span>
