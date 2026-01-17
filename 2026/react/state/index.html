@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <!-- title -->
+<!-- keywords -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="author" content="sukksa">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="sukksa">
+        <meta name="keywords" content="hexo,hexo-theme,hexo-blog">
+    <meta name="description" content="">
+    <meta name="description" content="组件通常需要根据交互更改屏幕上显示的内容。输入表单应该更新输入字段，单击轮播图上的“下一个”应该更改显示的图片，单击“购买”应该将商品放入购物车。组件需要“记住”某些东西：当前输入值、当前图片、购物车。在 React 中，这种组件特有的记忆被称为 state。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="state">
+<meta property="og:url" content="https://sukksa.github.io/2026/react/state/index.html">
+<meta property="og:site_name" content="sukksa blog">
+<meta property="og:description" content="组件通常需要根据交互更改屏幕上显示的内容。输入表单应该更新输入字段，单击轮播图上的“下一个”应该更改显示的图片，单击“购买”应该将商品放入购物车。组件需要“记住”某些东西：当前输入值、当前图片、购物车。在 React 中，这种组件特有的记忆被称为 state。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-01-17T07:47:40.000Z">
+<meta property="article:modified_time" content="2026-01-17T07:48:27.770Z">
+<meta property="article:author" content="sukksa">
+<meta property="article:tag" content="react">
+<meta name="twitter:card" content="summary">
+    <meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="icon" href="/assets/favicon.ico">
+    <title>state · sukksa&#39;s Studio</title>
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+    (function (w) {
+        'use strict'
+        // rel=preload support test
+        if (!w.loadCSS) {
+            w.loadCSS = function () {}
+        }
+        // define on the loadCSS obj
+        var rp = (loadCSS.relpreload = {})
+        // rel=preload feature support test
+        // runs once and returns a function for compat purposes
+        rp.support = (function () {
+            var ret
+            try {
+                ret = w.document.createElement('link').relList.supports('preload')
+            } catch (e) {
+                ret = false
+            }
+            return function () {
+                return ret
+            }
+        })()
+
+        // if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+        // then change that media back to its intended value on load
+        rp.bindMediaToggle = function (link) {
+            // remember existing media attr for ultimate state, or default to 'all'
+            var finalMedia = link.media || 'all'
+
+            function enableStylesheet() {
+                link.media = finalMedia
+            }
+
+            // bind load handlers to enable media
+            if (link.addEventListener) {
+                link.addEventListener('load', enableStylesheet)
+            } else if (link.attachEvent) {
+                link.attachEvent('onload', enableStylesheet)
+            }
+
+            // Set rel and non-applicable media type to start an async request
+            // note: timeout allows this to happen async to let rendering continue in IE
+            setTimeout(function () {
+                link.rel = 'stylesheet'
+                link.media = 'only x'
+            })
+            // also enable media after 3 seconds,
+            // which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+            setTimeout(enableStylesheet, 3000)
+        }
+
+        // loop through link elements in DOM
+        rp.poly = function () {
+            // double check this to prevent external calls from running
+            if (rp.support()) {
+                return
+            }
+            var links = w.document.getElementsByTagName('link')
+            for (var i = 0; i < links.length; i++) {
+                var link = links[i]
+                // qualify links to those with rel=preload and as=style attrs
+                if (
+                    link.rel === 'preload' &&
+                    link.getAttribute('as') === 'style' &&
+                    !link.getAttribute('data-loadcss')
+                ) {
+                    // prevent rerunning on link
+                    link.setAttribute('data-loadcss', true)
+                    // bind listeners to toggle media back
+                    rp.bindMediaToggle(link)
+                }
+            }
+        }
+
+        // if unsupported, run the polyfill
+        if (!rp.support()) {
+            // run once at least
+            rp.poly()
+
+            // rerun poly on an interval until onload
+            var run = w.setInterval(rp.poly, 500)
+            if (w.addEventListener) {
+                w.addEventListener('load', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            } else if (w.attachEvent) {
+                w.attachEvent('onload', function () {
+                    rp.poly()
+                    w.clearInterval(run)
+                })
+            }
+        }
+
+        // commonjs
+        if (typeof exports !== 'undefined') {
+            exports.loadCSS = loadCSS
+        } else {
+            w.loadCSS = loadCSS
+        }
+    })(typeof global !== 'undefined' ? global : this)
+</script>
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .footer-fixed-btn,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(
+            -45deg,
+            #444 0,
+            #444 80px,
+            #333 80px,
+            #333 160px
+        );
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s infinite;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+</style>
+
+    <link id="stylesheet-fancybox" rel="preload" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-base" rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link id="stylesheet-mobile" rel="preload" href="/css/mobile.css" as="style" onload="this.onload=null;this.rel='stylesheet';this.media='screen and (max-width: 960px)'">
+    <link id="stylesheet-theme-dark" rel="preload" href="/css/dark.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" as="script"> -->
+    <link rel="preload" href="/lib/jquery.min.js" as="script">
+    <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script>
+    <link rel="preload" href="/scripts/main.js" as="script">
+    <link rel="preload" href="/font/Oswald-Regular.ttf" as="font" crossorigin>
+    <link rel="preload" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" as="font" crossorigin>
+    <!-- algolia -->
+    <!-- 百度统计  -->
+    <!-- 谷歌统计  -->
+    <!-- Google tag (gtag.js) -->
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script> -->
+    <script src="/lib/jquery.min.js"></script>
+    <script src=""></script>
+    <!-- <script type="text/javascript">
+        if (typeof window.$ == undefined) {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js" />')
+        }
+    </script> -->
+        <body class="post-body">
+        <!-- header -->
+        <header class="header header-mobile">
+    <!-- top read progress line -->
+    <div class="header-element">
+        <div class="read-progress"></div>
+    </div>
+    <!-- sidebar menu button -->
+    <div class="header-element">
+        <div class="header-sidebar-menu">
+            <div style="padding-left: 1px;">&#xe775;</div>
+        </div>
+    </div>
+    <!-- header actions -->
+    <div class="header-actions">
+        <!-- theme mode switch button -->
+        <span class="header-theme-btn header-element">
+            <i class="fas fa-adjust"></i>
+        </span>
+        <!-- back to home page text -->
+        <span class="home-link header-element">
+            <a href="/">sukksa's Studio</a>
+        </span>
+    </div>
+    <!-- toggle banner -->
+    <div class="banner">
+        <div class="blog-title header-element">
+            <a href="/">sukksa&#39;s Studio</a>
+        </div>
+        <div class="post-title header-element">
+            <a href="#" class="post-name">state</a>
+        </div>
+    </div>
+</header>
+
+        <!-- fixed footer -->
+        <footer class="footer-fixed">
+    <!-- donate button -->
+
+    <!-- back to top button -->
+    <div class="footer-fixed-btn footer-fixed-btn--hidden back-top">
+        <div>&#xe639;</div>
+    </div>
+</footer>
+
+        <!-- wrapper -->
+        <div class="wrapper">
+            <div class="site-intro" style="    height:50vh;
+">
+    <!-- 主页  -->
+    <!-- 404页  -->
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.png)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+                state
+            <!-- 404 -->
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            <!-- 404 -->
+        </p>
+        <!-- 文章页 meta -->
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                    <div class="post-intro-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="react">react</a>
+</div>
+
+                <!-- 文章字数统计 -->
+                    <div class="post-intro-read">
+                        <span>字数统计: <span class="post-count word-count">10.3k</span>阅读时长: <span class="post-count reading-time">42 min</span></span>
+                    </div>
+                <div class="post-intro-meta">
+                    <!-- 撰写日期 -->
+                    <span class="iconfont-archer post-intro-calander">&#xe676;</span>
+                    <span class="post-intro-time">2026-01-17</span>
+                    <!-- busuanzi -->
+                        <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                            <span class="iconfont-archer post-intro-busuanzi">&#xe602;</span>
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    <!-- 文章分享 -->
+                    <!-- <span class="share-wrapper">
+                        <span class="iconfont-archer share-icon">&#xe71d;</span>
+                        <span class="share-text">Share</span>
+                        <ul class="share-list">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span> -->
+                </div>
+            </div>
+    </div>
+</div>
+
+            <script>
+  // get user agent
+  function getBrowserVersions() {
+    var u = window.navigator.userAgent
+    return {
+      userAgent: u,
+      trident: u.indexOf('Trident') > -1, //IE内核
+      presto: u.indexOf('Presto') > -1, //opera内核
+      webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+      gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+      mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+      ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+      android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+      iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+      iPad: u.indexOf('iPad') > -1, //是否为iPad
+      webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+      weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+      uc: u.indexOf('UCBrowser') > -1, //是否为android下的UC浏览器
+    }
+  }
+  var browser = {
+    versions: getBrowserVersions(),
+  }
+  console.log('userAgent: ' + browser.versions.userAgent)
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded')
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document
+        .getElementsByClassName('intro-title')[0]
+        .classList.add('intro-fade-in')
+      document
+        .getElementsByClassName('intro-subtitle')[0]
+        .classList.add('intro-fade-in')
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in')
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb() {
+    if (browser.versions.uc) {
+      console.log('UCBrowser')
+      fontLoaded()
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular'],
+        },
+        loading: function () {
+          // 所有字体开始加载
+          // console.log('font loading');
+        },
+        active: function () {
+          // 所有字体已渲染
+          fontLoaded()
+        },
+        inactive: function () {
+          // 字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout')
+          fontLoaded()
+        },
+        timeout: 5000, // Set the timeout to two seconds
+      })
+    }
+  }
+
+  function asyncErr() {
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document,
+      t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0]
+    o.src = u
+    if (cb) {
+      o.addEventListener(
+        'load',
+        function (e) {
+          cb(null, e)
+        },
+        false
+      )
+    }
+    if (err) {
+      o.addEventListener(
+        'error',
+        function (e) {
+          err(null, e)
+        },
+        false
+      )
+    }
+    s.parentNode.insertBefore(o, s)
+  }
+
+  var asyncLoadWithFallBack = function (arr, success, reject) {
+    var currReject = function () {
+      reject()
+      arr.shift()
+      if (arr.length) async(arr[0], success, currReject)
+    }
+
+    async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack(
+    [
+      'https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js',
+      'https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js',
+      "/lib/webfontloader.min.js",
+    ],
+    asyncCb,
+    asyncErr
+  )
+</script>
+
+            <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" alt="loading">
+            <div class="container container-unloaded">
+                <main class="main post-page">
+    <article class="article-entry">
+        <p>组件通常需要根据交互更改屏幕上显示的内容。输入表单应该更新输入字段，单击轮播图上的“下一个”应该更改显示的图片，单击“购买”应该将商品放入购物车。组件需要“记住”某些东西：当前输入值、当前图片、购物车。在 React 中，这种组件特有的记忆被称为 <strong>state</strong>。</p>
+<span id="more"></span>
+
+<h2 id="为什么要使用-state"><a href="#为什么要使用-state" class="headerlink" title="为什么要使用 state"></a>为什么要使用 state</h2><p>以下是一个渲染雕塑图片的组件。点击 “Next” 按钮应该显示下一个雕塑并将 <code>index</code> 更改为 <code>1</code>，再次点击又更改为 <code>2</code>，以此类推。但这个组件现在<strong>不起作用</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; sculptureList &#125; <span class="keyword">from</span> <span class="string">&#x27;./data.js&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">Gallery</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> index = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">handleClick</span>(<span class="params"></span>) &#123;</span><br><span class="line">    index = index + <span class="number">1</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> sculpture = sculptureList[index]</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleClick&#125;</span>&gt;</span>Next<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">i</span>&gt;</span>&#123;sculpture.name&#125; <span class="tag">&lt;/<span class="name">i</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        by &#123;sculpture.artist&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h3</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        (&#123;index + 1&#125; of &#123;sculptureList.length&#125;)</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>handleClick()</code> 事件处理函数正在更新局部变量 <code>index</code>。但存在两个原因使得变化不可见：</p>
+<ol>
+<li><strong>局部变量无法在多次渲染中持久保存。</strong> 当 React 再次渲染这个组件时，它会从头开始渲染——不会考虑之前对局部变量的任何更改。</li>
+<li><strong>更改局部变量不会触发渲染。</strong> React 没有意识到它需要使用新数据再次渲染组件。</li>
+</ol>
+<p>要使用新数据更新组件，需要做两件事：</p>
+<ol>
+<li><strong>保留</strong> 渲染之间的数据。</li>
+<li><strong>触发</strong> React 使用新数据渲染组件（重新渲染）。</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://zh-hans.react.dev/reference/react/useState"><code>useState</code></a> Hook 提供了这两个功能：</p>
+<ol>
+<li><strong>State 变量</strong> 用于保存渲染间的数据。</li>
+<li><strong>State setter 函数</strong> 更新变量并触发 React 再次渲染组件。</li>
+</ol>
+<blockquote>
+<p>Hooks ——以 <code>use</code> 开头的函数——只能在组件或<a target="_blank" rel="noopener" href="https://zh-hans.react.dev/learn/reusing-logic-with-custom-hooks">自定义 Hook</a> 的最顶层调用。你不能在条件语句、循环语句或其他嵌套函数内调用 Hook。Hook 是函数，但将它们视为关于组件需求的无条件声明会很有帮助。在组件顶部 “use” React 特性，类似于在文件顶部“导入”模块。</p>
+</blockquote>
+<h2 id="添加一个-state-变量"><a href="#添加一个-state-变量" class="headerlink" title="添加一个 state 变量"></a>添加一个 state 变量</h2><p>要添加 state 变量，先从文件顶部的 React 中导入 <code>useState</code>：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>将<code>let index = 0</code>修改为</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [index, setIndex] = <span class="title function_">useState</span>(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p><code>index</code> 是一个 state 变量，<code>setIndex</code> 是对应的 setter 函数。</p>
+<blockquote>
+<p>这里的 <code>[</code> 和 <code>]</code> 语法称为<a target="_blank" rel="noopener" href="https://zh.javascript.info/destructuring-assignment">数组解构</a>，它允许你从数组中读取值。 <code>useState</code> 返回的数组总是正好有两项。</p>
+</blockquote>
+<p>以下展示了它们在 <code>handleClick()</code> 中是如何共同起作用的：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">handleClick</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title function_">setIndex</span>(index + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="useState"><a href="#useState" class="headerlink" title="useState"></a><code>useState</code></h2><p>当你调用 <a target="_blank" rel="noopener" href="https://zh-hans.react.dev/reference/react/useState"><code>useState</code></a> 时，你是在告诉 React 你想让这个组件记住一些东西：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [index, setIndex] = <span class="title function_">useState</span>(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>在这个例子里，你希望 React 记住 <code>index</code>。</p>
+<p><code>useState</code> 的唯一参数是 state 变量的<strong>初始值</strong>。在这个例子中，<code>index</code> 的初始值被<code>useState(0)</code>设置为 <code>0</code>。</p>
+<p>每次你的组件渲染时，<code>useState</code> 都会给你一个包含两个值的数组：</p>
+<ol>
+<li><strong>state 变量</strong> (<code>index</code>) 会保存上次渲染的值。</li>
+<li><strong>state setter 函数</strong> (<code>setIndex</code>) 可以更新 state 变量并触发 React 重新渲染组件。</li>
+</ol>
+<p>以下是实际发生的情况：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [index, setIndex] = <span class="title function_">useState</span>(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><strong>组件进行第一次渲染。</strong> 因为你将 <code>0</code> 作为 <code>index</code> 的初始值传递给 <code>useState</code>，它将返回 <code>[0, setIndex]</code>。 React 记住 <code>0</code> 是最新的 state 值。</li>
+<li><strong>你更新了 state</strong>。当用户点击按钮时，它会调用 <code>setIndex(index + 1)</code>。 <code>index</code> 是 <code>0</code>，所以它是 <code>setIndex(1)</code>。这告诉 React 现在记住 <code>index</code> 是 <code>1</code> 并触发下一次渲染。</li>
+<li><strong>组件进行第二次渲染</strong>。React 仍然看到 <code>useState(0)</code>，但是因为 React <em>记住</em> 了你将 <code>index</code> 设置为了 <code>1</code>，它将返回 <code>[1, setIndex]</code>。</li>
+<li>以此类推！</li>
+</ol>
+<p><strong>在同一组件的每次渲染中，Hooks 都依托于一个稳定的调用顺序</strong>。这在实践中很有效，因为如果你遵循上面的规则（“只在顶层调用 Hooks”），Hooks 将始终以相同的顺序被调用。</p>
+<p>在 React 内部，为每个组件保存了一个数组，其中每一项都是一个 state 对。它维护当前 state 对的索引值，在渲染之前将其设置为 “0”。每次调用 useState 时，React 都会为你提供一个 state 对并增加索引值。</p>
+<p>一个简单的 useState 实现：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> componentHooks = []</span><br><span class="line"><span class="keyword">let</span> currentHookIndex = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// useState 在 React 中是如何工作的（简化版）</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">useState</span>(<span class="params">initialState</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> pair = componentHooks[currentHookIndex]</span><br><span class="line">  <span class="keyword">if</span> (pair) &#123;</span><br><span class="line">    <span class="comment">// 这不是第一次渲染</span></span><br><span class="line">    <span class="comment">// 所以 state pair 已经存在</span></span><br><span class="line">    <span class="comment">// 将其返回并为下一次 hook 的调用做准备</span></span><br><span class="line">    currentHookIndex++</span><br><span class="line">    <span class="keyword">return</span> pair</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 这是我们第一次进行渲染</span></span><br><span class="line">  <span class="comment">// 所以新建一个 state pair 然后存储它</span></span><br><span class="line">  pair = [initialState, setState]</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">setState</span>(<span class="params">nextState</span>) &#123;</span><br><span class="line">    <span class="comment">// 当用户发起 state 的变更，</span></span><br><span class="line">    <span class="comment">// 把新的值放入 pair 中</span></span><br><span class="line">    pair[<span class="number">0</span>] = nextState</span><br><span class="line">    <span class="title function_">updateDOM</span>()</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 存储这个 pair 用于将来的渲染</span></span><br><span class="line">  <span class="comment">// 并且为下一次 hook 的调用做准备</span></span><br><span class="line">  componentHooks[currentHookIndex] = pair</span><br><span class="line">  currentHookIndex++</span><br><span class="line">  <span class="keyword">return</span> pair</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="State-是隔离且私有的"><a href="#State-是隔离且私有的" class="headerlink" title="State 是隔离且私有的"></a>State 是隔离且私有的</h2><p>State 是屏幕上组件实例内部的状态。换句话说，<strong>如果你渲染同一个组件两次，每个副本都会有完全隔离的 state</strong>！改变其中一个不会影响另一个。</p>
+<p>在这个例子中， <code>Gallery</code> 组件以同样的逻辑被渲染了两次。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">Gallery</span> <span class="keyword">from</span> <span class="string">&#x27;./Gallery.js&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">Page</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">className</span>=<span class="string">&#x27;Page&#x27;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Gallery</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">Gallery</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这就是 state 与声明在模块顶部的普通变量不同的原因。 State 不依赖于特定的函数调用或在代码中的位置，它的作用域“只限于”屏幕上的某块特定区域。你渲染了两个 <code>&lt;Gallery /&gt;</code> 组件，所以它们的 state 是分别存储的。</p>
+<p>还要注意 <code>Page</code> 组件“不知道”关于 <code>Gallery</code> state 的任何信息，甚至不知道它是否有任何 state。与 props 不同，<strong>state 完全私有于声明它的组件</strong>。父组件无法更改它。这使你可以向任何组件添加或删除 state，而不会影响其他组件。</p>
+<p>如果你希望两个画廊保持其 states 同步怎么办？在 React 中执行此操作的正确方法是从子组件中<em>删除</em> state 并将其添加到离它们最近的共享父组件中。</p>
+<blockquote>
+<ul>
+<li>当一个组件需要在多次渲染间“记住”某些信息时使用 state 变量。</li>
+<li>State 变量是通过调用 <code>useState</code> Hook 来声明的。</li>
+<li>Hook 是以 <code>use</code> 开头的特殊函数。它们能让你 “hook” 到像 state 这样的 React 特性中。</li>
+<li>Hook 可能会让你想起 import：它们需要在非条件语句中调用。调用 Hook 时，包括 <code>useState</code>，仅在组件或另一个 Hook 的顶层被调用才有效。</li>
+<li><code>useState</code> Hook 返回一对值：当前 state 和更新它的函数。</li>
+<li>你可以拥有多个 state 变量。在内部，React 按顺序匹配它们。</li>
+<li>State 是组件私有的。如果你在两个地方渲染它，则每个副本都有独属于自己的 state。</li>
+</ul>
+</blockquote>
+<h2 id="state-如同一张快照"><a href="#state-如同一张快照" class="headerlink" title="state 如同一张快照"></a>state 如同一张快照</h2><h3 id="设置-state-会触发渲染"><a href="#设置-state-会触发渲染" class="headerlink" title="设置 state 会触发渲染"></a>设置 state 会触发渲染</h3><p>你可能会认为你的用户界面会直接对点击之类的用户输入做出响应并发生变化。在 React 中，它的工作方式与这种思维模型略有不同。在上一页中，你看到了来自 React 的<a target="_blank" rel="noopener" href="https://zh-hans.react.dev/learn/render-and-commit#step-1-trigger-a-render">设置 state 请求重新渲染</a>。这意味着要使界面对输入做出反应，你需要设置其 state。</p>
+<p>在这个例子中，当你按下 “send” 时，<code>setIsSent(true)</code> 会通知 React 重新渲染 UI：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">Form</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [isSent, setIsSent] = <span class="title function_">useState</span>(<span class="literal">false</span>)</span><br><span class="line">  <span class="keyword">const</span> [message, setMessage] = <span class="title function_">useState</span>(<span class="string">&#x27;Hi!&#x27;</span>)</span><br><span class="line">  <span class="keyword">if</span> (isSent) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="language-xml"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>Your message is on its way!<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">form</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">onSubmit</span>=<span class="string">&#123;e</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">        e.preventDefault()</span></span><br><span class="line"><span class="language-xml">        setIsSent(true)</span></span><br><span class="line"><span class="language-xml">        sendMessage(message)</span></span><br><span class="line"><span class="language-xml">      &#125;&#125;&gt;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">textarea</span> <span class="attr">placeholder</span>=<span class="string">&#x27;Message&#x27;</span> <span class="attr">value</span>=<span class="string">&#123;message&#125;</span> <span class="attr">onChange</span>=<span class="string">&#123;e</span> =&gt;</span> setMessage(e.target.value)&#125; /&gt;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&#x27;submit&#x27;</span>&gt;</span>Send<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">form</span>&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">sendMessage</span>(<span class="params">message</span>) &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当单击按钮时会发生以下情况：</p>
+<ol>
+<li>执行 <code>onSubmit</code> 事件处理函数。</li>
+<li><code>setIsSent(true)</code> 将 <code>isSent</code> 设置为 <code>true</code> 并排列一个新的渲染。</li>
+<li>React 根据新的 <code>isSent</code> 值重新渲染组件。</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="https://zh-hans.react.dev/learn/render-and-commit#step-2-react-renders-your-components">“正在渲染”</a> 就意味着 React 正在调用你的组件——一个函数。你从该函数返回的 JSX 就像是在某个时间点上 UI 的快照。它的 props、事件处理函数和内部变量都是 <strong>根据当前渲染时的 state</strong> 被计算出来的。</p>
+<h3 id="渲染会及时生成一张快照"><a href="#渲染会及时生成一张快照" class="headerlink" title="渲染会及时生成一张快照"></a>渲染会及时生成一张快照</h3><p>与照片或电影画面不同，你返回的 UI “快照”是可交互的。它其中包括类似事件处理函数的逻辑，这些逻辑用于指定如何对输入作出响应。React 随后会更新屏幕来匹配这张快照，并绑定事件处理函数。因此，按下按钮就会触发你 JSX 中的点击事件处理函数。</p>
+<p>当 React 重新渲染一个组件时：</p>
+<ol>
+<li>React 会再次调用你的函数</li>
+<li>函数会返回新的 JSX 快照</li>
+<li>React 会更新界面以匹配返回的快照</li>
+</ol>
+<p>state 不同于在你的函数返回之后就会消失的普通变量。state 实际上“活”在 React 本身中——就像被摆在一个架子上！——位于你的函数之外。当 React 调用你的组件时，它会为特定的那一次渲染提供一张 state 快照。你的组件会在其 JSX 中返回一张包含一整套新的 props 和事件处理函数的 UI 快照 ，其中所有的值都是 <strong>根据那一次渲染中 state 的值</strong> 被计算出来的！</p>
+<p>在这个例子中，你可能会以为点击“+3”按钮会调用 <code>setNumber(number + 1)</code> 三次从而使计数器递增三次。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">Counter</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [number, setNumber] = <span class="title function_">useState</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;number&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">        setNumber(number + 1);</span></span><br><span class="line"><span class="language-xml">        setNumber(number + 1);</span></span><br><span class="line"><span class="language-xml">        setNumber(number + 1);</span></span><br><span class="line"><span class="language-xml">      &#125;&#125;&gt;+3<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>每次点击只会让 <code>number</code> 递增一次！</p>
+<p><strong>设置 state 只会为下一次渲染变更 state 的值</strong>。在第一次渲染期间，<code>number</code> 为 <code>0</code>。这也就解释了为什么在 <strong>那次渲染中的</strong> <code>onClick</code> 处理函数中，即便在调用了 <code>setNumber(number + 1)</code> 之后，<code>number</code> 的值也仍然是 <code>0</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;button onClick=&#123;() =&gt; &#123;</span><br><span class="line"></span><br><span class="line">  setNumber(number + 1);</span><br><span class="line"></span><br><span class="line">  setNumber(number + 1);</span><br><span class="line"></span><br><span class="line">  setNumber(number + 1);</span><br><span class="line"></span><br><span class="line">&#125;&#125;&gt;+3&lt;/button&gt;</span><br></pre></td></tr></table></figure>
+
+<p>以下是这个按钮的点击事件处理函数通知 React 要做的事情：</p>
+<ol>
+<li><code>setNumber(number + 1)</code>：<code>number</code> 是  <code>0</code> 所以 <code>setNumber(0 + 1)</code>。<ul>
+<li>React 准备在下一次渲染时将 <code>number</code> 更改为 <code>1</code>。</li>
+</ul>
+</li>
+<li><code>setNumber(number + 1)</code>：<code>number</code> 是  <code>0</code> 所以 <code>setNumber(0 + 1)</code>。<ul>
+<li>React 准备在下一次渲染时将 <code>number</code> 更改为 <code>1</code>。</li>
+</ul>
+</li>
+<li><code>setNumber(number + 1)</code>：<code>number</code> 是  <code>0</code> 所以 <code>setNumber(0 + 1)</code>。<ul>
+<li>React 准备在下一次渲染时将 <code>number</code> 更改为 <code>1</code>。</li>
+</ul>
+</li>
+</ol>
+<p>尽管你调用了三次 <code>setNumber(number + 1)</code>，但在 <strong>这次渲染的</strong> 事件处理函数中 <code>number</code> 会一直是 <code>0</code>，所以你会三次将 state 设置成 <code>1</code>。这就是为什么在你的事件处理函数执行完以后，React 重新渲染的组件中的 <code>number</code> 等于 <code>1</code> 而不是 <code>3</code>。</p>
+<p>你还可以通过在心里把 state 变量替换成它们在你代码中的值来想象这个过程。由于 <strong>这次渲染</strong> 中的 state 变量 <code>number</code> 是 <code>0</code>，其事件处理函数看起来会像这样：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;button onClick=&#123;<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">setNumber</span>(<span class="number">0</span> + <span class="number">1</span>);</span><br><span class="line">  <span class="title function_">setNumber</span>(<span class="number">0</span> + <span class="number">1</span>);</span><br><span class="line">  <span class="title function_">setNumber</span>(<span class="number">0</span> + <span class="number">1</span>);</span><br><span class="line">&#125;&#125;&gt;+<span class="number">3</span>&lt;/button&gt;</span><br></pre></td></tr></table></figure>
+
+<p>对于下一次渲染来说，<code>number</code> 是 <code>1</code>，因此 <strong>那次渲染中的</strong> 点击事件处理函数看起来会像这样：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;button onClick=&#123;<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">setNumber</span>(<span class="number">1</span> + <span class="number">1</span>);</span><br><span class="line">  <span class="title function_">setNumber</span>(<span class="number">1</span> + <span class="number">1</span>);</span><br><span class="line">  <span class="title function_">setNumber</span>(<span class="number">1</span> + <span class="number">1</span>);</span><br><span class="line">&#125;&#125;&gt;+<span class="number">3</span>&lt;/button&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这就是为什么再次点击按钮会将计数器设置为 <code>2</code>，下次点击时会设为 <code>3</code>，依此类推。</p>
+<h3 id="异步事件中的-state"><a href="#异步事件中的-state" class="headerlink" title="异步事件中的 state"></a>异步事件中的 state</h3><p>在下边的例子中，给<code>alert</code> 添加一个定时器，使得它在组件重新渲染<strong>之后</strong>才触发，又会怎样呢？是会显示 “0” 还是 “5” ？</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">Counter</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [number, setNumber] = <span class="title function_">useState</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;number&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">        setNumber(number + 5);</span></span><br><span class="line"><span class="language-xml">        setTimeout(() =&gt; &#123;</span></span><br><span class="line"><span class="language-xml">          alert(number);</span></span><br><span class="line"><span class="language-xml">        &#125;, 3000);</span></span><br><span class="line"><span class="language-xml">      &#125;&#125;&gt;+5<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当你点击 <code>button</code> 时：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">setNumber</span>(<span class="number">0</span> + <span class="number">5</span>);</span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">alert</span>(<span class="number">0</span>);</span><br><span class="line">&#125;, <span class="number">3000</span>);</span><br></pre></td></tr></table></figure>
+
+<p>到提示框运行时，React 中存储的 state 可能已经发生了更改，但它是使用用户与之交互时状态的快照进行调度的！</p>
+<p><strong>一个 state 变量的值永远不会在一次渲染的内部发生变化，</strong> 即使其事件处理函数的代码是异步的。在 <strong>那次渲染的</strong> <code>onClick</code> 内部，<code>number</code> 的值即使在调用 <code>setNumber(number + 5)</code> 之后也还是 <code>0</code>。它的值在 React 通过调用你的组件“获取 UI 的快照”时就被“固定”了。</p>
+<p><strong>React 会使 state 的值始终“固定”在一次渲染的各个事件处理函数内部</strong>。你无需担心代码运行时 state 是否发生了变化。</p>
+<h2 id="把-state-更新加入队列"><a href="#把-state-更新加入队列" class="headerlink" title="把 state 更新加入队列"></a>把 state 更新加入队列</h2><p>设置组件 state 会把一次重新渲染加入队列。但有时你可能会希望在下次渲染加入队列之前对 state 的值执行多次操作。</p>
+<h3 id="React-会对-state-更新进行批处理"><a href="#React-会对-state-更新进行批处理" class="headerlink" title="React 会对 state 更新进行批处理"></a>React 会对 state 更新进行批处理</h3><figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">Counter</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [number, setNumber] = <span class="title function_">useState</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;number&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">        setNumber(number + 1);</span></span><br><span class="line"><span class="language-xml">        setNumber(number + 1);</span></span><br><span class="line"><span class="language-xml">        setNumber(number + 1);</span></span><br><span class="line"><span class="language-xml">      &#125;&#125;&gt;+3<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>每一次渲染的 state 值都是固定的，因此无论你调用多少次 <code>setNumber(1)</code>，在第一次渲染的事件处理函数内部的 <code>number</code> 值总是 <code>0</code> ：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">setNumber</span>(<span class="number">0</span> + <span class="number">1</span>);</span><br><span class="line"><span class="title function_">setNumber</span>(<span class="number">0</span> + <span class="number">1</span>);</span><br><span class="line"><span class="title function_">setNumber</span>(<span class="number">0</span> + <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+
+<p>但是这里还有另外一个影响因素需要讨论。<strong>React 会等到事件处理函数中的</strong> 所有 <strong>代码都运行完毕再处理 state 更新。</strong> 这就是重新渲染只会发生在所有这些 <code>setNumber()</code> 调用 <strong>之后</strong> 的原因。</p>
+<p>这让你可以更新多个 state 变量——甚至来自多个组件的 state 变量——而不会触发太多的 <a target="_blank" rel="noopener" href="https://zh-hans.react.dev/learn/render-and-commit#re-renders-when-state-updates">重新渲染</a>。但这也意味着只有在你的事件处理函数及其中任何代码执行完成 <strong>之后</strong>，UI 才会更新。这种特性也就是 <strong>批处理</strong></p>
+<h3 id="在下次渲染前多次更新同一个-state"><a href="#在下次渲染前多次更新同一个-state" class="headerlink" title="在下次渲染前多次更新同一个 state"></a>在下次渲染前多次更新同一个 state</h3><p>这是一个不常见的用例，但是如果你想在下次渲染之前多次更新同一个 state，你可以像 <code>setNumber(n =&gt; n + 1)</code> 这样传入一个根据队列中的前一个 state 计算下一个 state 的 <strong>函数</strong>，而不是像 <code>setNumber(number + 1)</code> 这样传入 <strong>下一个 state 值</strong>。这是一种告诉 React “用 state 值做某事”而不是仅仅替换它的方法。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">Counter</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [number, setNumber] = <span class="title function_">useState</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>&#123;number&#125;<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">        setNumber(n =&gt; n + 1);</span></span><br><span class="line"><span class="language-xml">        setNumber(n =&gt; n + 1);</span></span><br><span class="line"><span class="language-xml">        setNumber(n =&gt; n + 1);</span></span><br><span class="line"><span class="language-xml">      &#125;&#125;&gt;+3<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在这里，<code>n =&gt; n + 1</code> 被称为 <strong>更新函数</strong>。当你将它传递给一个 state 设置函数时：</p>
+<ol>
+<li>React 会将此函数加入队列，以便在事件处理函数中的所有其他代码运行后进行处理。</li>
+<li>在下一次渲染期间，React 会遍历队列并给你更新之后的最终 state。</li>
+</ol>
+<p>下面是 React 在执行事件处理函数时处理这几行代码的过程：</p>
+<ol>
+<li><code>setNumber(n =&gt; n + 1)</code>：<code>n =&gt; n + 1</code> 是一个函数。React 将它加入队列。</li>
+<li><code>setNumber(n =&gt; n + 1)</code>：<code>n =&gt; n + 1</code> 是一个函数。React 将它加入队列。</li>
+<li><code>setNumber(n =&gt; n + 1)</code>：<code>n =&gt; n + 1</code> 是一个函数。React 将它加入队列。</li>
+</ol>
+<p>当你在下次渲染期间调用 <code>useState</code> 时，React 会遍历队列。之前的 <code>number</code> state 的值是 <code>0</code>，所以这就是 React 作为参数 <code>n</code> 传递给第一个更新函数的值。然后 React 会获取你上一个更新函数的返回值，并将其作为 <code>n</code> 传递给下一个更新函数，以此类推：</p>
+<table>
+<thead>
+<tr>
+<th>更新队列</th>
+<th><code>n</code></th>
+<th>返回值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>n =&gt; n + 1</code></td>
+<td><code>0</code></td>
+<td><code>0 + 1 = 1</code></td>
+</tr>
+<tr>
+<td><code>n =&gt; n + 1</code></td>
+<td><code>1</code></td>
+<td><code>1 + 1 = 2</code></td>
+</tr>
+<tr>
+<td><code>n =&gt; n + 1</code></td>
+<td><code>2</code></td>
+<td><code>2 + 1 = 3</code></td>
+</tr>
+</tbody></table>
+<p>React 会保存 <code>3</code> 为最终结果并从 <code>useState</code> 中返回。</p>
+<h3 id="如果你在替换-state-后更新-state-会发生什么"><a href="#如果你在替换-state-后更新-state-会发生什么" class="headerlink" title="如果你在替换 state 后更新 state 会发生什么"></a>如果你在替换 state 后更新 state 会发生什么</h3><p>这个事件处理函数会怎么样？你认为 <code>number</code> 在下一次渲染中的值是什么？</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;button onClick=&#123;<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">setNumber</span>(number + <span class="number">5</span>);</span><br><span class="line">  <span class="title function_">setNumber</span>(<span class="function"><span class="params">n</span> =&gt;</span> n + <span class="number">1</span>);</span><br><span class="line">&#125;&#125;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这是事件处理函数告诉 React 要做的事情：</p>
+<ol>
+<li><code>setNumber(number + 5)</code>：<code>number</code> 为 <code>0</code>，所以 <code>setNumber(0 + 5)</code>。React 将 <em>“替换为 <code>5</code>”</em> 添加到其队列中。</li>
+<li><code>setNumber(n =&gt; n + 1)</code>：<code>n =&gt; n + 1</code> 是一个更新函数。 React 将 <strong>该函数</strong> 添加到其队列中。</li>
+</ol>
+<p>在下一次渲染期间，React 会遍历 state 队列：</p>
+<table>
+<thead>
+<tr>
+<th>更新队列</th>
+<th><code>n</code></th>
+<th>返回值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>“替换为 <code>5</code>”</td>
+<td><code>0</code>（未使用）</td>
+<td><code>5</code></td>
+</tr>
+<tr>
+<td><code>n =&gt; n + 1</code></td>
+<td><code>5</code></td>
+<td><code>5 + 1 = 6</code></td>
+</tr>
+</tbody></table>
+<p>React 会保存 <code>6</code> 为最终结果并从 <code>useState</code> 中返回。</p>
+<p>你可能已经注意到，<code>setState(x)</code> 实际上会像 <code>setState(n =&gt; x)</code> 一样运行，只是没有使用 <code>n</code></p>
+<h3 id="如果你在更新-state-后替换-state-会发生什么"><a href="#如果你在更新-state-后替换-state-会发生什么" class="headerlink" title="如果你在更新 state 后替换 state 会发生什么"></a>如果你在更新 state 后替换 state 会发生什么</h3><p> <code>number</code> 在下一次渲染中的值是什么？</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;button onClick=&#123;<span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">setNumber</span>(number + <span class="number">5</span>);</span><br><span class="line">  <span class="title function_">setNumber</span>(<span class="function"><span class="params">n</span> =&gt;</span> n + <span class="number">1</span>);</span><br><span class="line">  <span class="title function_">setNumber</span>(<span class="number">42</span>);</span><br><span class="line">&#125;&#125;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>以下是 React 在执行事件处理函数时处理这几行代码的过程：</p>
+<ol>
+<li><code>setNumber(number + 5)</code>：<code>number</code> 为 <code>0</code>，所以 <code>setNumber(0 + 5)</code>。React 将 <em>“替换为 <code>5</code>”</em> 添加到其队列中。</li>
+<li><code>setNumber(n =&gt; n + 1)</code>：<code>n =&gt; n + 1</code> 是一个更新函数。React 将该函数添加到其队列中。</li>
+<li><code>setNumber(42)</code>：React 将 <em>“替换为 <code>42</code>”</em> 添加到其队列中。</li>
+</ol>
+<p>在下一次渲染期间，React 会遍历 state 队列：</p>
+<table>
+<thead>
+<tr>
+<th>更新队列</th>
+<th><code>n</code></th>
+<th>返回值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>“替换为 <code>5</code>”</td>
+<td><code>0</code>（未使用）</td>
+<td><code>5</code></td>
+</tr>
+<tr>
+<td><code>n =&gt; n + 1</code></td>
+<td><code>5</code></td>
+<td><code>5 + 1 = 6</code></td>
+</tr>
+<tr>
+<td>“替换为 <code>42</code>”</td>
+<td><code>6</code>（未使用）</td>
+<td><code>42</code></td>
+</tr>
+</tbody></table>
+<p>然后 React 会保存 <code>42</code> 为最终结果并从 <code>useState</code> 中返回。</p>
+<p>总而言之，以下是你可以考虑传递给 <code>setNumber</code> state 设置函数的内容：</p>
+<ul>
+<li><strong>一个更新函数</strong>（例如：<code>n =&gt; n + 1</code>）会被添加到队列中。</li>
+<li><strong>任何其他的值</strong>（例如：数字 <code>5</code>）会导致“替换为 <code>5</code>”被添加到队列中，已经在队列中的内容会被忽略。</li>
+</ul>
+<p>事件处理函数执行完成后，React 将触发重新渲染。在重新渲染期间，React 将处理队列。更新函数会在渲染期间执行，因此 <strong>更新函数必须是 <a target="_blank" rel="noopener" href="https://zh-hans.react.dev/learn/keeping-components-pure">纯函数</a></strong> 并且只 <strong>返回</strong> 结果。不要尝试从它们内部设置 state 或者执行其他副作用。</p>
+<h2 id="更新-state-中的对象"><a href="#更新-state-中的对象" class="headerlink" title="更新 state 中的对象"></a>更新 state 中的对象</h2><p>state 中可以保存任意类型的 JavaScript 值，包括对象。但是，你不应该直接修改存放在 React state 中的对象。相反，当你想要更新一个对象时，你需要创建一个新的对象（或者将其拷贝一份），然后将 state 更新为此对象。</p>
+<h3 id="将-state-视为只读的"><a href="#将-state-视为只读的" class="headerlink" title="将 state 视为只读的"></a>将 state 视为只读的</h3><p>你可以在 state 中存放任意类型的 JavaScript 值。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [x, setX] = <span class="title function_">useState</span>(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>到目前为止，你已经尝试过在 state 中存放数字、字符串和布尔值，这些类型的值在 JavaScript 中是不可变（immutable）的，这意味着它们不能被改变或是只读的。你可以通过替换它们的值以触发一次重新渲染。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">setX</span>(<span class="number">5</span>);</span><br></pre></td></tr></table></figure>
+
+<p>state <code>x</code> 从 <code>0</code> 变为 <code>5</code>，但是数字 <code>0</code> 本身并没有发生改变。在 JavaScript 中，无法对内置的原始值，如数字、字符串和布尔值，进行任何更改。</p>
+<p>现在考虑 state 中存放对象的情况：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [position, setPosition] = <span class="title function_">useState</span>(&#123; <span class="attr">x</span>: <span class="number">0</span>, <span class="attr">y</span>: <span class="number">0</span> &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>从技术上来讲，可以改变对象自身的内容。<strong>当你这样做时，就制造了一个 mutation</strong>：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">position.<span class="property">x</span> = <span class="number">5</span>;</span><br></pre></td></tr></table></figure>
+
+<p>然而，虽然严格来说 React state 中存放的对象是可变的，但你应该像处理数字、布尔值、字符串一样将它们视为不可变的。因此你应该替换它们的值，而不是对它们进行修改。</p>
+<p>换句话说，应该 <strong>把所有存放在 state 中的 JavaScript 对象都视为只读的</strong>。</p>
+<p>在下面的例子中，我们用一个存放在 state 中的对象来表示指针当前的位置。当你在预览区触摸或移动光标时，红色的点本应移动。但是实际上红点仍停留在原处：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">MovingDot</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [position, setPosition] = <span class="title function_">useState</span>(&#123;</span><br><span class="line">    <span class="attr">x</span>: <span class="number">0</span>,</span><br><span class="line">    <span class="attr">y</span>: <span class="number">0</span></span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">div</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      <span class="attr">onPointerMove</span>=<span class="string">&#123;e</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">        position.x = e.clientX;</span></span><br><span class="line"><span class="language-xml">        position.y = e.clientY;</span></span><br><span class="line"><span class="language-xml">      &#125;&#125;</span></span><br><span class="line"><span class="language-xml">      style=&#123;&#123;</span></span><br><span class="line"><span class="language-xml">        position: &#x27;relative&#x27;,</span></span><br><span class="line"><span class="language-xml">        width: &#x27;100vw&#x27;,</span></span><br><span class="line"><span class="language-xml">        height: &#x27;100vh&#x27;,</span></span><br><span class="line"><span class="language-xml">      &#125;&#125;&gt;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">style</span>=<span class="string">&#123;&#123;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">position:</span> &#x27;<span class="attr">absolute</span>&#x27;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">backgroundColor:</span> &#x27;<span class="attr">red</span>&#x27;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">borderRadius:</span> &#x27;<span class="attr">50</span>%&#x27;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">transform:</span> `<span class="attr">translate</span>($&#123;<span class="attr">position.x</span>&#125;<span class="attr">px</span>, $&#123;<span class="attr">position.y</span>&#125;<span class="attr">px</span>)`,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">left:</span> <span class="attr">-10</span>,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">top:</span> <span class="attr">-10</span>,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">width:</span> <span class="attr">20</span>,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">height:</span> <span class="attr">20</span>,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">      &#125;&#125; /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>问题出在下面这段代码中。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">onPointerMove=&#123;<span class="function"><span class="params">e</span> =&gt;</span> &#123;</span><br><span class="line">  position.<span class="property">x</span> = e.<span class="property">clientX</span>;</span><br><span class="line">  position.<span class="property">y</span> = e.<span class="property">clientY</span>;</span><br><span class="line">&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码直接修改了上一次渲染中分配给 <code>position</code> 的对象。但是因为并没有使用 state 的设置函数，React 并不知道对象已更改。所以 React 没有做出任何响应。这就像在吃完饭之后才尝试去改变要点的菜一样。虽然在一些情况下，直接修改 state 可能是有效的，但我们并不推荐这么做。你应该把在渲染过程中可以访问到的 state 视为只读的。</p>
+<p>在这种情况下，为了真正地触发一次重新渲染，<strong>你需要创建一个新对象并把它传递给 state 的设置函数</strong>：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">onPointerMove=&#123;<span class="function"><span class="params">e</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="title function_">setPosition</span>(&#123;</span><br><span class="line">    <span class="attr">x</span>: e.<span class="property">clientX</span>,</span><br><span class="line">    <span class="attr">y</span>: e.<span class="property">clientY</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过使用 <code>setPosition</code>，你在告诉 React：</p>
+<ul>
+<li>使用这个新的对象替换 <code>position</code> 的值</li>
+<li>然后再次渲染这个组件</li>
+</ul>
+<blockquote>
+<h4 id="使用展开语法复制对象"><a href="#使用展开语法复制对象" class="headerlink" title="使用展开语法复制对象"></a>使用展开语法复制对象</h4><p>如果只想改变对象的其中一个值，可以使用 <code>...</code> 复制整个对象，只更改需要变更的属性。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">onPointerMove=&#123;<span class="function"><span class="params">e</span> =&gt;</span> &#123;</span><br><span class="line"><span class="title function_">setPosition</span>(&#123;</span><br><span class="line">...position,</span><br><span class="line"> <span class="attr">y</span>: e.<span class="property">clientY</span></span><br><span class="line">&#125;);</span><br><span class="line">&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>只能在竖直方向移动</p>
+</blockquote>
+<h3 id="更新一个嵌套对象"><a href="#更新一个嵌套对象" class="headerlink" title="更新一个嵌套对象"></a>更新一个嵌套对象</h3><p>考虑下面这种结构的嵌套对象：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [person, setPerson] = <span class="title function_">useState</span>(&#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;Niki de Saint Phalle&#x27;</span>,</span><br><span class="line">  <span class="attr">artwork</span>: &#123;</span><br><span class="line">    <span class="attr">title</span>: <span class="string">&#x27;Blue Nana&#x27;</span>,</span><br><span class="line">    <span class="attr">city</span>: <span class="string">&#x27;Hamburg&#x27;</span>,</span><br><span class="line">    <span class="attr">image</span>: <span class="string">&#x27;https://i.imgur.com/Sd1AgUOm.jpg&#x27;</span>,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>如果你想要更新 <code>person.artwork.city</code> 的值，用 mutation 来实现的方法非常容易理解：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">person.<span class="property">artwork</span>.<span class="property">city</span> = <span class="string">&#x27;New Delhi&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>但是在 React 中，你需要将 state 视为不可变的！为了修改 <code>city</code> 的值，你首先需要创建一个新的 <code>artwork</code> 对象（其中预先填充了上一个 <code>artwork</code> 对象中的数据），然后创建一个新的 <code>person</code> 对象，并使得其中的 <code>artwork</code> 属性指向新创建的 <code>artwork</code> 对象：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> nextArtwork = &#123; ...person.<span class="property">artwork</span>, <span class="attr">city</span>: <span class="string">&#x27;New Delhi&#x27;</span> &#125;;</span><br><span class="line"><span class="keyword">const</span> nextPerson = &#123; ...person, <span class="attr">artwork</span>: nextArtwork &#125;;</span><br><span class="line"><span class="title function_">setPerson</span>(nextPerson);</span><br></pre></td></tr></table></figure>
+
+<p>或者，写成一个函数调用：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">setPerson</span>(&#123;</span><br><span class="line">  ...person, <span class="comment">// 复制其它字段的数据 </span></span><br><span class="line">  <span class="attr">artwork</span>: &#123; <span class="comment">// 替换 artwork 字段 </span></span><br><span class="line">    ...person.<span class="property">artwork</span>, <span class="comment">// 复制之前 person.artwork 中的数据</span></span><br><span class="line">    <span class="attr">city</span>: <span class="string">&#x27;New Delhi&#x27;</span> <span class="comment">// 但是将 city 的值替换为 New Delhi！</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Immer"><a href="#Immer" class="headerlink" title="Immer"></a>Immer</h3><p>如果你的 state 有多层的嵌套，你或许应该考虑 <a target="_blank" rel="noopener" href="https://zh-hans.react.dev/learn/choosing-the-state-structure#avoid-deeply-nested-state">将其扁平化</a>。但是，如果你不想改变 state 的数据结构，你可能更喜欢用一种更便捷的方式来实现嵌套展开的效果。<a target="_blank" rel="noopener" href="https://github.com/immerjs/use-immer">Immer</a> 是一个非常流行的库，它可以让你使用简便但可以直接修改的语法编写代码，并会帮你处理好复制的过程。通过使用 Immer，你写出的代码看起来就像是你“打破了规则”而直接修改了对象：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">updatePerson</span>(<span class="function"><span class="params">draft</span> =&gt;</span> &#123;</span><br><span class="line">  draft.<span class="property">artwork</span>.<span class="property">city</span> = <span class="string">&#x27;Lagos&#x27;</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>尝试使用 Immer:</p>
+<ol>
+<li>运行 <code>npm install use-immer</code> 添加 Immer 依赖</li>
+<li>用 <code>import &#123; useImmer &#125; from &#39;use-immer&#39;</code> 替换掉 <code>import &#123; useState &#125; from &#39;react&#39;</code></li>
+</ol>
+<blockquote>
+<h4 id="为什么在-React-中不推荐直接修改-state？"><a href="#为什么在-React-中不推荐直接修改-state？" class="headerlink" title="为什么在 React 中不推荐直接修改 state？"></a>为什么在 React 中不推荐直接修改 state？</h4><ul>
+<li><strong>调试</strong>：如果你使用 <code>console.log</code> 并且不直接修改 state，你之前日志中的 state 的值就不会被新的 state 变化所影响。这样你就可以清楚地看到两次渲染之间 state 的值发生了什么变化</li>
+<li><strong>优化</strong>：React 常见的 <a target="_blank" rel="noopener" href="https://zh-hans.react.dev/reference/react/memo">优化策略</a> 依赖于如果之前的 props 或者 state 的值和下一次相同就跳过渲染。如果你从未直接修改 state ，那么你就可以很快看到 state 是否发生了变化。如果 <code>prevObj === obj</code>，那么你就可以肯定这个对象内部并没有发生改变。</li>
+<li><strong>新功能</strong>：我们正在构建的 React 的新功能依赖于 state 被 <a target="_blank" rel="noopener" href="https://zh-hans.react.dev/learn/state-as-a-snapshot">像快照一样看待</a> 的理念。如果你直接修改 state 的历史版本，可能会影响你使用这些新功能。</li>
+<li><strong>需求变更</strong>：有些应用功能在不出现任何修改的情况下会更容易实现，比如实现撤销&#x2F;恢复、展示修改历史，或是允许用户把表单重置成某个之前的值。这是因为你可以把 state 之前的拷贝保存到内存中，并适时对其进行再次使用。如果一开始就用了直接修改 state 的方式，那么后面要实现这样的功能就会变得非常困难。</li>
+<li><strong>更简单的实现</strong>：React 并不依赖于 mutation ，所以你不需要对对象进行任何特殊操作。它不需要像很多“响应式”的解决方案一样去劫持对象的属性、总是用代理把对象包裹起来，或者在初始化时做其他工作。这也是 React 允许你把任何对象存放在 state 中——不管对象有多大——而不会造成有任何额外的性能或正确性问题的原因。</li>
+</ul>
+</blockquote>
+<h2 id="更新-state-中的数组"><a href="#更新-state-中的数组" class="headerlink" title="更新 state 中的数组"></a>更新 state 中的数组</h2><p>数组是另外一种可以存储在 state 中的 JavaScript 对象，它虽然是可变的，但是却应该被视为不可变。同对象一样，当你想要更新存储于 state 中的数组时，你需要创建一个新的数组（或者创建一份已有数组的拷贝值），并使用新数组设置 state。</p>
+<h3 id="在没有-mutation-的前提下更新数组"><a href="#在没有-mutation-的前提下更新数组" class="headerlink" title="在没有 mutation 的前提下更新数组"></a>在没有 mutation 的前提下更新数组</h3><p>在 JavaScript 中，数组只是另一种对象。<a target="_blank" rel="noopener" href="https://zh-hans.react.dev/learn/updating-objects-in-state">同对象一样</a>，<strong>你需要将 React state 中的数组视为只读的</strong>。这意味着你不应该使用类似于 <code>arr[0] = &#39;bird&#39;</code> 这样的方式来重新分配数组中的元素，也不应该使用会直接修改原始数组的方法，例如 <code>push()</code> 和 <code>pop()</code>。</p>
+<p>相反，每次要更新一个数组时，你需要把一个<strong>新</strong>的数组传入 state 的 setting 方法中。为此，你可以通过使用像 <code>filter()</code> 和 <code>map()</code> 这样不会直接修改原始值的方法，从原始数组生成一个新的数组。然后你就可以将 state 设置为这个新生成的数组。</p>
+<p>下面是常见数组操作的参考表。当你操作 React state 中的数组时，你需要避免使用左列的方法，而首选右列的方法：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>避免使用 (会改变原始数组)</th>
+<th>推荐使用 (会返回一个新数组）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>添加元素</td>
+<td><code>push</code>，<code>unshift</code></td>
+<td><code>concat</code>，<code>[...arr]</code> 展开语法</td>
+</tr>
+<tr>
+<td>删除元素</td>
+<td><code>pop</code>，<code>shift</code>，<code>splice</code></td>
+<td><code>filter</code>，<code>slice</code></td>
+</tr>
+<tr>
+<td>替换元素</td>
+<td><code>splice</code>，<code>arr[i] = ...</code> 赋值</td>
+<td><code>map</code></td>
+</tr>
+<tr>
+<td>排序</td>
+<td><code>reverse</code>，<code>sort</code></td>
+<td>先将数组复制一份</td>
+</tr>
+</tbody></table>
+<p>或者，你可以<a target="_blank" rel="noopener" href="https://zh-hans.react.dev/learn/updating-arrays-in-state#write-concise-update-logic-with-immer">使用 Immer</a> ，这样你便可以使用表格中的所有方法了。</p>
+<h3 id="向数组中添加元素"><a href="#向数组中添加元素" class="headerlink" title="向数组中添加元素"></a>向数组中添加元素</h3><p><code>push()</code> 会直接修改原始数组，而你不希望这样：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> nextId = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">List</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [name, setName] = <span class="title function_">useState</span>(<span class="string">&#x27;&#x27;</span>);</span><br><span class="line">  <span class="keyword">const</span> [artists, setArtists] = <span class="title function_">useState</span>([]);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>振奋人心的雕塑家们：<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">input</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">value</span>=<span class="string">&#123;name&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        <span class="attr">onChange</span>=<span class="string">&#123;e</span> =&gt;</span> setName(e.target.value)&#125;</span></span><br><span class="line"><span class="language-xml">      /&gt;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">        artists.push(&#123;</span></span><br><span class="line"><span class="language-xml">          id: nextId++,</span></span><br><span class="line"><span class="language-xml">          name: name,</span></span><br><span class="line"><span class="language-xml">        &#125;);</span></span><br><span class="line"><span class="language-xml">      &#125;&#125;&gt;添加<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;artists.map(artist =&gt; (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">li</span> <span class="attr">key</span>=<span class="string">&#123;artist.id&#125;</span>&gt;</span>&#123;artist.name&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        ))&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>相反，你应该创建一个 <strong>新</strong> 数组，其包含了原始数组的所有元素 <strong>以及</strong> 一个在末尾的新元素。这可以通过很多种方法实现，最简单的一种就是使用 <code>...</code> <a target="_blank" rel="noopener" href="https://zh-hans.react.dev/a-javascript-refresher#array-spread">数组展开</a> 语法：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">setArtists</span>( <span class="comment">// 替换 state</span></span><br><span class="line">  [ <span class="comment">// 是通过传入一个新数组实现的</span></span><br><span class="line">    ...artists, <span class="comment">// 新数组包含原数组的所有元素</span></span><br><span class="line">    &#123; <span class="attr">id</span>: nextId++, <span class="attr">name</span>: name &#125; <span class="comment">// 并在末尾添加了一个新的元素</span></span><br><span class="line">  ]</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>数组展开运算符还允许你把新添加的元素放在原始的 <code>...artists</code> 之前：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">setArtists</span>([</span><br><span class="line">  &#123; <span class="attr">id</span>: nextId++, <span class="attr">name</span>: name &#125;,</span><br><span class="line">  ...artists <span class="comment">// 将原数组中的元素放在末尾</span></span><br><span class="line">]);</span><br></pre></td></tr></table></figure>
+
+<p>这样一来，展开操作就可以完成 <code>push()</code> 和 <code>unshift()</code> 的工作，将新元素添加到数组的末尾和开头。</p>
+<h3 id="从数组中删除元素"><a href="#从数组中删除元素" class="headerlink" title="从数组中删除元素"></a>从数组中删除元素</h3><p>从数组中删除一个元素最简单的方法就是将它<strong>过滤出去</strong>。换句话说，你需要生成一个不包含该元素的新数组。这可以通过 <code>filter</code> 方法实现，例如：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> initialArtists = [</span><br><span class="line">  &#123; <span class="attr">id</span>: <span class="number">0</span>, <span class="attr">name</span>: <span class="string">&#x27;Marta Colvin Andrade&#x27;</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">name</span>: <span class="string">&#x27;Lamidi Olonade Fakeye&#x27;</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">id</span>: <span class="number">2</span>, <span class="attr">name</span>: <span class="string">&#x27;Louise Nevelson&#x27;</span> &#125;,</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">List</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [artists, setArtists] = <span class="title function_">useState</span>(initialArtists)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>振奋人心的雕塑家们：<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;artists.map(artist =&gt; (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">li</span> <span class="attr">key</span>=<span class="string">&#123;artist.id&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            &#123;artist.name&#125;&#123;&#x27; &#x27;&#125;</span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">button</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">                setArtists(artists.filter(a =&gt; a.id !== artist.id))</span></span><br><span class="line"><span class="language-xml">              &#125;&#125;&gt;</span></span><br><span class="line"><span class="language-xml">              删除</span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        ))&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>artists.filter(s =&gt; s.id !== artist.id)</code> 表示“创建一个新的数组，该数组由那些 ID 与 <code>artists.id</code> 不同的 <code>artists</code> 组成”。换句话说，每个 artist 的“删除”按钮会把 <em>那一个</em> artist 从原始数组中过滤掉，并使用过滤后的数组再次进行渲染。注意，<code>filter</code> 并不会改变原始数组。</p>
+<h3 id="转换数组"><a href="#转换数组" class="headerlink" title="转换数组"></a>转换数组</h3><p>如果你想改变数组中的某些或全部元素，你可以用 <code>map()</code> 创建一个<strong>新</strong>数组。你传入 <code>map</code> 的函数决定了要根据每个元素的值或索引（或二者都要）对元素做何处理。</p>
+<p>在下面的例子中，一个数组记录了两个圆形和一个正方形的坐标。当你点击按钮时，仅有两个圆形会向下移动 100 像素。这是通过使用 <code>map()</code> 生成一个新数组实现的。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> initialShapes = [</span><br><span class="line">  &#123; <span class="attr">id</span>: <span class="number">0</span>, <span class="attr">type</span>: <span class="string">&#x27;circle&#x27;</span>, <span class="attr">x</span>: <span class="number">50</span>, <span class="attr">y</span>: <span class="number">100</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">type</span>: <span class="string">&#x27;square&#x27;</span>, <span class="attr">x</span>: <span class="number">150</span>, <span class="attr">y</span>: <span class="number">100</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">id</span>: <span class="number">2</span>, <span class="attr">type</span>: <span class="string">&#x27;circle&#x27;</span>, <span class="attr">x</span>: <span class="number">250</span>, <span class="attr">y</span>: <span class="number">100</span> &#125;,</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">ShapeEditor</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [shapes, setShapes] = <span class="title function_">useState</span>(initialShapes)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">handleClick</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> nextShapes = shapes.<span class="title function_">map</span>(<span class="function"><span class="params">shape</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (shape.<span class="property">type</span> === <span class="string">&#x27;square&#x27;</span>) &#123;</span><br><span class="line">        <span class="comment">// 不作改变</span></span><br><span class="line">        <span class="keyword">return</span> shape</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 返回一个新的圆形，位置在下方 50px 处</span></span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">          ...shape,</span><br><span class="line">          <span class="attr">y</span>: shape.<span class="property">y</span> + <span class="number">50</span>,</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="comment">// 使用新的数组进行重渲染</span></span><br><span class="line">    <span class="title function_">setShapes</span>(nextShapes)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleClick&#125;</span>&gt;</span>所有圆形向下移动！<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;shapes.map(shape =&gt; (</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">div</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">key</span>=<span class="string">&#123;shape.id&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          <span class="attr">style</span>=<span class="string">&#123;&#123;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">background:</span> &#x27;<span class="attr">purple</span>&#x27;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">position:</span> &#x27;<span class="attr">absolute</span>&#x27;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">left:</span> <span class="attr">shape.x</span>,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">top:</span> <span class="attr">shape.y</span>,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">borderRadius:</span> <span class="attr">shape.type</span> === <span class="string">&#x27;circle&#x27;</span> ? &#x27;<span class="attr">50</span>%&#x27; <span class="attr">:</span> &#x27;&#x27;,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">width:</span> <span class="attr">20</span>,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">height:</span> <span class="attr">20</span>,</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">          &#125;&#125;</span></span></span><br><span class="line"><span class="tag"><span class="language-xml">        /&gt;</span></span></span><br><span class="line"><span class="language-xml">      ))&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="替换数组中的元素"><a href="#替换数组中的元素" class="headerlink" title="替换数组中的元素"></a>替换数组中的元素</h3><p>想要替换数组中一个或多个元素是非常常见的。类似 <code>arr[0] = &#39;bird&#39;</code> 这样的赋值语句会直接修改原始数组，所以在这种情况下，你也应该使用 <code>map</code>。</p>
+<p>要替换一个元素，请使用 <code>map</code> 创建一个新数组。在你的 <code>map</code> 回调里，第二个参数是元素的索引。使用索引来判断最终是返回原始的元素（即回调的第一个参数）还是替换成其他值：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> initialCounters = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">CounterList</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [counters, setCounters] = <span class="title function_">useState</span>(initialCounters)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">handleIncrementClick</span>(<span class="params">index</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> nextCounters = counters.<span class="title function_">map</span>(<span class="function">(<span class="params">c, i</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (i === index) &#123;</span><br><span class="line">        <span class="comment">// 递增被点击的计数器数值</span></span><br><span class="line">        <span class="keyword">return</span> c + <span class="number">1</span></span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 其余部分不发生变化</span></span><br><span class="line">        <span class="keyword">return</span> c</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="title function_">setCounters</span>(nextCounters)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;counters.map((counter, i) =&gt; (</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">li</span> <span class="attr">key</span>=<span class="string">&#123;i&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          &#123;counter&#125;</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">button</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">            <span class="attr">onClick</span>=<span class="string">&#123;()</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">              handleIncrementClick(i)</span></span><br><span class="line"><span class="language-xml">            &#125;&#125;&gt;</span></span><br><span class="line"><span class="language-xml">            +1</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      ))&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="向数组中插入元素"><a href="#向数组中插入元素" class="headerlink" title="向数组中插入元素"></a>向数组中插入元素</h3><p>有时，你也许想向数组特定位置插入一个元素，这个位置既不在数组开头，也不在末尾。为此，你可以将数组展开运算符 <code>...</code> 和 <code>slice()</code> 方法一起使用。<code>slice()</code> 方法让你从数组中切出“一片”。为了将元素插入数组，你需要先展开原数组在插入点之前的切片，然后插入新元素，最后展开原数组中剩下的部分。</p>
+<p>下面的例子中，插入按钮总是会将元素插入到数组中索引为 <code>1</code> 的位置。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> nextId = <span class="number">3</span></span><br><span class="line"><span class="keyword">const</span> initialArtists = [</span><br><span class="line">  &#123; <span class="attr">id</span>: <span class="number">0</span>, <span class="attr">name</span>: <span class="string">&#x27;Marta Colvin Andrade&#x27;</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">name</span>: <span class="string">&#x27;Lamidi Olonade Fakeye&#x27;</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">id</span>: <span class="number">2</span>, <span class="attr">name</span>: <span class="string">&#x27;Louise Nevelson&#x27;</span> &#125;,</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">List</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [name, setName] = <span class="title function_">useState</span>(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">  <span class="keyword">const</span> [artists, setArtists] = <span class="title function_">useState</span>(initialArtists)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">handleClick</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> insertAt = <span class="number">1</span> <span class="comment">// 可能是任何索引</span></span><br><span class="line">    <span class="keyword">const</span> nextArtists = [</span><br><span class="line">      <span class="comment">// 插入点之前的元素：</span></span><br><span class="line">      ...artists.<span class="title function_">slice</span>(<span class="number">0</span>, insertAt),</span><br><span class="line">      <span class="comment">// 新的元素：</span></span><br><span class="line">      &#123; <span class="attr">id</span>: nextId++, <span class="attr">name</span>: name &#125;,</span><br><span class="line">      <span class="comment">// 插入点之后的元素：</span></span><br><span class="line">      ...artists.<span class="title function_">slice</span>(insertAt),</span><br><span class="line">    ]</span><br><span class="line">    <span class="title function_">setArtists</span>(nextArtists)</span><br><span class="line">    <span class="title function_">setName</span>(<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>振奋人心的雕塑家们：<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">input</span> <span class="attr">value</span>=<span class="string">&#123;name&#125;</span> <span class="attr">onChange</span>=<span class="string">&#123;e</span> =&gt;</span> setName(e.target.value)&#125; /&gt;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleClick&#125;</span>&gt;</span>插入<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;artists.map(artist =&gt; (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">li</span> <span class="attr">key</span>=<span class="string">&#123;artist.id&#125;</span>&gt;</span>&#123;artist.name&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        ))&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="其他改变数组的情况"><a href="#其他改变数组的情况" class="headerlink" title="其他改变数组的情况"></a>其他改变数组的情况</h3><p>总会有一些事，是你仅仅依靠展开运算符和 <code>map()</code> 或者 <code>filter()</code> 等不会直接修改原值的方法所无法做到的。例如，你可能想翻转数组，或是对数组排序。而 JavaScript 中的 <code>reverse()</code> 和 <code>sort()</code> 方法会改变原数组，所以你无法直接使用它们。</p>
+<p><strong>可以先拷贝这个数组，再改变这个拷贝后的值。</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> initialList = [</span><br><span class="line">  &#123; <span class="attr">id</span>: <span class="number">0</span>, <span class="attr">title</span>: <span class="string">&#x27;Big Bellies&#x27;</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">title</span>: <span class="string">&#x27;Lunar Landscape&#x27;</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">id</span>: <span class="number">2</span>, <span class="attr">title</span>: <span class="string">&#x27;Terracotta Army&#x27;</span> &#125;,</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">List</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [list, setList] = <span class="title function_">useState</span>(initialList)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">handleClick</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> nextList = [...list]</span><br><span class="line">    nextList.<span class="title function_">reverse</span>()</span><br><span class="line">    <span class="title function_">setList</span>(nextList)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleClick&#125;</span>&gt;</span>翻转<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        &#123;list.map(artwork =&gt; (</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">li</span> <span class="attr">key</span>=<span class="string">&#123;artwork.id&#125;</span>&gt;</span>&#123;artwork.title&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        ))&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这段代码中，你先使用 <code>[...list]</code> 展开运算符创建了一份数组的拷贝值。当你有了这个拷贝值后，你就可以使用像 <code>nextList.reverse()</code> 或 <code>nextList.sort()</code> 这样直接修改原数组的方法。你甚至可以通过 <code>nextList[0] = &quot;something&quot;</code> 这样的方式对数组中的特定元素进行赋值。</p>
+<p>然而，<strong>即使你拷贝了数组，你还是不能直接修改其内部的元素</strong>。这是因为数组的拷贝是浅拷贝——新的数组中依然保留了与原始数组相同的元素。因此，如果你修改了拷贝数组内部的某个对象，其实你正在直接修改当前的 state。举个例子，像下面的代码就会带来问题。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> nextList = [...list];</span><br><span class="line">nextList[<span class="number">0</span>].<span class="property">seen</span> = <span class="literal">true</span>; <span class="comment">// 问题：直接修改了 list[0] 的值</span></span><br><span class="line"><span class="title function_">setList</span>(nextList);</span><br></pre></td></tr></table></figure>
+
+<p>虽然 <code>nextList</code> 和 <code>list</code> 是两个不同的数组，**<code>nextList[0]</code> 和 <code>list[0]</code> 却指向了同一个对象**。因此，通过改变 <code>nextList[0].seen</code>，<code>list[0].seen</code> 的值也被改变了。这是一种 state 的 mutation 操作，应该避免这么做！你可以用类似于更新嵌套的 JavaScript 对象的方式解决这个问题——拷贝想要修改的特定元素，而不是直接修改它。下面是具体的操作。</p>
+<h2 id="更新数组内部的对象"><a href="#更新数组内部的对象" class="headerlink" title="更新数组内部的对象"></a>更新数组内部的对象</h2><p>对象并不是 <em>真的</em> 位于数组“内部”。可能他们在代码中看起来像是在数组“内部”，但其实数组中的每个对象都是这个数组“指向”的一个存储于其它位置的值。这就是当你在处理类似 <code>list[0]</code> 这样的嵌套字段时需要格外小心的原因。其他人的艺术品清单可能指向了数组的同一个元素！</p>
+<p><strong>当你更新一个嵌套的 state 时，你需要从想要更新的地方创建拷贝值，一直这样，直到顶层。</strong> 让我们看一下这该怎么做。</p>
+<p>在下面的例子中，两个不同的艺术品清单有着相同的初始 state。他们本应该互不影响，但是因为一次 mutation，他们的 state 被意外地共享了，勾选一个清单中的事项会影响另外一个清单：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> nextId = <span class="number">3</span></span><br><span class="line"><span class="keyword">const</span> initialList = [</span><br><span class="line">  &#123; <span class="attr">id</span>: <span class="number">0</span>, <span class="attr">title</span>: <span class="string">&#x27;Big Bellies&#x27;</span>, <span class="attr">seen</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">title</span>: <span class="string">&#x27;Lunar Landscape&#x27;</span>, <span class="attr">seen</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">id</span>: <span class="number">2</span>, <span class="attr">title</span>: <span class="string">&#x27;Terracotta Army&#x27;</span>, <span class="attr">seen</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">BucketList</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [myList, setMyList] = <span class="title function_">useState</span>(initialList)</span><br><span class="line">  <span class="keyword">const</span> [yourList, setYourList] = <span class="title function_">useState</span>(initialList)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">handleToggleMyList</span>(<span class="params">artworkId, nextSeen</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> myNextList = myList.<span class="title function_">map</span>(<span class="function"><span class="params">artwork</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (artwork.<span class="property">id</span> === artworkId) &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123; ...artwork, <span class="attr">seen</span>: nextSeen &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> artwork</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="title function_">setMyList</span>(myNextList)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">handleToggleYourList</span>(<span class="params">artworkId, nextSeen</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> yourNextList = [...yourList]</span><br><span class="line">    <span class="keyword">const</span> artwork = yourNextList.<span class="title function_">find</span>(<span class="function"><span class="params">a</span> =&gt;</span> a.<span class="property">id</span> === artworkId)</span><br><span class="line">    artwork.<span class="property">seen</span> = nextSeen</span><br><span class="line">    <span class="title function_">setYourList</span>(yourNextList)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>艺术愿望清单<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h2</span>&gt;</span>我想看的艺术清单：<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">ItemList</span> <span class="attr">artworks</span>=<span class="string">&#123;myList&#125;</span> <span class="attr">onToggle</span>=<span class="string">&#123;handleToggleMyList&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h2</span>&gt;</span>你想看的艺术清单：<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">ItemList</span> <span class="attr">artworks</span>=<span class="string">&#123;yourList&#125;</span> <span class="attr">onToggle</span>=<span class="string">&#123;handleToggleYourList&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ItemList</span>(<span class="params">&#123; artworks, onToggle &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;artworks.map(artwork =&gt; (</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">li</span> <span class="attr">key</span>=<span class="string">&#123;artwork.id&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">input</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">type</span>=<span class="string">&#x27;checkbox&#x27;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">checked</span>=<span class="string">&#123;artwork.seen&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">onChange</span>=<span class="string">&#123;e</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">                onToggle(artwork.id, e.target.checked)</span></span><br><span class="line"><span class="language-xml">              &#125;&#125;</span></span><br><span class="line"><span class="language-xml">            /&gt;</span></span><br><span class="line"><span class="language-xml">            &#123;artwork.title&#125;</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      ))&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 <code>handleToggleYourList</code> 中，因为直接修改了已经有的对象，而其他对象又引用了这个对象，导致修改这个已有的对象时，会导致其他对象也发生变化。显然这是错误的。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">handleToggleYourList</span>(<span class="params">artworkId, nextSeen</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> yourNextList = [...yourList]</span><br><span class="line">  <span class="keyword">const</span> artwork = yourNextList.<span class="title function_">find</span>(<span class="function"><span class="params">a</span> =&gt;</span> a.<span class="property">id</span> === artworkId)</span><br><span class="line">  artwork.<span class="property">seen</span> = nextSeen <span class="comment">// 问题：直接修改了已有的元素</span></span><br><span class="line">  <span class="title function_">setYourList</span>(yourNextList)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>虽然 <code>yourNextList</code> 这个数组是新的，但是其<strong>内部的元素本身</strong>与原数组 <code>yourList</code> 是相同的。因此，修改 <code>artwork.seen</code>，其实是在修改<strong>原始的</strong> artwork 对象。而这个 artwork 对象也被 <code>myList</code> 使用，这样就带来了 bug。如果你避免直接修改 state，它们就会消失。</p>
+<p>使用 <code>map</code> 在没有 mutation 的前提下将一个旧的元素替换成更新的版本。 <code>handleToggleMyList</code> 通过 <code>map</code> 重新组成了一个数组，与 <code>yourList</code> 中的 artwork 指向不同的地址，所以在 <code>handleToggleMyList</code> 中就是正常的。</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">handleToggleMyList</span>(<span class="params">artworkId, nextSeen</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> myNextList = myList.<span class="title function_">map</span>(<span class="function"><span class="params">artwork</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (artwork.<span class="property">id</span> === artworkId) &#123;</span><br><span class="line">      <span class="keyword">return</span> &#123; ...artwork, <span class="attr">seen</span>: nextSeen &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> artwork</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="title function_">setMyList</span>(myNextList)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用-Immer-编写简洁的更新逻辑"><a href="#使用-Immer-编写简洁的更新逻辑" class="headerlink" title="使用 Immer 编写简洁的更新逻辑"></a>使用 Immer 编写简洁的更新逻辑</h3><p>在没有 mutation 的前提下更新嵌套数组可能会变得有点重复。<a target="_blank" rel="noopener" href="https://zh-hans.react.dev/learn/updating-objects-in-state#write-concise-update-logic-with-immer">就像对对象一样</a>:</p>
+<ul>
+<li>通常情况下，你应该不需要更新处于非常深层级的 state 。如果你有此类需求，你或许需要<a target="_blank" rel="noopener" href="https://zh-hans.react.dev/learn/choosing-the-state-structure#avoid-deeply-nested-state">调整一下数据的结构</a>，让数据变得扁平一些。</li>
+<li>如果你不想改变 state 的数据结构，你也许会更喜欢使用 <a target="_blank" rel="noopener" href="https://github.com/immerjs/use-immer">Immer</a> ，它让你可以继续使用方便的，但会直接修改原值的语法，并负责为你生成拷贝值。</li>
+</ul>
+<p>下面是用 Immer 来重写的艺术愿望清单的例子：</p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useState &#125; <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useImmer &#125; <span class="keyword">from</span> <span class="string">&#x27;use-immer&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> nextId = <span class="number">3</span></span><br><span class="line"><span class="keyword">const</span> initialList = [</span><br><span class="line">  &#123; <span class="attr">id</span>: <span class="number">0</span>, <span class="attr">title</span>: <span class="string">&#x27;Big Bellies&#x27;</span>, <span class="attr">seen</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">title</span>: <span class="string">&#x27;Lunar Landscape&#x27;</span>, <span class="attr">seen</span>: <span class="literal">false</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">id</span>: <span class="number">2</span>, <span class="attr">title</span>: <span class="string">&#x27;Terracotta Army&#x27;</span>, <span class="attr">seen</span>: <span class="literal">true</span> &#125;,</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">BucketList</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> [myList, updateMyList] = <span class="title function_">useImmer</span>(initialList)</span><br><span class="line">  <span class="keyword">const</span> [yourList, updateYourList] = <span class="title function_">useImmer</span>(initialList)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">handleToggleMyList</span>(<span class="params">id, nextSeen</span>) &#123;</span><br><span class="line">    <span class="title function_">updateMyList</span>(<span class="function"><span class="params">draft</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> artwork = draft.<span class="title function_">find</span>(<span class="function"><span class="params">a</span> =&gt;</span> a.<span class="property">id</span> === id)</span><br><span class="line">      artwork.<span class="property">seen</span> = nextSeen</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">handleToggleYourList</span>(<span class="params">artworkId, nextSeen</span>) &#123;</span><br><span class="line">    <span class="title function_">updateYourList</span>(<span class="function"><span class="params">draft</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">const</span> artwork = draft.<span class="title function_">find</span>(<span class="function"><span class="params">a</span> =&gt;</span> a.<span class="property">id</span> === artworkId)</span><br><span class="line">      artwork.<span class="property">seen</span> = nextSeen</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h1</span>&gt;</span>艺术愿望清单<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h2</span>&gt;</span>我想看的艺术清单：<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">ItemList</span> <span class="attr">artworks</span>=<span class="string">&#123;myList&#125;</span> <span class="attr">onToggle</span>=<span class="string">&#123;handleToggleMyList&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h2</span>&gt;</span>你想看的艺术清单：<span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">ItemList</span> <span class="attr">artworks</span>=<span class="string">&#123;yourList&#125;</span> <span class="attr">onToggle</span>=<span class="string">&#123;handleToggleYourList&#125;</span> /&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">ItemList</span>(<span class="params">&#123; artworks, onToggle &#125;</span>) &#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;<span class="name">ul</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      &#123;artworks.map(artwork =&gt; (</span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">li</span> <span class="attr">key</span>=<span class="string">&#123;artwork.id&#125;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">            <span class="tag">&lt;<span class="name">input</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">type</span>=<span class="string">&#x27;checkbox&#x27;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">checked</span>=<span class="string">&#123;artwork.seen&#125;</span></span></span></span><br><span class="line"><span class="tag"><span class="language-xml">              <span class="attr">onChange</span>=<span class="string">&#123;e</span> =&gt;</span> &#123;</span></span><br><span class="line"><span class="language-xml">                onToggle(artwork.id, e.target.checked)</span></span><br><span class="line"><span class="language-xml">              &#125;&#125;</span></span><br><span class="line"><span class="language-xml">            /&gt;</span></span><br><span class="line"><span class="language-xml">            &#123;artwork.title&#125;</span></span><br><span class="line"><span class="language-xml">          <span class="tag">&lt;/<span class="name">label</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;/<span class="name">li</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      ))&#125;</span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>请注意当使用 Immer 时，<strong>类似 <code>artwork.seen = nextSeen</code> 这种会产生 mutation 的语法不会再有任何问题了：</strong></p>
+<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">updateMyTodos</span>(<span class="function"><span class="params">draft</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> artwork = draft.<span class="title function_">find</span>(<span class="function"><span class="params">a</span> =&gt;</span> a.<span class="property">id</span> === artworkId);</span><br><span class="line">  artwork.<span class="property">seen</span> = nextSeen;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这是因为你并不是在直接修改原始的 state，而是在修改 Immer 提供的一个特殊的 <code>draft</code> 对象。同理，你也可以为 <code>draft</code> 的内容使用 <code>push()</code> 和 <code>pop()</code> 这些会直接修改原值的方法。在幕后，Immer 总是会根据你对 <code>draft</code> 的修改来从头开始构建下一个 state。这使得你的事件处理程序非常的简洁，同时也不会直接修改 state。</p>
+
+    </article>
+    <!-- license -->
+        <div class="license-wrapper">
+            <p>原文作者：<a href="https://sukksa.github.io">sukksa</a>
+            <p>原文链接：<a href="https://sukksa.github.io/2026/react/state/">https://sukksa.github.io/2026/react/state/</a>
+            <!-- <p>发表日期：<a href="https://sukksa.github.io/2026/react/state/">January 17th 2026, 4:47:40 pm</a>
+            <p>更新日期：<a href="https://sukksa.github.io/2026/react/state/">January 17th 2026, 4:48:27 pm</a> -->
+            <p>发表日期：<a href="https://sukksa.github.io/2026/react/state/">2026-01-17 16:47:40</a>
+            <p>更新日期：<a href="https://sukksa.github.io/2026/react/state/">2026-01-17 16:48:27</a>
+        </div>
+    <!-- paginator -->
+    <ul class="post-paginator">
+        <li class="next">
+        </li>
+        <li class="previous">
+                <div class="prevSlogan">Previous Post</div>
+                <a href="/2026/react/react-%E4%BA%8B%E4%BB%B6/" title="react 事件">
+                    <div class="prevTitle">react 事件</div>
+                </a>
+        </li>
+    </ul>
+    <!-- comment -->
+        <div class="post-comment">
+            <!-- 来必力 City 版安装代码 -->
+
+            
+            
+            
+            <!-- utteranc评论 -->
+
+            <!-- partial('_partial/comment/changyan') -->
+            <!--PC版-->
+
+            
+            
+            
+        </div>
+    <!-- timeliness note -->
+    <!-- idea from: https://hexo.fluid-dev.com/posts/hexo-injector/#%E6%96%87%E7%AB%A0%E6%97%B6%E6%95%88%E6%80%A7%E6%8F%90%E7%A4%BA -->
+    <!-- Mathjax -->
+</main>
+
+                <!-- profile -->
+            </div>
+            <footer class="footer footer-unloaded">
+    <!-- social  -->
+        <div class="social">
+                            <a href="mailto:2450553074@qq.com" class="iconfont-archer email" title="email" ></a>
+                <a href="//github.com/sukksa" class="iconfont-archer github" target="_blank" title="github"></a>
+                <a href="https://space.bilibili.com/74396531" class="iconfont-archer bilibili" target="_blank" title="bilibili"></a>
+
+        </div>
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- website approve for Chinese user -->
+    <!-- 不蒜子  -->
+        <div class="busuanzi-container">
+                <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+        </div>
+</footer>
+
+        </div>
+        <!-- toc -->
+            <div class="toc-wrapper toc-wrapper-loding" style=    top:50vh;
+>
+                <div class="toc-catalog">
+                    <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+                </div>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E4%BD%BF%E7%94%A8-state"><span class="toc-number">1.</span> <span class="toc-text">为什么要使用 state</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E4%B8%80%E4%B8%AA-state-%E5%8F%98%E9%87%8F"><span class="toc-number">2.</span> <span class="toc-text">添加一个 state 变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#useState"><span class="toc-number">3.</span> <span class="toc-text">useState</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#State-%E6%98%AF%E9%9A%94%E7%A6%BB%E4%B8%94%E7%A7%81%E6%9C%89%E7%9A%84"><span class="toc-number">4.</span> <span class="toc-text">State 是隔离且私有的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#state-%E5%A6%82%E5%90%8C%E4%B8%80%E5%BC%A0%E5%BF%AB%E7%85%A7"><span class="toc-number">5.</span> <span class="toc-text">state 如同一张快照</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE-state-%E4%BC%9A%E8%A7%A6%E5%8F%91%E6%B8%B2%E6%9F%93"><span class="toc-number">5.1.</span> <span class="toc-text">设置 state 会触发渲染</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E4%BC%9A%E5%8F%8A%E6%97%B6%E7%94%9F%E6%88%90%E4%B8%80%E5%BC%A0%E5%BF%AB%E7%85%A7"><span class="toc-number">5.2.</span> <span class="toc-text">渲染会及时生成一张快照</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%82%E6%AD%A5%E4%BA%8B%E4%BB%B6%E4%B8%AD%E7%9A%84-state"><span class="toc-number">5.3.</span> <span class="toc-text">异步事件中的 state</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%8A-state-%E6%9B%B4%E6%96%B0%E5%8A%A0%E5%85%A5%E9%98%9F%E5%88%97"><span class="toc-number">6.</span> <span class="toc-text">把 state 更新加入队列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#React-%E4%BC%9A%E5%AF%B9-state-%E6%9B%B4%E6%96%B0%E8%BF%9B%E8%A1%8C%E6%89%B9%E5%A4%84%E7%90%86"><span class="toc-number">6.1.</span> <span class="toc-text">React 会对 state 更新进行批处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8%E4%B8%8B%E6%AC%A1%E6%B8%B2%E6%9F%93%E5%89%8D%E5%A4%9A%E6%AC%A1%E6%9B%B4%E6%96%B0%E5%90%8C%E4%B8%80%E4%B8%AA-state"><span class="toc-number">6.2.</span> <span class="toc-text">在下次渲染前多次更新同一个 state</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E6%9E%9C%E4%BD%A0%E5%9C%A8%E6%9B%BF%E6%8D%A2-state-%E5%90%8E%E6%9B%B4%E6%96%B0-state-%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88"><span class="toc-number">6.3.</span> <span class="toc-text">如果你在替换 state 后更新 state 会发生什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E6%9E%9C%E4%BD%A0%E5%9C%A8%E6%9B%B4%E6%96%B0-state-%E5%90%8E%E6%9B%BF%E6%8D%A2-state-%E4%BC%9A%E5%8F%91%E7%94%9F%E4%BB%80%E4%B9%88"><span class="toc-number">6.4.</span> <span class="toc-text">如果你在更新 state 后替换 state 会发生什么</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0-state-%E4%B8%AD%E7%9A%84%E5%AF%B9%E8%B1%A1"><span class="toc-number">7.</span> <span class="toc-text">更新 state 中的对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86-state-%E8%A7%86%E4%B8%BA%E5%8F%AA%E8%AF%BB%E7%9A%84"><span class="toc-number">7.1.</span> <span class="toc-text">将 state 视为只读的</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%B1%95%E5%BC%80%E8%AF%AD%E6%B3%95%E5%A4%8D%E5%88%B6%E5%AF%B9%E8%B1%A1"><span class="toc-number">7.1.1.</span> <span class="toc-text">使用展开语法复制对象</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E4%B8%80%E4%B8%AA%E5%B5%8C%E5%A5%97%E5%AF%B9%E8%B1%A1"><span class="toc-number">7.2.</span> <span class="toc-text">更新一个嵌套对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Immer"><span class="toc-number">7.3.</span> <span class="toc-text">Immer</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E5%9C%A8-React-%E4%B8%AD%E4%B8%8D%E6%8E%A8%E8%8D%90%E7%9B%B4%E6%8E%A5%E4%BF%AE%E6%94%B9-state%EF%BC%9F"><span class="toc-number">7.3.1.</span> <span class="toc-text">为什么在 React 中不推荐直接修改 state？</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0-state-%E4%B8%AD%E7%9A%84%E6%95%B0%E7%BB%84"><span class="toc-number">8.</span> <span class="toc-text">更新 state 中的数组</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8%E6%B2%A1%E6%9C%89-mutation-%E7%9A%84%E5%89%8D%E6%8F%90%E4%B8%8B%E6%9B%B4%E6%96%B0%E6%95%B0%E7%BB%84"><span class="toc-number">8.1.</span> <span class="toc-text">在没有 mutation 的前提下更新数组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%91%E6%95%B0%E7%BB%84%E4%B8%AD%E6%B7%BB%E5%8A%A0%E5%85%83%E7%B4%A0"><span class="toc-number">8.2.</span> <span class="toc-text">向数组中添加元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E6%95%B0%E7%BB%84%E4%B8%AD%E5%88%A0%E9%99%A4%E5%85%83%E7%B4%A0"><span class="toc-number">8.3.</span> <span class="toc-text">从数组中删除元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%AC%E6%8D%A2%E6%95%B0%E7%BB%84"><span class="toc-number">8.4.</span> <span class="toc-text">转换数组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%BF%E6%8D%A2%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E5%85%83%E7%B4%A0"><span class="toc-number">8.5.</span> <span class="toc-text">替换数组中的元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%91%E6%95%B0%E7%BB%84%E4%B8%AD%E6%8F%92%E5%85%A5%E5%85%83%E7%B4%A0"><span class="toc-number">8.6.</span> <span class="toc-text">向数组中插入元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E6%94%B9%E5%8F%98%E6%95%B0%E7%BB%84%E7%9A%84%E6%83%85%E5%86%B5"><span class="toc-number">8.7.</span> <span class="toc-text">其他改变数组的情况</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E6%95%B0%E7%BB%84%E5%86%85%E9%83%A8%E7%9A%84%E5%AF%B9%E8%B1%A1"><span class="toc-number">9.</span> <span class="toc-text">更新数组内部的对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Immer-%E7%BC%96%E5%86%99%E7%AE%80%E6%B4%81%E7%9A%84%E6%9B%B4%E6%96%B0%E9%80%BB%E8%BE%91"><span class="toc-number">9.1.</span> <span class="toc-text">使用 Immer 编写简洁的更新逻辑</span></a></li></ol></li></ol>
+            </div>
+        <!-- sidebar -->
+        <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+        <div class="sidebar-panel-archives">
+    <!-- 在 ejs 中将 archive 按照时间排序 -->
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 65
+        </div>
+        <!-- search  -->
+    </div>
+    <div class="post-archive">
+            <div class="archive-year"> 2026 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/17</span>
+            <a class="archive-post-title" href="/2026/react/state/">state</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/11</span>
+            <a class="archive-post-title" href="/2026/react/react-%E4%BA%8B%E4%BB%B6/">react 事件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">01/11</span>
+            <a class="archive-post-title" href="/2026/react/react-%E5%9F%BA%E7%A1%80/">react 基础</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2025 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/05</span>
+            <a class="archive-post-title" href="/2025/other/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84npm%E6%95%99%E7%A8%8B/">从零开始的npm教程</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/26</span>
+            <a class="archive-post-title" href="/2025/other/%E5%B0%86Hexo%E6%8F%90%E4%BA%A4%E5%88%B0%E4%BB%93%E5%BA%93/">将 Hexo 提交到仓库</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/note/%E3%80%8A%E7%BD%AA%E4%B8%8E%E7%BD%9A%E3%80%8B/">《罪与罚》</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/other/%E4%BB%8E%E7%8E%B0%E6%9C%89%E7%9A%84%E4%BB%93%E5%BA%93%E5%88%87%E6%8D%A2%E5%88%B0%E5%8F%A6%E4%B8%80%E4%B8%AA%E4%BB%93%E5%BA%93/">从现有git仓库切换到另一个仓库</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/25</span>
+            <a class="archive-post-title" href="/2025/cesium/%E5%8F%AA%E6%98%BE%E7%A4%BA%E6%9F%90%E4%B8%AA%E5%8C%BA%E5%9F%9F/">仅显示某个行政区划（cesium 挖孔）</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2025/cesium/%E7%AC%AC%E4%B8%80%E4%B8%AAcesium%E9%A1%B9%E7%9B%AE/">第一个cesium项目</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/16</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E6%B3%A2%E6%B5%AA/">使用着色器绘制波浪</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%9D%80%E8%89%B2%E5%99%A8%E7%A8%8B%E5%BA%8F/">第一个 shader 程序</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/06</span>
+            <a class="archive-post-title" href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E5%9B%BE%E6%A1%88/">使用着色器绘制图案</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/09</span>
+            <a class="archive-post-title" href="/2025/Threejs/Threejs%20Modules/">THREE Modules</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/05</span>
+            <a class="archive-post-title" href="/2025/other/%E5%A6%82%E4%BD%95%E7%A7%BB%E9%99%A4%20GitHub%20%E4%B8%AD%E7%9A%84%20contributors/">如何移除 GitHub 中的 contributors</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2022 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vuex/">Vuex</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E6%8F%92%E4%BB%B6/">Vue 插件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/Vue-router/">vue-router</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/07</span>
+            <a class="archive-post-title" href="/2022/vue/mixin/">Mixin (混入)</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E8%84%9A%E6%89%8B%E6%9E%B6/">Vue 脚手架</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/%E7%BB%84%E4%BB%B6%E9%97%B4%E9%80%9A%E4%BF%A1/">组件间通信</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/06</span>
+            <a class="archive-post-title" href="/2022/vue/%E6%8C%89%E9%94%AE%E4%BF%AE%E9%A5%B0%E7%AC%A6/">按键修饰符</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span>
+            <a class="archive-post-title" href="/2022/vue/%E7%BB%84%E4%BB%B6/">Vue 组件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/05</span>
+            <a class="archive-post-title" href="/2022/vue/%E8%BF%87%E6%B8%A1%E4%B8%8E%E5%8A%A8%E7%94%BB/">过渡与动画</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/03</span>
+            <a class="archive-post-title" href="/2022/ES6/Promise/">Promise</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E6%8C%87%E4%BB%A4/">Vue 基本指令</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/17</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F/">Vue 生命周期</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/29</span>
+            <a class="archive-post-title" href="/2022/vue/Vue%E5%AE%9E%E4%BE%8B%E5%AF%B9%E8%B1%A1/">Vue实例对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/26</span>
+            <a class="archive-post-title" href="/2022/ES6/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%89%A9%E5%B1%95/">字符串的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/23</span>
+            <a class="archive-post-title" href="/2022/ES6/Moudle%20%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%AE%9E%E7%8E%B0/">Module 的加载实现</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/21</span>
+            <a class="archive-post-title" href="/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/">Module 模块化</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span>
+            <a class="archive-post-title" href="/2022/ES6/%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%89%A9%E5%B1%95/">对象的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/25</span>
+            <a class="archive-post-title" href="/2022/ES6/Class%E7%9A%84%E7%BB%A7%E6%89%BF/">Class的基本用法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">06/24</span>
+            <a class="archive-post-title" href="/2022/ES6/Class%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">Class的基本用法</a>
+        </li>
+                </ul>
+            <div class="archive-year"> 2021 </div>
+            <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/18</span>
+            <a class="archive-post-title" href="/2021/ES6/set%E4%B8%8Emap/">set 与 map</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/05</span>
+            <a class="archive-post-title" href="/2021/Ajax/Ajax%E8%B7%A8%E5%9F%9F%E8%AF%B7%E6%B1%82/">Ajax跨域</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2021/Ajax/Axios/">Axios</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/24</span>
+            <a class="archive-post-title" href="/2021/Ajax/Fetch/">Fetch</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/22</span>
+            <a class="archive-post-title" href="/2021/Ajax/%E5%8E%9F%E7%94%9FAjax/">原生Ajax</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/18</span>
+            <a class="archive-post-title" href="/2021/node/node/">node</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/15</span>
+            <a class="archive-post-title" href="/2021/less/less/">less</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/11</span>
+            <a class="archive-post-title" href="/2021/ES6/Symbol/">Symbol</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/08</span>
+            <a class="archive-post-title" href="/2021/ES6/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A9%E5%B1%95/">函数的扩展</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/06</span>
+            <a class="archive-post-title" href="/2021/ES6/%E5%8F%98%E9%87%8F%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC/">变量解构赋值</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2021/ES6/ES6%E7%AE%80%E4%BB%8B/">ES6简介</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/30</span>
+            <a class="archive-post-title" href="/2021/ES6/let%E4%B8%8Econst/">let与const</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/26</span>
+            <a class="archive-post-title" href="/2021/%E5%AE%9E%E6%88%98/jQuery%E8%BD%AE%E6%92%AD%E5%9B%BE/">jQuery轮播图</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E6%8F%92%E4%BB%B6/">jQuery插件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/24</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E5%8A%A8%E7%94%BB/">jQuery动画</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/21</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E4%BA%8B%E4%BB%B6/">jQuery事件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E4%BF%AE%E6%94%B9DOM%E7%BB%93%E6%9E%84/">jQuery修改DOM结构</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/20</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E6%93%8D%E4%BD%9CDOM/">jQuery操作DOM元素</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E9%80%89%E6%8B%A9%E5%99%A8/">jQuery选择器</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/19</span>
+            <a class="archive-post-title" href="/2021/jQuery/jQuery%E7%AE%80%E4%BB%8B/">jQuery介绍</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%AF%B9%E8%B1%A1/">对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/17</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E7%BA%BF%E7%A8%8B%E6%9C%BA%E5%88%B6%E4%B8%8E%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6/">线程机制与事件机制</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%87%BD%E6%95%B0/">函数</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/DOM/%E4%BA%8B%E4%BB%B6/">事件</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/15</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%8F%98%E9%87%8F%E4%B8%8E%E4%BD%9C%E7%94%A8%E5%9F%9F/">变量与作用域</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/DOM/%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1/">事件对象</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/DOM/DOM/">DOM介绍</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%96%B9%E6%B3%95/">字符串方法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">基本语法</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E6%95%B0%E7%BB%84/">数组</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/">类型转换</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/27</span>
+            <a class="archive-post-title" href="/2021/javaScript/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/">正则表达式</a>
+        </li>
+            </ul>
+    </div>
+</div>
+
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+            <span class="sidebar-tag-name" data-tags="Ajax">
+                <span class="iconfont-archer">&#xe606;</span>
+                Ajax
+            </span>
+            <span class="sidebar-tag-name" data-tags="JavaScript">
+                <span class="iconfont-archer">&#xe606;</span>
+                JavaScript
+            </span>
+            <span class="sidebar-tag-name" data-tags="Threejs">
+                <span class="iconfont-archer">&#xe606;</span>
+                Threejs
+            </span>
+            <span class="sidebar-tag-name" data-tags="jQuery">
+                <span class="iconfont-archer">&#xe606;</span>
+                jQuery
+            </span>
+            <span class="sidebar-tag-name" data-tags="ES6">
+                <span class="iconfont-archer">&#xe606;</span>
+                ES6
+            </span>
+            <span class="sidebar-tag-name" data-tags="javaScript">
+                <span class="iconfont-archer">&#xe606;</span>
+                javaScript
+            </span>
+            <span class="sidebar-tag-name" data-tags="DOM">
+                <span class="iconfont-archer">&#xe606;</span>
+                DOM
+            </span>
+            <span class="sidebar-tag-name" data-tags="cesium">
+                <span class="iconfont-archer">&#xe606;</span>
+                cesium
+            </span>
+            <span class="sidebar-tag-name" data-tags="vite">
+                <span class="iconfont-archer">&#xe606;</span>
+                vite
+            </span>
+            <span class="sidebar-tag-name" data-tags="Note">
+                <span class="iconfont-archer">&#xe606;</span>
+                Note
+            </span>
+            <span class="sidebar-tag-name" data-tags="node">
+                <span class="iconfont-archer">&#xe606;</span>
+                node
+            </span>
+            <span class="sidebar-tag-name" data-tags="less">
+                <span class="iconfont-archer">&#xe606;</span>
+                less
+            </span>
+            <span class="sidebar-tag-name" data-tags="react">
+                <span class="iconfont-archer">&#xe606;</span>
+                react
+            </span>
+            <span class="sidebar-tag-name" data-tags="git">
+                <span class="iconfont-archer">&#xe606;</span>
+                git
+            </span>
+            <span class="sidebar-tag-name" data-tags="shader">
+                <span class="iconfont-archer">&#xe606;</span>
+                shader
+            </span>
+            <span class="sidebar-tag-name" data-tags="Vue">
+                <span class="iconfont-archer">&#xe606;</span>
+                Vue
+            </span>
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+        缺失模块，请参考主题文档进行安装配置：https://github.com/fi3ework/hexo-theme-archer#%E5%AE%89%E8%A3%85%E4%B8%BB%E9%A2%98
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+        <span class="sidebar-category-name" data-categories="Ajax">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Ajax
+        </span>
+        <span class="sidebar-category-name" data-categories="Threejs">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Threejs
+        </span>
+        <span class="sidebar-category-name" data-categories="jQuery">
+            <span class="iconfont-archer">&#xe60a;</span>
+            jQuery
+        </span>
+        <span class="sidebar-category-name" data-categories="ES6">
+            <span class="iconfont-archer">&#xe60a;</span>
+            ES6
+        </span>
+        <span class="sidebar-category-name" data-categories="DOM">
+            <span class="iconfont-archer">&#xe60a;</span>
+            DOM
+        </span>
+        <span class="sidebar-category-name" data-categories="javaScript">
+            <span class="iconfont-archer">&#xe60a;</span>
+            javaScript
+        </span>
+        <span class="sidebar-category-name" data-categories="cesium">
+            <span class="iconfont-archer">&#xe60a;</span>
+            cesium
+        </span>
+        <span class="sidebar-category-name" data-categories="note">
+            <span class="iconfont-archer">&#xe60a;</span>
+            note
+        </span>
+        <span class="sidebar-category-name" data-categories="node">
+            <span class="iconfont-archer">&#xe60a;</span>
+            node
+        </span>
+        <span class="sidebar-category-name" data-categories="less">
+            <span class="iconfont-archer">&#xe60a;</span>
+            less
+        </span>
+        <span class="sidebar-category-name" data-categories="git">
+            <span class="iconfont-archer">&#xe60a;</span>
+            git
+        </span>
+        <span class="sidebar-category-name" data-categories="shader">
+            <span class="iconfont-archer">&#xe60a;</span>
+            shader
+        </span>
+        <span class="sidebar-category-name" data-categories="实战">
+            <span class="iconfont-archer">&#xe60a;</span>
+            实战
+        </span>
+        <span class="sidebar-category-name" data-categories="Vue">
+            <span class="iconfont-archer">&#xe60a;</span>
+            Vue
+        </span>
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+
+    </div>
+</div>
+
+        <!-- site-meta -->
+        <script>
+    var siteMetaRoot = "/"
+    if (siteMetaRoot === "undefined") {
+        siteMetaRoot = '/'
+    }
+    var siteMeta = {
+        url: "https://sukksa.github.io",
+        root: siteMetaRoot,
+        author: "sukksa"
+    }
+</script>
+
+        <!-- import experimental options here -->
+        <!-- Custom Font -->
+
+        <!-- main func -->
+        <script src="/scripts/main.js"></script>
+        <!-- fancybox -->
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.36/dist/fancybox/fancybox.umd.js" onload="window.Fancybox.bind('[data-fancybox]')" defer></script>
+        <!-- algolia -->
+        <!-- busuanzi -->
+            <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+            <!-- <script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script> -->
+        <!-- async load share.js -->
+            <script src="/scripts/share.js" async></script>
+        <!-- mermaid -->
+    </body>
+</html>
