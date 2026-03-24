@@ -407,6 +407,96 @@
             <div class="container container-unloaded">
                 <main class="main index-page">
         <article class="index-post">
+            <a class="abstract-title" href="/2022/ES6/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%89%A9%E5%B1%95/">
+                <span class="abstract-title-text">字符串的扩展</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="字符串的扩展"><a href="#字符串的扩展" class="headerlink" title="字符串的扩展"></a>字符串的扩展</h1><h2 id="字符的-Unicode-表示法"><a href="#字符的-Unicode-表示法" class="headerlink" title="字符的 Unicode 表示法"></a>字符的 Unicode 表示法</h2><p>JavaScript 允许采用<code>\uxxxx</code>形式表示一个字符，其中<code>xxxx</code>表示字符的 Unicode 码点。</p>
+<pre><code>    &#39;\u0061&#39;
+    // &quot;a&quot;
+</code></pre>
+<p>但是，这种表示法只限于码点在<code>\u0000~\uFFFF</code>之间的字符。超出这个范围的字符，必须用两个双字节的形式表示</p>
+            </div>
+            <!-- read more -->
+                <div class="abstract-read-more-button">
+                    <a href="/2022/ES6/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%89%A9%E5%B1%95/">
+                        <span style="margin-right: 0.2rem;">阅读全文</span>
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </div>
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/10/07">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/07/26</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="ES6">ES6</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="javaScript">javaScript</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+        <article class="index-post">
+            <a class="abstract-title" href="/2022/ES6/Moudle%20%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%AE%9E%E7%8E%B0/">
+                <span class="abstract-title-text">Module 的加载实现</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="Module-的加载实现"><a href="#Module-的加载实现" class="headerlink" title="Module 的加载实现"></a>Module 的加载实现</h1><p>本章介绍如何在浏览器和 Node 之中加载 ES6 模块，以及实际开发中经常遇到的一些问题(比如循环加载)</p>
+<h2 id="浏览器加载"><a href="#浏览器加载" class="headerlink" title="浏览器加载"></a>浏览器加载</h2><h3 id="传统方法"><a href="#传统方法" class="headerlink" title="传统方法"></a>传统方法</h3><p>在 HTML 网页中，浏览器通过<code>&lt;script&gt;</code>标签加载 JavaScript 脚本。</p>
+            </div>
+            <!-- read more -->
+                <div class="abstract-read-more-button">
+                    <a href="/2022/ES6/Moudle%20%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%AE%9E%E7%8E%B0/">
+                        <span style="margin-right: 0.2rem;">阅读全文</span>
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </div>
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/10/07">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/07/23</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="ES6">ES6</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="javaScript">javaScript</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+        <article class="index-post">
+            <a class="abstract-title" href="/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/">
+                <span class="abstract-title-text">Module 模块化</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="模块化-module"><a href="#模块化-module" class="headerlink" title="模块化 module"></a>模块化 module</h1><h2 id="基本概述"><a href="#基本概述" class="headerlink" title="基本概述"></a>基本概述</h2><p>历史上，JavaScript 一直没有模块(<code>module</code>)体系，无法将一个大程序拆分成互相依赖的小文件，再用简单的方法拼装起来。其他语言都有这项功能，比如 Ruby 的<code>require</code>、Python 的<code>import</code>，甚至就连 CSS 都有<code>@import</code>，但是 JavaScript 任何这方面的支持都没有，这对开发大型的、复杂的项目形成了巨大障碍。</p>
+<p>在 ES6 之前，社区制定了一些模块加载方案，最主要的有 CommonJS 和 AMD 两种。前者用于服务器，后者用于浏览器。ES6 在语言标准的层面上，实现了模块功能，而且实现得相当简单，完全可以取代 CommonJS 和 AMD 规范，成为浏览器和服务器通用的模块解决方案</p>
+            </div>
+            <!-- read more -->
+                <div class="abstract-read-more-button">
+                    <a href="/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/">
+                        <span style="margin-right: 0.2rem;">阅读全文</span>
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </div>
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/07/24">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/07/21</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="ES6">ES6</a>
+        <a class="post-tag" href="javascript:void(0);" data-tags="javaScript">javaScript</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+        <article class="index-post">
             <a class="abstract-title" href="/2022/ES6/%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%89%A9%E5%B1%95/">
                 <span class="abstract-title-text">对象的扩展</span>
             </a>
@@ -623,89 +713,6 @@
             </div>
         </article>
         <div class="index-post-divider"></div>
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/Ajax/%E5%8E%9F%E7%94%9FAjax/">
-                <span class="abstract-title-text">原生Ajax</span>
-            </a>
-            <div class="abstract-content">
-                <h1 id="原生Ajax"><a href="#原生Ajax" class="headerlink" title="原生Ajax"></a>原生Ajax</h1><p>Ajax 全称 Asynchronous JavaScript and XML(异步的 JavaScript 和 XML)，既是一个对象，也是一种方法模式 </p>
-<p>AJAX 是一种用于创建快速动态网页的技术，通过在后台与服务器进行少量数据交换,Ajax 可以使网页实现异步更新。这意味着可以在不重新加载整个网页的情况下，对网页的某部分进行更新，传统的不使用 Ajax 的网页如果需要更新内容,必需重载整个网页</p>
-            </div>
-            <!-- read more -->
-                <div class="abstract-read-more-button">
-                    <a href="/2021/Ajax/%E5%8E%9F%E7%94%9FAjax/">
-                        <span style="margin-right: 0.2rem;">阅读全文</span>
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                </div>
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2022/03/08">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/11/22</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="Ajax">Ajax</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="JavaScript">JavaScript</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/node/node/">
-                <span class="abstract-title-text">node</span>
-            </a>
-            <div class="abstract-content">
-                <h2 id="node简介"><a href="#node简介" class="headerlink" title="node简介"></a>node简介</h2><p>Node是对ES标准一个实现，Node也是一个JS引擎，通过Node可以使js代码在服务器端执行，Node仅仅对ES标准进行了实现，所以在Node中不包含DOM 和 BOM</p>
-            </div>
-            <!-- read more -->
-                <div class="abstract-read-more-button">
-                    <a href="/2021/node/node/">
-                        <span style="margin-right: 0.2rem;">阅读全文</span>
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                </div>
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2022/11/03">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/11/18</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="node">node</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/less/less/">
-                <span class="abstract-title-text">less</span>
-            </a>
-            <div class="abstract-content">
-                <h1 id="less"><a href="#less" class="headerlink" title="less"></a>less</h1><p><strong>less 是一种动态样式语言,属于 CSS 预处理器的范畴,它拓展了 CSS 语言</strong>,其余的 CSS 预处理器有 sass 和 stylus 等 less 增加了变量,MIxin,函数等特性,使 CSS 更易维护和扩展,less 既可以在客户端上运行,也可以借助 node.js 在服务端 运行</p>
-            </div>
-            <!-- read more -->
-                <div class="abstract-read-more-button">
-                    <a href="/2021/less/less/">
-                        <span style="margin-right: 0.2rem;">阅读全文</span>
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                </div>
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/11/15">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/11/15</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="less">less</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
     <!-- paginator  -->
         <nav class="page-nav">
             <a class="extend prev" rel="prev" href="/archives/page/3/">&lt; PREV</a><a class="page-number" href="/archives/">1</a><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/archives/page/5/">5</a><a class="page-number" href="/archives/page/6/">6</a><a class="page-number" href="/archives/page/7/">7</a><a class="extend next" rel="next" href="/archives/page/5/">NEXT &gt;</a>
@@ -810,15 +817,30 @@
         
         
         
+        
+        
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 65
+        Total : 68
         </div>
         <!-- search  -->
     </div>
     <div class="post-archive">
             <div class="archive-year"> 2026 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/24</span>
+            <a class="archive-post-title" href="/2026/cesium/%E5%85%B3%E4%BA%8E-cesium-%E5%9C%A8-micro-app-%E4%B8%8B%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E7%9A%84%E9%97%AE%E9%A2%98/">关于 cesium 在 micro-app 下无法显示的问题</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/24</span>
+            <a class="archive-post-title" href="/2026/TypeScript/TypeScript-%E8%BF%9B%E9%98%B6/">TypeScript 进阶</a>
+        </li>
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/24</span>
+            <a class="archive-post-title" href="/2026/TypeScript/TypeScript-%E5%9F%BA%E7%A1%80/">TypeScript 基础</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">01/17</span>
             <a class="archive-post-title" href="/2026/react/state/">state</a>
@@ -1158,6 +1180,10 @@
                 <span class="iconfont-archer">&#xe606;</span>
                 Vue
             </span>
+            <span class="sidebar-tag-name" data-tags="TypeScript">
+                <span class="iconfont-archer">&#xe606;</span>
+                TypeScript
+            </span>
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
     <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
@@ -1223,6 +1249,10 @@
         <span class="sidebar-category-name" data-categories="Vue">
             <span class="iconfont-archer">&#xe60a;</span>
             Vue
+        </span>
+        <span class="sidebar-category-name" data-categories="TypeScript">
+            <span class="iconfont-archer">&#xe60a;</span>
+            TypeScript
         </span>
     </div>
     <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
