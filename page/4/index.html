@@ -414,6 +414,57 @@
             <div class="container container-unloaded">
                 <main class="main index-page">
         <article class="index-post">
+            <a class="abstract-title" href="/2022/vue/Vue%E5%AE%9E%E4%BE%8B%E5%AF%B9%E8%B1%A1/">
+                <span class="abstract-title-text">Vue实例对象</span>
+            </a>
+            <div class="abstract-content">
+                <h1 id="Vue实例对象"><a href="#Vue实例对象" class="headerlink" title="Vue实例对象"></a>Vue实例对象</h1><h2 id="创建并绑定-Vue-对象"><a href="#创建并绑定-Vue-对象" class="headerlink" title="创建并绑定 Vue 对象"></a>创建并绑定 Vue 对象</h2><p>Vue 也是一个构造函数,通过 <code>new Vue()</code>可以创建一个 Vue 对象,通过 Vue 对象进行对 DOM 元素以及内部的子孙元素的操作</p>
+<pre><code>    new Vue(&#123;
+        el: &#39;#div&#39;,
+        /*
+        在Vue中通过el属性来绑定一个DOM元素,从而让该DOM元素以及内部都绑定Vue的相关操作,一般是通过ID进行查找,因为这样才能够精确绑定
+        */
+        data: &#123;
+            //data属性中包含着在el中使用的使用的变量或属性
+            msg: 123,
+        &#125;,
+        //也可以使用函数形式的
+        data() &#123;
+            return &#123;
+                msg: 123,
+            &#125;
+        &#125;,
+        //methods属性包含着需要使用的方法
+        methods: &#123;
+            show() &#123;
+                console.log(this.msg)
+            &#125;,
+        &#125;,
+    &#125;)
+</code></pre>
+<p><strong>注:在实例内部使用定义的属性或方法时不能直接使用,必须通过 <code>this</code> 来指定需要用的属性</strong></p>
+            </div>
+            <!-- read more -->
+                <div class="abstract-read-more-button">
+                    <a href="/2022/vue/Vue%E5%AE%9E%E4%BE%8B%E5%AF%B9%E8%B1%A1/">
+                        <span style="margin-right: 0.2rem;">阅读全文</span>
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </div>
+            <div class="abstract-post-meta">
+                <!-- date -->
+                <div class="abstract-date" title="Last updated: 2022/10/07">
+                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2022/07/29</span>
+                </div>
+                <!-- tags -->
+                    <div class="abstract-tags" >
+        <a class="post-tag" href="javascript:void(0);" data-tags="Vue">Vue</a>
+</div>
+
+            </div>
+        </article>
+        <div class="index-post-divider"></div>
+        <article class="index-post">
             <a class="abstract-title" href="/2022/ES6/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%89%A9%E5%B1%95/">
                 <span class="abstract-title-text">字符串的扩展</span>
             </a>
@@ -692,34 +743,6 @@
             </div>
         </article>
         <div class="index-post-divider"></div>
-        <article class="index-post">
-            <a class="abstract-title" href="/2021/Ajax/Fetch/">
-                <span class="abstract-title-text">Fetch</span>
-            </a>
-            <div class="abstract-content">
-                <h1 id="Fetch"><a href="#Fetch" class="headerlink" title="Fetch"></a>Fetch</h1><p>fetch 是一种 HTTP 数据请求的方式，是 XMLHttpRequest 的一种替代方案。fetch 不是 ajax 的进一步封装，而是原生 js。Fetch 函数就是原生 js，没有使用 XMLHttpRequest 对象</p>
-            </div>
-            <!-- read more -->
-                <div class="abstract-read-more-button">
-                    <a href="/2021/Ajax/Fetch/">
-                        <span style="margin-right: 0.2rem;">阅读全文</span>
-                        <i class="fas fa-angle-right"></i>
-                    </a>
-                </div>
-            <div class="abstract-post-meta">
-                <!-- date -->
-                <div class="abstract-date" title="Last updated: 2021/11/24">
-                    <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2021/11/24</span>
-                </div>
-                <!-- tags -->
-                    <div class="abstract-tags" >
-        <a class="post-tag" href="javascript:void(0);" data-tags="Ajax">Ajax</a>
-        <a class="post-tag" href="javascript:void(0);" data-tags="JavaScript">JavaScript</a>
-</div>
-
-            </div>
-        </article>
-        <div class="index-post-divider"></div>
     <!-- paginator  -->
         <nav class="page-nav">
             <a class="extend prev" rel="prev" href="/page/3/">&lt; PREV</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/5/">NEXT &gt;</a>
@@ -846,15 +869,20 @@
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 68
+        Total : 69
         </div>
         <!-- search  -->
     </div>
     <div class="post-archive">
             <div class="archive-year"> 2026 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/31</span>
+            <a class="archive-post-title" href="/2026/react/react-hooks/">react-hooks</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">03/24</span>
             <a class="archive-post-title" href="/2026/cesium/%E5%85%B3%E4%BA%8E-cesium-%E5%9C%A8-micro-app-%E4%B8%8B%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E7%9A%84%E9%97%AE%E9%A2%98/">关于 cesium 在 micro-app 下无法显示的问题</a>

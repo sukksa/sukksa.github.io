@@ -18,7 +18,7 @@
 <meta property="og:description" content="组件通常需要根据交互更改屏幕上显示的内容。输入表单应该更新输入字段，单击轮播图上的“下一个”应该更改显示的图片，单击“购买”应该将商品放入购物车。组件需要“记住”某些东西：当前输入值、当前图片、购物车。在 React 中，这种组件特有的记忆被称为 state。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-01-17T07:47:40.000Z">
-<meta property="article:modified_time" content="2026-01-17T07:48:27.770Z">
+<meta property="article:modified_time" content="2026-05-31T04:50:51.277Z">
 <meta property="article:author" content="sukksa">
 <meta property="article:tag" content="react">
 <meta name="twitter:card" content="summary">
@@ -296,7 +296,7 @@
 
                 <!-- 文章字数统计 -->
                     <div class="post-intro-read">
-                        <span>字数统计: <span class="post-count word-count">10.3k</span>阅读时长: <span class="post-count reading-time">42 min</span></span>
+                        <span>字数统计: <span class="post-count word-count">10.5k</span>阅读时长: <span class="post-count reading-time">43 min</span></span>
                     </div>
                 <div class="post-intro-meta">
                     <!-- 撰写日期 -->
@@ -456,7 +456,10 @@
         <p>组件通常需要根据交互更改屏幕上显示的内容。输入表单应该更新输入字段，单击轮播图上的“下一个”应该更改显示的图片，单击“购买”应该将商品放入购物车。组件需要“记住”某些东西：当前输入值、当前图片、购物车。在 React 中，这种组件特有的记忆被称为 <strong>state</strong>。</p>
 <span id="more"></span>
 
-<h2 id="为什么要使用-state"><a href="#为什么要使用-state" class="headerlink" title="为什么要使用 state"></a>为什么要使用 state</h2><p>以下是一个渲染雕塑图片的组件。点击 “Next” 按钮应该显示下一个雕塑并将 <code>index</code> 更改为 <code>1</code>，再次点击又更改为 <code>2</code>，以此类推。但这个组件现在<strong>不起作用</strong></p>
+<h2 id="为什么要使用-state"><a href="#为什么要使用-state" class="headerlink" title="为什么要使用 state"></a>为什么要使用 state</h2><p>props 是来自组件外部的数据，是无法更改的，如果一个组件需要保存自己的数据该怎么办？并随着时间保持它？或者是让我们的应用程序具有交互性，由于某个操作而更改 UI ?</p>
+<p>这就是 state 的作用， 基本上就是一个组件的数据可以随着时间的推移而保持，我们由 state 来获取数据。可以认为 state 作为组件的内存，随着组件的创建而创建，随着组件的卸载而销毁。</p>
+<p>用户产生的每一条数据都是一个 state ，每当更新 state 时，react 都会重新渲染，生成新的组件视图，到用户界面上就是更改 UI 。</p>
+<p>以下是一个渲染雕塑图片的组件。点击 “Next” 按钮应该显示下一个雕塑并将 <code>index</code> 更改为 <code>1</code>，再次点击又更改为 <code>2</code>，以此类推。但这个组件现在<strong>不起作用</strong></p>
 <figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; sculptureList &#125; <span class="keyword">from</span> <span class="string">&#x27;./data.js&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">function</span> <span class="title function_">Gallery</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> index = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">function</span> <span class="title function_">handleClick</span>(<span class="params"></span>) &#123;</span><br><span class="line">    index = index + <span class="number">1</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> sculpture = sculptureList[index]</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    <span class="language-xml"><span class="tag">&lt;&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&#123;handleClick&#125;</span>&gt;</span>Next<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        <span class="tag">&lt;<span class="name">i</span>&gt;</span>&#123;sculpture.name&#125; <span class="tag">&lt;/<span class="name">i</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        by &#123;sculpture.artist&#125;</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">h2</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;<span class="name">h3</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">        (&#123;index + 1&#125; of &#123;sculptureList.length&#125;)</span></span><br><span class="line"><span class="language-xml">      <span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;/&gt;</span></span></span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><code>handleClick()</code> 事件处理函数正在更新局部变量 <code>index</code>。但存在两个原因使得变化不可见：</p>
@@ -875,9 +878,9 @@
             <p>原文作者：<a href="https://sukksa.github.io">sukksa</a>
             <p>原文链接：<a href="https://sukksa.github.io/2026/react/state/">https://sukksa.github.io/2026/react/state/</a>
             <!-- <p>发表日期：<a href="https://sukksa.github.io/2026/react/state/">January 17th 2026, 4:47:40 pm</a>
-            <p>更新日期：<a href="https://sukksa.github.io/2026/react/state/">January 17th 2026, 4:48:27 pm</a> -->
+            <p>更新日期：<a href="https://sukksa.github.io/2026/react/state/">May 31st 2026, 1:50:51 pm</a> -->
             <p>发表日期：<a href="https://sukksa.github.io/2026/react/state/">2026-01-17 16:47:40</a>
-            <p>更新日期：<a href="https://sukksa.github.io/2026/react/state/">2026-01-17 16:48:27</a>
+            <p>更新日期：<a href="https://sukksa.github.io/2026/react/state/">2026-05-31 13:50:51</a>
         </div>
     <!-- paginator -->
     <ul class="post-paginator">
@@ -1023,15 +1026,20 @@
         
         
         
+        
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 68
+        Total : 69
         </div>
         <!-- search  -->
     </div>
     <div class="post-archive">
             <div class="archive-year"> 2026 </div>
             <ul class="year-list">
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/31</span>
+            <a class="archive-post-title" href="/2026/react/react-hooks/">react-hooks</a>
+        </li>
         <li class="archive-post-item">
             <span class="archive-post-date">03/24</span>
             <a class="archive-post-title" href="/2026/cesium/%E5%85%B3%E4%BA%8E-cesium-%E5%9C%A8-micro-app-%E4%B8%8B%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E7%9A%84%E9%97%AE%E9%A2%98/">关于 cesium 在 micro-app 下无法显示的问题</a>
