@@ -74,6 +74,7 @@
 <link rel="stylesheet" href="/css/responsive.css?v=2026061801">
 
 
+
 <!-- Font Awesome 6 (Brand Icons for social media) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">
 
@@ -213,152 +214,139 @@
   <!-- Navbar -->
   <div id="top-row" class="z-50 pointer-events-none relative mx-auto w-full xl:w-[92vw] max-w-[var(--page-width)] px-3 md:px-4">
     <div id="navbar-wrapper" class="pointer-events-auto">
-      
-
-<nav id="navbar"
-     class="navbar sticky transparent"
-     data-transparent="true"
-     role="navigation"
-     aria-label="主导航">
-
+       <nav id="navbar" class="navbar sticky transparent" data-transparent="true"
+  role="navigation" aria-label="主导航">
   <div>
     <div class="navbar-inner">
-    <!-- Left: Logo + Site Title -->
-    <div class="navbar-brand">
-      <a href="/" class="navbar-logo-link" aria-label="sukksa blog - 首页">
-        
+      <!-- Left: Logo + Site Title -->
+      <div class="navbar-brand">
+        <a href="/" class="navbar-logo-link" aria-label="sukksa blog - 首页">
+          <!-- 
         <img src="/img/firefly.png" alt="sukksa blog" class="navbar-logo-img" width="32" height="32">
-        
-        <span class="navbar-title">sukksa blog</span>
-      </a>
-    </div>
-
-    <!-- Center: Menu Links -->
-    <div class="navbar-menu" id="navbar-menu" role="menubar">
-      <ul class="navbar-links">
-        <!-- Home (LinkPreset.Home) -->
-        <li class="navbar-link-item" role="none">
-          <a href="/" class="navbar-link" role="menuitem">
-            <span class="navbar-link-content">
-              <span class="material-symbols-outlined">home</span>
-              <span>首页</span>
-            </span>
-            <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
-          </a>
-        </li>
-
-        <!-- Archive (LinkPreset.Archive) -->
-        <li class="navbar-link-item" role="none">
-          <a href="/archives" class="navbar-link" role="menuitem">
-            <span class="navbar-link-content">
-              <span class="material-symbols-outlined">archive</span>
-              <span>归档</span>
-            </span>
-            <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
-          </a>
-        </li>
-
-        <!-- Categories -->
-        <li class="navbar-link-item" role="none">
-          <a href="/categories" class="navbar-link" role="menuitem">
-            <span class="navbar-link-content">
-              <span class="material-symbols-outlined">folder</span>
-              <span>分类</span>
-            </span>
-            <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
-          </a>
-        </li>
-
-        <!-- Tags -->
-        <li class="navbar-link-item" role="none">
-          <a href="/tags" class="navbar-link" role="menuitem">
-            <span class="navbar-link-content">
-              <span class="material-symbols-outlined">sell</span>
-              <span>标签</span>
-            </span>
-            <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
-          </a>
-        </li>
-
-        <!-- Dynamic -->
-        
-
-        <!-- About -->
-        
-        
-        <li class="navbar-link-item" role="none">
-          <a href="/about" class="navbar-link" role="menuitem">
-            <span class="navbar-link-content">
-              <span class="material-symbols-outlined">person</span>
-              <span>关于</span>
-            </span>
-            <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
-          </a>
-        </li>
-        
-
-        <!-- Friends -->
-        
-
-        <!-- Custom Nav Links / Dropdown Groups -->
-        
-      </ul>
-    </div>
-
-    <!-- Right Side Buttons -->
-    <div class="navbar-actions" style="position: relative;">
-      <!-- Search Toggle -->
-      <button id="search-toggle" class="navbar-action-btn search-toggle-btn" aria-label="搜索" title="搜索">
-        <span class="material-symbols-outlined">search</span>
-      </button>
-
-      <!-- Music Toggle -->
-      <button id="nav-music-btn" class="navbar-action-btn music-toggle-btn" aria-label="音乐" title="音乐">
-        <span class="material-symbols-outlined">music_note</span>
-      </button>
-
-      <!-- Play / Wallpaper Toggle -->
-      <button id="nav-play-btn" class="navbar-action-btn play-toggle-btn" aria-label="壁纸" title="壁纸">
-        <span class="material-symbols-outlined">play_arrow</span>
-      </button>
-
-      <!-- Display Settings Toggle (Palette Icon) -->
-      <button id="display-settings-toggle" class="navbar-action-btn display-settings-toggle" aria-label="显示设置" title="显示设置">
-        <span class="material-symbols-outlined">palette</span>
-      </button>
-
-      <!-- Theme Toggle (Light/Dark/System) -->
-      <button id="theme-toggle" class="navbar-action-btn theme-switch-btn" aria-label="切换主题" title="切换主题">
-        <span class="material-symbols-outlined theme-icon-light sun-icon">light_mode</span>
-        <span class="material-symbols-outlined theme-icon-dark moon-icon">dark_mode</span>
-      </button>
-
-      <!-- Theme Popover Modal -->
-      <div id="theme-popover" class="theme-popover float-panel closed">
-        <button class="theme-popover-item" data-theme-mode="light">
-          <span class="material-symbols-outlined">light_mode</span>
-          <span>亮色</span>
+         -->
+          <span class="navbar-title">sukksa blog</span>
+        </a>
+      </div>
+      <!-- Center: Menu Links -->
+      <div class="navbar-menu" id="navbar-menu" role="menubar">
+        <ul class="navbar-links">
+          <!-- Home (LinkPreset.Home) -->
+          <li class="navbar-link-item" role="none">
+            <a href="/" class="navbar-link" role="menuitem">
+              <span class="navbar-link-content">
+                <span class="material-symbols-outlined">home</span>
+                <span>首页</span>
+              </span>
+              <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
+            </a>
+          </li>
+          <!-- Archive (LinkPreset.Archive) -->
+          <li class="navbar-link-item" role="none">
+            <a href="/archives" class="navbar-link" role="menuitem">
+              <span class="navbar-link-content">
+                <span class="material-symbols-outlined">archive</span>
+                <span>归档</span>
+              </span>
+              <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
+            </a>
+          </li>
+          <!-- Categories -->
+          <li class="navbar-link-item" role="none">
+            <a href="/categories" class="navbar-link"
+              role="menuitem">
+              <span class="navbar-link-content">
+                <span class="material-symbols-outlined">folder</span>
+                <span>分类</span>
+              </span>
+              <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
+            </a>
+          </li>
+          <!-- Tags -->
+          <li class="navbar-link-item" role="none">
+            <a href="/tags" class="navbar-link" role="menuitem">
+              <span class="navbar-link-content">
+                <span class="material-symbols-outlined">sell</span>
+                <span>标签</span>
+              </span>
+              <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
+            </a>
+          </li>
+          <!-- Dynamic --> 
+          <!-- Bangumi 追番 -->  
+          
+           <li class="navbar-link-item" role="none">
+            <a href="/bangumi" class="navbar-link" role="menuitem">
+              <span class="navbar-link-content">
+                <span class="material-symbols-outlined">live_tv</span>
+                <span>追番</span>
+              </span>
+              <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
+            </a>
+          </li> 
+          <!-- About -->   <li class="navbar-link-item" role="none">
+            <a href="/about" class="navbar-link" role="menuitem">
+              <span class="navbar-link-content">
+                <span class="material-symbols-outlined">person</span>
+                <span>关于</span>
+              </span>
+              <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
+            </a>
+          </li> 
+          <!-- Friends --> 
+          <!-- Custom Nav Links / Dropdown Groups --> 
+        </ul>
+      </div>
+      <!-- Right Side Buttons -->
+      <div class="navbar-actions" style="position: relative;">
+        <!-- Search Toggle -->
+        <button id="search-toggle" class="navbar-action-btn search-toggle-btn" aria-label="搜索"
+          title="搜索">
+          <span class="material-symbols-outlined">search</span>
         </button>
-        <button class="theme-popover-item" data-theme-mode="dark">
-          <span class="material-symbols-outlined">dark_mode</span>
-          <span>暗色</span>
+        <!-- Music Toggle -->
+        <button id="nav-music-btn" class="navbar-action-btn music-toggle-btn" aria-label="音乐" title="音乐">
+          <span class="material-symbols-outlined">music_note</span>
         </button>
-        <button class="theme-popover-item" data-theme-mode="system">
-          <span class="material-symbols-outlined">brightness_auto</span>
-          <span>跟随系统</span>
+        <!-- Play / Wallpaper Toggle -->
+        <button id="nav-play-btn" class="navbar-action-btn play-toggle-btn" aria-label="壁纸"
+          title="壁纸">
+          <span class="material-symbols-outlined">play_arrow</span>
+        </button>
+        <!-- Display Settings Toggle (Palette Icon) -->
+        <button id="display-settings-toggle" class="navbar-action-btn display-settings-toggle" aria-label="显示设置"
+          title="显示设置">
+          <span class="material-symbols-outlined">palette</span>
+        </button>
+        <!-- Theme Toggle (Light/Dark/System) -->
+        <button id="theme-toggle" class="navbar-action-btn theme-switch-btn" aria-label="切换主题"
+          title="切换主题">
+          <span class="material-symbols-outlined theme-icon-light sun-icon">light_mode</span>
+          <span class="material-symbols-outlined theme-icon-dark moon-icon">dark_mode</span>
+        </button>
+        <!-- Theme Popover Modal -->
+        <div id="theme-popover" class="theme-popover float-panel closed">
+          <button class="theme-popover-item" data-theme-mode="light">
+            <span class="material-symbols-outlined">light_mode</span>
+            <span>亮色</span>
+          </button>
+          <button class="theme-popover-item" data-theme-mode="dark">
+            <span class="material-symbols-outlined">dark_mode</span>
+            <span>暗色</span>
+          </button>
+          <button class="theme-popover-item" data-theme-mode="system">
+            <span class="material-symbols-outlined">brightness_auto</span>
+            <span>跟随系统</span>
+          </button>
+        </div>
+        <!-- Mobile Hamburger Menu -->
+        <button id="mobile-menu-toggle" class="navbar-action-btn mobile-menu-btn" aria-label="切换菜单" aria-expanded="false"
+          aria-controls="navbar-menu">
+          <span class="material-symbols-outlined hamburger-icon">menu</span>
         </button>
       </div>
-
-      <!-- Mobile Hamburger Menu -->
-      <button id="mobile-menu-toggle" class="navbar-action-btn mobile-menu-btn" aria-label="切换菜单" aria-expanded="false" aria-controls="navbar-menu">
-        <span class="material-symbols-outlined hamburger-icon">menu</span>
-      </button>
     </div>
   </div>
-</div>
-
 </nav>
-
     </div>
   </div>
 
@@ -483,9 +471,9 @@
     <!-- Page Title Overlay -->
     <div class="page-title-overlay">
       
-      <h1 class="page-title">JavaScript</h1>
+      <h1 class="page-title">javaScript</h1>
       
-      <div class="page-subtitle">4 篇文章</div>
+      <div class="page-subtitle">25 篇文章</div>
       
     </div>
     
@@ -573,7 +561,7 @@
       
         
         <a
-          href="mailto:example@email.com"
+          href="mailto:sukksa@qq.com"
           class="profile-social-link"
           target="_blank"
           rel="noopener noreferrer"
@@ -588,30 +576,30 @@
       
         
         <a
-          href="/donate/"
+          href="https://space.bilibili.com/74396531"
           class="profile-social-link"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Sponsor"
+          aria-label="Bilibili"
         >
           
           
-            <span class="material-symbols-outlined">favorite</span>
+            <svg class="profile-social-icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M18.5 3.5h-13c-2.5 0-3 1.5-3 3v10c0 2 .5 3 3 3h13c2.5 0 3-1 3-3v-10c0-1.5-.5-3-3-3zM9 13.5c0 .3-.2.5-.5.5s-.5-.2-.5-.5v-4c0-.3.2-.5.5-.5s.5.2.5.5v4zm6 0c0 .3-.2.5-.5.5s-.5-.2-.5-.5v-4c0-.3.2-.5.5-.5s.5.2.5.5v4z"/></svg>
           
         </a>
         
       
         
         <a
-          href="/rss/"
+          href="https://bangumi.tv/user/726667"
           class="profile-social-link"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="RSS"
+          aria-label="Bangumi"
         >
           
           
-            <span class="material-symbols-outlined">rss_feed</span>
+            <span class="material-symbols-outlined">live_tv</span>
           
         </a>
         
@@ -678,7 +666,7 @@
       <meting-js
         server="netease"
         type="playlist"
-        id="10046455237"
+        id="18495784452"
         api="https://api.injahow.cn/meting/?server=:server&amp;type=:type&amp;id=:id&amp;r=:r"
         order="list"
         fixed="false"
@@ -935,17 +923,17 @@
       
       <a href="/tags/jQuery/" class="tag-item">jQuery</a>
       
-      <a href="/tags/DOM/" class="tag-item">DOM</a>
-      
       <a href="/tags/Ajax/" class="tag-item">Ajax</a>
       
       <a href="/tags/JavaScript/" class="tag-item">JavaScript</a>
       
+      <a href="/tags/DOM/" class="tag-item">DOM</a>
+      
       <a href="/tags/Threejs/" class="tag-item">Threejs</a>
       
-      <a href="/tags/react/" class="tag-item">react</a>
-      
       <a href="/tags/git/" class="tag-item">git</a>
+      
+      <a href="/tags/react/" class="tag-item">react</a>
       
       
     </div>
@@ -1023,30 +1011,33 @@
   <div class="post-card-content">
     <!-- Title -->
     <h2 class="post-card-title">
-      <a href="/2021/Ajax/Ajax%E8%B7%A8%E5%9F%9F%E8%AF%B7%E6%B1%82/">Ajax跨域</a>
+      <a href="/2022/ES6/Promise/">Promise</a>
     </h2>
 
     <!-- Meta line: date, category -->
     <div class="post-card-meta">
       
       
-      <time datetime="2021-12-05" pubdate>
+      <time datetime="2022-10-03" pubdate>
         <span class="material-symbols-outlined md-18">calendar_today</span>
-        <span>2021-12-05</span>
+        <span>2022-10-03</span>
       </time>
       
       
         
-        <a class="category-badge" href="/categories/Ajax/">
+        <a class="category-badge" href="/categories/ES6/">
           <span class="material-symbols-outlined md-18">folder</span>
-          <span>Ajax</span>
+          <span>ES6</span>
         </a>
       
     </div>
 
     <!-- Description / excerpt -->
     
-    <p class="post-card-excerpt">Ajax跨域同源策略同源策略（Sameoriginpolicy）是一种约定，它是浏览器最核心也最基本的安全功能，如果缺少了同源策略，则浏览器的正常功能可能都会受到影响。可以说Web是构建在同源策略基础之上的，浏览器只是针对同源策略的一种实现。同源策略会阻止一个域的javascript脚本和另外一个域的内容进行交互。所谓同源（即指在同一个域）就是两个页面具有相同的协议（protocol），主机（ho</p>
+    <p class="post-card-excerpt">PromisePromise 是什么理解 PromisePromise 是异步编程的一种解决方案，比传统的解决方案——回调函数和事件——更合理和更强大。它由社区最早提出和实现，ES6 将其写进了语言标准，统一了用法，原生提供了Promise对象。 
+所谓Promise，简单说就是一个容器，里面保存着某个未来才会结束的事件(通常是一个异步操作)的结果。
+
+从语法上看：Promise是一个构造函数 (</p>
     
 
     <!-- Footer: tags & reading time -->
@@ -1054,19 +1045,19 @@
       
       <div class="post-card-tags">
         
-          <a href="/tags/Ajax/" class="post-tag-item">
-            #Ajax
+          <a href="/tags/javaScript/" class="post-tag-item">
+            #javaScript
           </a>
         
-          <a href="/tags/JavaScript/" class="post-tag-item">
-            #JavaScript
+          <a href="/tags/ES6/" class="post-tag-item">
+            #ES6
           </a>
         
       </div>
       
       
       <span class="post-card-reading-time">
-        5 min
+        43 min
       </span>
       
     </div>
@@ -1075,7 +1066,7 @@
   <!-- Right side chevron panel for coverless cards -->
   
   <div class="post-card-arrow">
-    <a href="/2021/Ajax/Ajax%E8%B7%A8%E5%9F%9F%E8%AF%B7%E6%B1%82/" aria-hidden="true" tabindex="-1">
+    <a href="/2022/ES6/Promise/" aria-hidden="true" tabindex="-1">
       <span class="material-symbols-outlined">chevron_right</span>
     </a>
   </div>
@@ -1093,30 +1084,34 @@
   <div class="post-card-content">
     <!-- Title -->
     <h2 class="post-card-title">
-      <a href="/2021/Ajax/Fetch/">Fetch</a>
+      <a href="/2022/ES6/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%89%A9%E5%B1%95/">字符串的扩展</a>
     </h2>
 
     <!-- Meta line: date, category -->
     <div class="post-card-meta">
       
       
-      <time datetime="2021-11-24" pubdate>
+      <time datetime="2022-07-26" pubdate>
         <span class="material-symbols-outlined md-18">calendar_today</span>
-        <span>2021-11-24</span>
+        <span>2022-07-26</span>
       </time>
       
       
         
-        <a class="category-badge" href="/categories/Ajax/">
+        <a class="category-badge" href="/categories/ES6/">
           <span class="material-symbols-outlined md-18">folder</span>
-          <span>Ajax</span>
+          <span>ES6</span>
         </a>
       
     </div>
 
     <!-- Description / excerpt -->
     
-    <p class="post-card-excerpt">Fetchfetch 是一种 HTTP 数据请求的方式，是 XMLHttpRequest 的一种替代方案。fetch 不是 ajax 的进一步封装，而是原生 js。Fetch 函数就是原生 js，没有使用 XMLHttpRequest 对象</p>
+    <p class="post-card-excerpt">字符串的扩展字符的 Unicode 表示法JavaScript 允许采用\uxxxx形式表示一个字符，其中xxxx表示字符的 Unicode 码点。
+    &amp;#39;\u0061&amp;#39;
+    // &amp;quot;a&amp;quot;
+
+但是，这种表示法只限于码点在\u0000~\uFFFF之间的字符。超出这个范围的字符，必须用两个双字节的形式表示</p>
     
 
     <!-- Footer: tags & reading time -->
@@ -1124,19 +1119,19 @@
       
       <div class="post-card-tags">
         
-          <a href="/tags/Ajax/" class="post-tag-item">
-            #Ajax
+          <a href="/tags/javaScript/" class="post-tag-item">
+            #javaScript
           </a>
         
-          <a href="/tags/JavaScript/" class="post-tag-item">
-            #JavaScript
+          <a href="/tags/ES6/" class="post-tag-item">
+            #ES6
           </a>
         
       </div>
       
       
       <span class="post-card-reading-time">
-        7 min
+        27 min
       </span>
       
     </div>
@@ -1145,7 +1140,7 @@
   <!-- Right side chevron panel for coverless cards -->
   
   <div class="post-card-arrow">
-    <a href="/2021/Ajax/Fetch/" aria-hidden="true" tabindex="-1">
+    <a href="/2022/ES6/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E6%89%A9%E5%B1%95/" aria-hidden="true" tabindex="-1">
       <span class="material-symbols-outlined">chevron_right</span>
     </a>
   </div>
@@ -1163,38 +1158,31 @@
   <div class="post-card-content">
     <!-- Title -->
     <h2 class="post-card-title">
-      <a href="/2021/Ajax/Axios/">Axios</a>
+      <a href="/2022/ES6/Moudle%20%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%AE%9E%E7%8E%B0/">Module 的加载实现</a>
     </h2>
 
     <!-- Meta line: date, category -->
     <div class="post-card-meta">
       
       
-      <time datetime="2021-11-24" pubdate>
+      <time datetime="2022-07-23" pubdate>
         <span class="material-symbols-outlined md-18">calendar_today</span>
-        <span>2021-11-24</span>
+        <span>2022-07-23</span>
       </time>
       
       
         
-        <a class="category-badge" href="/categories/Ajax/">
+        <a class="category-badge" href="/categories/ES6/">
           <span class="material-symbols-outlined md-18">folder</span>
-          <span>Ajax</span>
+          <span>ES6</span>
         </a>
       
     </div>
 
     <!-- Description / excerpt -->
     
-    <p class="post-card-excerpt">Axios创建 APIAPI 的分类
-REST API: restful （Representational State Transfer (资源)表现层状态转化）
-发送请求进行CRUD 哪个操作由请求方式来决定
-同一个请求路径可以进行多个操作
-请求方式会用到GET&amp;#x2F;POST&amp;#x2F;PUT&amp;#x2F;DELETE
-
-
-非REST API: restless
-请求方式不决定请求的CRU</p>
+    <p class="post-card-excerpt">Module 的加载实现本章介绍如何在浏览器和 Node 之中加载 ES6 模块，以及实际开发中经常遇到的一些问题(比如循环加载)
+浏览器加载传统方法在 HTML 网页中，浏览器通过&amp;lt;script&amp;gt;标签加载 JavaScript 脚本。</p>
     
 
     <!-- Footer: tags & reading time -->
@@ -1202,19 +1190,19 @@ REST API: restful （Representational State Transfer (资源)表现层状态转�
       
       <div class="post-card-tags">
         
-          <a href="/tags/Ajax/" class="post-tag-item">
-            #Ajax
+          <a href="/tags/javaScript/" class="post-tag-item">
+            #javaScript
           </a>
         
-          <a href="/tags/JavaScript/" class="post-tag-item">
-            #JavaScript
+          <a href="/tags/ES6/" class="post-tag-item">
+            #ES6
           </a>
         
       </div>
       
       
       <span class="post-card-reading-time">
-        28 min
+        36 min
       </span>
       
     </div>
@@ -1223,7 +1211,7 @@ REST API: restful （Representational State Transfer (资源)表现层状态转�
   <!-- Right side chevron panel for coverless cards -->
   
   <div class="post-card-arrow">
-    <a href="/2021/Ajax/Axios/" aria-hidden="true" tabindex="-1">
+    <a href="/2022/ES6/Moudle%20%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%AE%9E%E7%8E%B0/" aria-hidden="true" tabindex="-1">
       <span class="material-symbols-outlined">chevron_right</span>
     </a>
   </div>
@@ -1241,31 +1229,31 @@ REST API: restful （Representational State Transfer (资源)表现层状态转�
   <div class="post-card-content">
     <!-- Title -->
     <h2 class="post-card-title">
-      <a href="/2021/Ajax/%E5%8E%9F%E7%94%9FAjax/">原生Ajax</a>
+      <a href="/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/">Module 模块化</a>
     </h2>
 
     <!-- Meta line: date, category -->
     <div class="post-card-meta">
       
       
-      <time datetime="2021-11-22" pubdate>
+      <time datetime="2022-07-21" pubdate>
         <span class="material-symbols-outlined md-18">calendar_today</span>
-        <span>2021-11-22</span>
+        <span>2022-07-21</span>
       </time>
       
       
         
-        <a class="category-badge" href="/categories/Ajax/">
+        <a class="category-badge" href="/categories/ES6/">
           <span class="material-symbols-outlined md-18">folder</span>
-          <span>Ajax</span>
+          <span>ES6</span>
         </a>
       
     </div>
 
     <!-- Description / excerpt -->
     
-    <p class="post-card-excerpt">原生AjaxAjax 全称 Asynchronous JavaScript and XML(异步的 JavaScript 和 XML)，既是一个对象，也是一种方法模式 
-AJAX 是一种用于创建快速动态网页的技术，通过在后台与服务器进行少量数据交换,Ajax 可以使网页实现异步更新。这意味着可以在不重新加载整个网页的情况下，对网页的某部分进行更新，传统的不使用 Ajax 的网页如果需要更新内容,必</p>
+    <p class="post-card-excerpt">模块化 module基本概述历史上，JavaScript 一直没有模块(module)体系，无法将一个大程序拆分成互相依赖的小文件，再用简单的方法拼装起来。其他语言都有这项功能，比如 Ruby 的require、Python 的import，甚至就连 CSS 都有@import，但是 JavaScript 任何这方面的支持都没有，这对开发大型的、复杂的项目形成了巨大障碍。
+在 ES6 之前，社区制</p>
     
 
     <!-- Footer: tags & reading time -->
@@ -1273,19 +1261,19 @@ AJAX 是一种用于创建快速动态网页的技术，通过在后台与服务
       
       <div class="post-card-tags">
         
-          <a href="/tags/Ajax/" class="post-tag-item">
-            #Ajax
+          <a href="/tags/javaScript/" class="post-tag-item">
+            #javaScript
           </a>
         
-          <a href="/tags/JavaScript/" class="post-tag-item">
-            #JavaScript
+          <a href="/tags/ES6/" class="post-tag-item">
+            #ES6
           </a>
         
       </div>
       
       
       <span class="post-card-reading-time">
-        8 min
+        25 min
       </span>
       
     </div>
@@ -1294,7 +1282,436 @@ AJAX 是一种用于创建快速动态网页的技术，通过在后台与服务
   <!-- Right side chevron panel for coverless cards -->
   
   <div class="post-card-arrow">
-    <a href="/2021/Ajax/%E5%8E%9F%E7%94%9FAjax/" aria-hidden="true" tabindex="-1">
+    <a href="/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/" aria-hidden="true" tabindex="-1">
+      <span class="material-symbols-outlined">chevron_right</span>
+    </a>
+  </div>
+  
+</article>
+
+        
+          
+
+<article class="post-card-item card-base" data-pinned="false" data-has-cover="false">
+  <!-- Cover image area -->
+  
+
+  <!-- Content area -->
+  <div class="post-card-content">
+    <!-- Title -->
+    <h2 class="post-card-title">
+      <a href="/2022/ES6/%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%89%A9%E5%B1%95/">对象的扩展</a>
+    </h2>
+
+    <!-- Meta line: date, category -->
+    <div class="post-card-meta">
+      
+      
+      <time datetime="2022-07-19" pubdate>
+        <span class="material-symbols-outlined md-18">calendar_today</span>
+        <span>2022-07-19</span>
+      </time>
+      
+      
+        
+        <a class="category-badge" href="/categories/ES6/">
+          <span class="material-symbols-outlined md-18">folder</span>
+          <span>ES6</span>
+        </a>
+      
+    </div>
+
+    <!-- Description / excerpt -->
+    
+    <p class="post-card-excerpt">对象的扩展属性的简介表示ES6 允许直接写入变量和函数，作为对象的属性和方法。这样的书写更加简洁。
+    const foo = &amp;quot;bar&amp;quot;
+    const baz = &amp;#123; foo &amp;#125;
+    baz // &amp;#123;foo: &amp;quot;bar&amp;quot;&amp;#125;
+
+    // 等同于
+    // const baz = &amp;#123; fo</p>
+    
+
+    <!-- Footer: tags & reading time -->
+    <div class="post-card-footer">
+      
+      <div class="post-card-tags">
+        
+          <a href="/tags/javaScript/" class="post-tag-item">
+            #javaScript
+          </a>
+        
+          <a href="/tags/ES6/" class="post-tag-item">
+            #ES6
+          </a>
+        
+      </div>
+      
+      
+      <span class="post-card-reading-time">
+        56 min
+      </span>
+      
+    </div>
+  </div>
+
+  <!-- Right side chevron panel for coverless cards -->
+  
+  <div class="post-card-arrow">
+    <a href="/2022/ES6/%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%89%A9%E5%B1%95/" aria-hidden="true" tabindex="-1">
+      <span class="material-symbols-outlined">chevron_right</span>
+    </a>
+  </div>
+  
+</article>
+
+        
+          
+
+<article class="post-card-item card-base" data-pinned="false" data-has-cover="false">
+  <!-- Cover image area -->
+  
+
+  <!-- Content area -->
+  <div class="post-card-content">
+    <!-- Title -->
+    <h2 class="post-card-title">
+      <a href="/2022/ES6/Class%E7%9A%84%E7%BB%A7%E6%89%BF/">Class的基本用法</a>
+    </h2>
+
+    <!-- Meta line: date, category -->
+    <div class="post-card-meta">
+      
+      
+      <time datetime="2022-06-25" pubdate>
+        <span class="material-symbols-outlined md-18">calendar_today</span>
+        <span>2022-06-25</span>
+      </time>
+      
+      
+        
+        <a class="category-badge" href="/categories/ES6/">
+          <span class="material-symbols-outlined md-18">folder</span>
+          <span>ES6</span>
+        </a>
+      
+    </div>
+
+    <!-- Description / excerpt -->
+    
+    <p class="post-card-excerpt">Class的基本用法Class 可以通过extends关键字实现继承，这比 ES5 的通过修改原型链实现继承，要清晰和方便很多。</p>
+    
+
+    <!-- Footer: tags & reading time -->
+    <div class="post-card-footer">
+      
+      <div class="post-card-tags">
+        
+          <a href="/tags/javaScript/" class="post-tag-item">
+            #javaScript
+          </a>
+        
+          <a href="/tags/ES6/" class="post-tag-item">
+            #ES6
+          </a>
+        
+      </div>
+      
+      
+      <span class="post-card-reading-time">
+        17 min
+      </span>
+      
+    </div>
+  </div>
+
+  <!-- Right side chevron panel for coverless cards -->
+  
+  <div class="post-card-arrow">
+    <a href="/2022/ES6/Class%E7%9A%84%E7%BB%A7%E6%89%BF/" aria-hidden="true" tabindex="-1">
+      <span class="material-symbols-outlined">chevron_right</span>
+    </a>
+  </div>
+  
+</article>
+
+        
+          
+
+<article class="post-card-item card-base" data-pinned="false" data-has-cover="false">
+  <!-- Cover image area -->
+  
+
+  <!-- Content area -->
+  <div class="post-card-content">
+    <!-- Title -->
+    <h2 class="post-card-title">
+      <a href="/2022/ES6/Class%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/">Class的基本用法</a>
+    </h2>
+
+    <!-- Meta line: date, category -->
+    <div class="post-card-meta">
+      
+      
+      <time datetime="2022-06-24" pubdate>
+        <span class="material-symbols-outlined md-18">calendar_today</span>
+        <span>2022-06-24</span>
+      </time>
+      
+      
+        
+        <a class="category-badge" href="/categories/ES6/">
+          <span class="material-symbols-outlined md-18">folder</span>
+          <span>ES6</span>
+        </a>
+      
+    </div>
+
+    <!-- Description / excerpt -->
+    
+    <p class="post-card-excerpt">Class的基本用法ES6 提供了更接近传统语言的写法，引入了 Class(类)这个概念，作为对象的模板。通过class关键字，可以定义类。基本上，ES6 的class可以看作只是一个语法糖，它的绝大部分功能，ES5 都可以做到，新的class写法只是让对象原型的写法更加清晰、更像面向对象编程的语法而已。</p>
+    
+
+    <!-- Footer: tags & reading time -->
+    <div class="post-card-footer">
+      
+      <div class="post-card-tags">
+        
+          <a href="/tags/javaScript/" class="post-tag-item">
+            #javaScript
+          </a>
+        
+          <a href="/tags/ES6/" class="post-tag-item">
+            #ES6
+          </a>
+        
+      </div>
+      
+      
+      <span class="post-card-reading-time">
+        16 min
+      </span>
+      
+    </div>
+  </div>
+
+  <!-- Right side chevron panel for coverless cards -->
+  
+  <div class="post-card-arrow">
+    <a href="/2022/ES6/Class%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95/" aria-hidden="true" tabindex="-1">
+      <span class="material-symbols-outlined">chevron_right</span>
+    </a>
+  </div>
+  
+</article>
+
+        
+          
+
+<article class="post-card-item card-base" data-pinned="false" data-has-cover="false">
+  <!-- Cover image area -->
+  
+
+  <!-- Content area -->
+  <div class="post-card-content">
+    <!-- Title -->
+    <h2 class="post-card-title">
+      <a href="/2021/ES6/set%E4%B8%8Emap/">set 与 map</a>
+    </h2>
+
+    <!-- Meta line: date, category -->
+    <div class="post-card-meta">
+      
+      
+      <time datetime="2021-12-18" pubdate>
+        <span class="material-symbols-outlined md-18">calendar_today</span>
+        <span>2021-12-18</span>
+      </time>
+      
+      
+        
+        <a class="category-badge" href="/categories/ES6/">
+          <span class="material-symbols-outlined md-18">folder</span>
+          <span>ES6</span>
+        </a>
+      
+    </div>
+
+    <!-- Description / excerpt -->
+    
+    <p class="post-card-excerpt">set 与 mapset基本用法ES6 提供了新的数据结构 Set。它类似于数组，但是成员的值都是唯一的，没有重复的值。
+Set 本身是一个构造函数，用来生成 Set 数据结构。</p>
+    
+
+    <!-- Footer: tags & reading time -->
+    <div class="post-card-footer">
+      
+      <div class="post-card-tags">
+        
+          <a href="/tags/javaScript/" class="post-tag-item">
+            #javaScript
+          </a>
+        
+          <a href="/tags/ES6/" class="post-tag-item">
+            #ES6
+          </a>
+        
+      </div>
+      
+      
+      <span class="post-card-reading-time">
+        14 min
+      </span>
+      
+    </div>
+  </div>
+
+  <!-- Right side chevron panel for coverless cards -->
+  
+  <div class="post-card-arrow">
+    <a href="/2021/ES6/set%E4%B8%8Emap/" aria-hidden="true" tabindex="-1">
+      <span class="material-symbols-outlined">chevron_right</span>
+    </a>
+  </div>
+  
+</article>
+
+        
+          
+
+<article class="post-card-item card-base" data-pinned="false" data-has-cover="false">
+  <!-- Cover image area -->
+  
+
+  <!-- Content area -->
+  <div class="post-card-content">
+    <!-- Title -->
+    <h2 class="post-card-title">
+      <a href="/2021/ES6/Symbol/">Symbol</a>
+    </h2>
+
+    <!-- Meta line: date, category -->
+    <div class="post-card-meta">
+      
+      
+      <time datetime="2021-11-11" pubdate>
+        <span class="material-symbols-outlined md-18">calendar_today</span>
+        <span>2021-11-11</span>
+      </time>
+      
+      
+        
+        <a class="category-badge" href="/categories/ES6/">
+          <span class="material-symbols-outlined md-18">folder</span>
+          <span>ES6</span>
+        </a>
+      
+    </div>
+
+    <!-- Description / excerpt -->
+    
+    <p class="post-card-excerpt">SymbolES5 的对象属性名都是字符串，这容易造成属性名的冲突。如在对象中添加一个方法，这个方法名有可能导致重名，引起冲突
+ES6 引入了一种新的原始数据类型 Symbol，表示独一无二的值。它是 JavaScript 语言的第七种数据类型
+对象的属性名现在可以有两种类型，一种是原来就有的字符串，另一种就是新增的 Symbol 类型。凡是属性名属于 Symbol 类型，就都是独一无二的，可以保</p>
+    
+
+    <!-- Footer: tags & reading time -->
+    <div class="post-card-footer">
+      
+      <div class="post-card-tags">
+        
+          <a href="/tags/javaScript/" class="post-tag-item">
+            #javaScript
+          </a>
+        
+          <a href="/tags/ES6/" class="post-tag-item">
+            #ES6
+          </a>
+        
+      </div>
+      
+      
+      <span class="post-card-reading-time">
+        23 min
+      </span>
+      
+    </div>
+  </div>
+
+  <!-- Right side chevron panel for coverless cards -->
+  
+  <div class="post-card-arrow">
+    <a href="/2021/ES6/Symbol/" aria-hidden="true" tabindex="-1">
+      <span class="material-symbols-outlined">chevron_right</span>
+    </a>
+  </div>
+  
+</article>
+
+        
+          
+
+<article class="post-card-item card-base" data-pinned="false" data-has-cover="false">
+  <!-- Cover image area -->
+  
+
+  <!-- Content area -->
+  <div class="post-card-content">
+    <!-- Title -->
+    <h2 class="post-card-title">
+      <a href="/2021/ES6/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A9%E5%B1%95/">函数的扩展</a>
+    </h2>
+
+    <!-- Meta line: date, category -->
+    <div class="post-card-meta">
+      
+      
+      <time datetime="2021-11-08" pubdate>
+        <span class="material-symbols-outlined md-18">calendar_today</span>
+        <span>2021-11-08</span>
+      </time>
+      
+      
+        
+        <a class="category-badge" href="/categories/ES6/">
+          <span class="material-symbols-outlined md-18">folder</span>
+          <span>ES6</span>
+        </a>
+      
+    </div>
+
+    <!-- Description / excerpt -->
+    
+    <p class="post-card-excerpt">函数的扩展函数参数的默认值ES6 允许给函数参数赋值初始值</p>
+    
+
+    <!-- Footer: tags & reading time -->
+    <div class="post-card-footer">
+      
+      <div class="post-card-tags">
+        
+          <a href="/tags/javaScript/" class="post-tag-item">
+            #javaScript
+          </a>
+        
+          <a href="/tags/ES6/" class="post-tag-item">
+            #ES6
+          </a>
+        
+      </div>
+      
+      
+      <span class="post-card-reading-time">
+        12 min
+      </span>
+      
+    </div>
+  </div>
+
+  <!-- Right side chevron panel for coverless cards -->
+  
+  <div class="post-card-arrow">
+    <a href="/2021/ES6/%E5%87%BD%E6%95%B0%E7%9A%84%E6%89%A9%E5%B1%95/" aria-hidden="true" tabindex="-1">
       <span class="material-symbols-outlined">chevron_right</span>
     </a>
   </div>
@@ -1307,6 +1724,35 @@ AJAX 是一种用于创建快速动态网页的技术，通过在后台与服务
 
     
 
+
+<div class="pagination-wrapper">
+  <nav class="pagination" aria-label="pagination">
+    
+    <span class="pagination-item pagination-prev pagination-disabled" aria-disabled="true">
+      <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+      <span>上一页</span>
+    </span>
+    
+
+    <span class="pagination-info">
+      <span class="page-number">1</span>
+      <span class="page-divider">/</span>
+      <span class="page-total">3</span>
+    </span>
+
+    
+    <a
+      href="/tags/javaScript/page/2/"
+      class="pagination-item pagination-next"
+      rel="next"
+      aria-label="下一页"
+    >
+      <span>下一页</span>
+      <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+    </a>
+    
+  </nav>
+</div>
 
 
   </main>
@@ -1370,6 +1816,17 @@ AJAX 是一种用于创建快速动态网页的技术，通过在后台与服务
       </div>
       <span class="stat-value">17</span>
     </div>
+    
+    <!-- Bangumi 追番量（在看 + 看过） -->
+    
+    <div class="stat-item">
+      <div class="stat-label">
+        <span class="material-symbols-outlined stat-icon">live_tv</span>
+        <span>追番</span>
+      </div>
+      <span class="stat-value" title="Bangumi 在看 + 看过 合计">388</span>
+    </div>
+    
     
     <!-- Total Words -->
     <div class="stat-item">
@@ -1945,7 +2402,7 @@ AJAX 是一种用于创建快速动态网页的技术，通过在后台与服务
             <span class="material-symbols-outlined">schedule</span>
           </div>
           <div class="site-info-card-label">构建时间</div>
-          <div class="site-info-card-value">2026/10/17 17:42:48</div>
+          <div class="site-info-card-value">2026/10/18 00:43:00</div>
         </div>
 
         <!-- System Info -->
@@ -2044,7 +2501,7 @@ if (!window._siteInfoToggleBound) {
       
         
         <a
-          href="mailto:example@email.com"
+          href="mailto:sukksa@qq.com"
           class="profile-social-link"
           target="_blank"
           rel="noopener noreferrer"
@@ -2059,30 +2516,30 @@ if (!window._siteInfoToggleBound) {
       
         
         <a
-          href="/donate/"
+          href="https://space.bilibili.com/74396531"
           class="profile-social-link"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Sponsor"
+          aria-label="Bilibili"
         >
           
           
-            <span class="material-symbols-outlined">favorite</span>
+            <svg class="profile-social-icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M18.5 3.5h-13c-2.5 0-3 1.5-3 3v10c0 2 .5 3 3 3h13c2.5 0 3-1 3-3v-10c0-1.5-.5-3-3-3zM9 13.5c0 .3-.2.5-.5.5s-.5-.2-.5-.5v-4c0-.3.2-.5.5-.5s.5.2.5.5v4zm6 0c0 .3-.2.5-.5.5s-.5-.2-.5-.5v-4c0-.3.2-.5.5-.5s.5.2.5.5v4z"/></svg>
           
         </a>
         
       
         
         <a
-          href="/rss/"
+          href="https://bangumi.tv/user/726667"
           class="profile-social-link"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="RSS"
+          aria-label="Bangumi"
         >
           
           
-            <span class="material-symbols-outlined">rss_feed</span>
+            <span class="material-symbols-outlined">live_tv</span>
           
         </a>
         
@@ -2106,7 +2563,7 @@ if (!window._siteInfoToggleBound) {
       <meting-js
         server="netease"
         type="playlist"
-        id="10046455237"
+        id="18495784452"
         api="https://api.injahow.cn/meting/?server=:server&amp;type=:type&amp;id=:id&amp;r=:r"
         order="list"
         fixed="false"
@@ -2343,6 +2800,17 @@ if (!window._siteInfoToggleBound) {
       <span class="stat-value">17</span>
     </div>
     
+    <!-- Bangumi 追番量（在看 + 看过） -->
+    
+    <div class="stat-item">
+      <div class="stat-label">
+        <span class="material-symbols-outlined stat-icon">live_tv</span>
+        <span>追番</span>
+      </div>
+      <span class="stat-value" title="Bangumi 在看 + 看过 合计">388</span>
+    </div>
+    
+    
     <!-- Total Words -->
     <div class="stat-item">
       <div class="stat-label">
@@ -2393,17 +2861,17 @@ if (!window._siteInfoToggleBound) {
       
       <a href="/tags/jQuery/" class="tag-item">jQuery</a>
       
-      <a href="/tags/DOM/" class="tag-item">DOM</a>
-      
       <a href="/tags/Ajax/" class="tag-item">Ajax</a>
       
       <a href="/tags/JavaScript/" class="tag-item">JavaScript</a>
       
+      <a href="/tags/DOM/" class="tag-item">DOM</a>
+      
       <a href="/tags/Threejs/" class="tag-item">Threejs</a>
       
-      <a href="/tags/react/" class="tag-item">react</a>
-      
       <a href="/tags/git/" class="tag-item">git</a>
+      
+      <a href="/tags/react/" class="tag-item">react</a>
       
       
     </div>
@@ -2509,7 +2977,7 @@ if (!window._siteInfoToggleBound) {
             <span class="material-symbols-outlined">schedule</span>
           </div>
           <div class="site-info-card-label">构建时间</div>
-          <div class="site-info-card-value">2026/10/17 17:42:48</div>
+          <div class="site-info-card-value">2026/10/18 00:43:00</div>
         </div>
 
         <!-- System Info -->
@@ -2795,6 +3263,11 @@ if (!window._siteInfoToggleBound) {
 <script src="/js/ui/scroll.js"></script>
 <script src="/js/ui/back-to-top.js"></script>
 <script src="/js/ui/post-layout.js"></script>
+
+<!-- Bangumi 追番页：关闭分页时的滚动加载（PJAX 切换页面后也能重新初始化） -->
+
+<script src="/js/features/bangumi-infinite.js"></script>
+
 
 <!-- Feature Scripts -->
 

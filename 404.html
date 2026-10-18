@@ -76,6 +76,7 @@
 <link rel="stylesheet" href="/css/responsive.css?v=2026061801">
 
 
+
 <!-- Font Awesome 6 (Brand Icons for social media) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">
 
@@ -215,152 +216,139 @@
   <!-- Navbar -->
   <div id="top-row" class="z-50 pointer-events-none relative mx-auto w-full xl:w-[92vw] max-w-[var(--page-width)] px-3 md:px-4">
     <div id="navbar-wrapper" class="pointer-events-auto">
-      
-
-<nav id="navbar"
-     class="navbar sticky transparent"
-     data-transparent="true"
-     role="navigation"
-     aria-label="主导航">
-
+       <nav id="navbar" class="navbar sticky transparent" data-transparent="true"
+  role="navigation" aria-label="主导航">
   <div>
     <div class="navbar-inner">
-    <!-- Left: Logo + Site Title -->
-    <div class="navbar-brand">
-      <a href="/" class="navbar-logo-link" aria-label="sukksa blog - 首页">
-        
+      <!-- Left: Logo + Site Title -->
+      <div class="navbar-brand">
+        <a href="/" class="navbar-logo-link" aria-label="sukksa blog - 首页">
+          <!-- 
         <img src="/img/firefly.png" alt="sukksa blog" class="navbar-logo-img" width="32" height="32">
-        
-        <span class="navbar-title">sukksa blog</span>
-      </a>
-    </div>
-
-    <!-- Center: Menu Links -->
-    <div class="navbar-menu" id="navbar-menu" role="menubar">
-      <ul class="navbar-links">
-        <!-- Home (LinkPreset.Home) -->
-        <li class="navbar-link-item" role="none">
-          <a href="/" class="navbar-link" role="menuitem">
-            <span class="navbar-link-content">
-              <span class="material-symbols-outlined">home</span>
-              <span>首页</span>
-            </span>
-            <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
-          </a>
-        </li>
-
-        <!-- Archive (LinkPreset.Archive) -->
-        <li class="navbar-link-item" role="none">
-          <a href="/archives" class="navbar-link" role="menuitem">
-            <span class="navbar-link-content">
-              <span class="material-symbols-outlined">archive</span>
-              <span>归档</span>
-            </span>
-            <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
-          </a>
-        </li>
-
-        <!-- Categories -->
-        <li class="navbar-link-item" role="none">
-          <a href="/categories" class="navbar-link" role="menuitem">
-            <span class="navbar-link-content">
-              <span class="material-symbols-outlined">folder</span>
-              <span>分类</span>
-            </span>
-            <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
-          </a>
-        </li>
-
-        <!-- Tags -->
-        <li class="navbar-link-item" role="none">
-          <a href="/tags" class="navbar-link" role="menuitem">
-            <span class="navbar-link-content">
-              <span class="material-symbols-outlined">sell</span>
-              <span>标签</span>
-            </span>
-            <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
-          </a>
-        </li>
-
-        <!-- Dynamic -->
-        
-
-        <!-- About -->
-        
-        
-        <li class="navbar-link-item" role="none">
-          <a href="/about" class="navbar-link" role="menuitem">
-            <span class="navbar-link-content">
-              <span class="material-symbols-outlined">person</span>
-              <span>关于</span>
-            </span>
-            <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
-          </a>
-        </li>
-        
-
-        <!-- Friends -->
-        
-
-        <!-- Custom Nav Links / Dropdown Groups -->
-        
-      </ul>
-    </div>
-
-    <!-- Right Side Buttons -->
-    <div class="navbar-actions" style="position: relative;">
-      <!-- Search Toggle -->
-      <button id="search-toggle" class="navbar-action-btn search-toggle-btn" aria-label="搜索" title="搜索">
-        <span class="material-symbols-outlined">search</span>
-      </button>
-
-      <!-- Music Toggle -->
-      <button id="nav-music-btn" class="navbar-action-btn music-toggle-btn" aria-label="音乐" title="音乐">
-        <span class="material-symbols-outlined">music_note</span>
-      </button>
-
-      <!-- Play / Wallpaper Toggle -->
-      <button id="nav-play-btn" class="navbar-action-btn play-toggle-btn" aria-label="壁纸" title="壁纸">
-        <span class="material-symbols-outlined">play_arrow</span>
-      </button>
-
-      <!-- Display Settings Toggle (Palette Icon) -->
-      <button id="display-settings-toggle" class="navbar-action-btn display-settings-toggle" aria-label="显示设置" title="显示设置">
-        <span class="material-symbols-outlined">palette</span>
-      </button>
-
-      <!-- Theme Toggle (Light/Dark/System) -->
-      <button id="theme-toggle" class="navbar-action-btn theme-switch-btn" aria-label="切换主题" title="切换主题">
-        <span class="material-symbols-outlined theme-icon-light sun-icon">light_mode</span>
-        <span class="material-symbols-outlined theme-icon-dark moon-icon">dark_mode</span>
-      </button>
-
-      <!-- Theme Popover Modal -->
-      <div id="theme-popover" class="theme-popover float-panel closed">
-        <button class="theme-popover-item" data-theme-mode="light">
-          <span class="material-symbols-outlined">light_mode</span>
-          <span>亮色</span>
+         -->
+          <span class="navbar-title">sukksa blog</span>
+        </a>
+      </div>
+      <!-- Center: Menu Links -->
+      <div class="navbar-menu" id="navbar-menu" role="menubar">
+        <ul class="navbar-links">
+          <!-- Home (LinkPreset.Home) -->
+          <li class="navbar-link-item" role="none">
+            <a href="/" class="navbar-link" role="menuitem">
+              <span class="navbar-link-content">
+                <span class="material-symbols-outlined">home</span>
+                <span>首页</span>
+              </span>
+              <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
+            </a>
+          </li>
+          <!-- Archive (LinkPreset.Archive) -->
+          <li class="navbar-link-item" role="none">
+            <a href="/archives" class="navbar-link" role="menuitem">
+              <span class="navbar-link-content">
+                <span class="material-symbols-outlined">archive</span>
+                <span>归档</span>
+              </span>
+              <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
+            </a>
+          </li>
+          <!-- Categories -->
+          <li class="navbar-link-item" role="none">
+            <a href="/categories" class="navbar-link"
+              role="menuitem">
+              <span class="navbar-link-content">
+                <span class="material-symbols-outlined">folder</span>
+                <span>分类</span>
+              </span>
+              <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
+            </a>
+          </li>
+          <!-- Tags -->
+          <li class="navbar-link-item" role="none">
+            <a href="/tags" class="navbar-link" role="menuitem">
+              <span class="navbar-link-content">
+                <span class="material-symbols-outlined">sell</span>
+                <span>标签</span>
+              </span>
+              <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
+            </a>
+          </li>
+          <!-- Dynamic --> 
+          <!-- Bangumi 追番 -->  
+          
+           <li class="navbar-link-item" role="none">
+            <a href="/bangumi" class="navbar-link" role="menuitem">
+              <span class="navbar-link-content">
+                <span class="material-symbols-outlined">live_tv</span>
+                <span>追番</span>
+              </span>
+              <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
+            </a>
+          </li> 
+          <!-- About -->   <li class="navbar-link-item" role="none">
+            <a href="/about" class="navbar-link" role="menuitem">
+              <span class="navbar-link-content">
+                <span class="material-symbols-outlined">person</span>
+                <span>关于</span>
+              </span>
+              <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
+            </a>
+          </li> 
+          <!-- Friends --> 
+          <!-- Custom Nav Links / Dropdown Groups --> 
+        </ul>
+      </div>
+      <!-- Right Side Buttons -->
+      <div class="navbar-actions" style="position: relative;">
+        <!-- Search Toggle -->
+        <button id="search-toggle" class="navbar-action-btn search-toggle-btn" aria-label="搜索"
+          title="搜索">
+          <span class="material-symbols-outlined">search</span>
         </button>
-        <button class="theme-popover-item" data-theme-mode="dark">
-          <span class="material-symbols-outlined">dark_mode</span>
-          <span>暗色</span>
+        <!-- Music Toggle -->
+        <button id="nav-music-btn" class="navbar-action-btn music-toggle-btn" aria-label="音乐" title="音乐">
+          <span class="material-symbols-outlined">music_note</span>
         </button>
-        <button class="theme-popover-item" data-theme-mode="system">
-          <span class="material-symbols-outlined">brightness_auto</span>
-          <span>跟随系统</span>
+        <!-- Play / Wallpaper Toggle -->
+        <button id="nav-play-btn" class="navbar-action-btn play-toggle-btn" aria-label="壁纸"
+          title="壁纸">
+          <span class="material-symbols-outlined">play_arrow</span>
+        </button>
+        <!-- Display Settings Toggle (Palette Icon) -->
+        <button id="display-settings-toggle" class="navbar-action-btn display-settings-toggle" aria-label="显示设置"
+          title="显示设置">
+          <span class="material-symbols-outlined">palette</span>
+        </button>
+        <!-- Theme Toggle (Light/Dark/System) -->
+        <button id="theme-toggle" class="navbar-action-btn theme-switch-btn" aria-label="切换主题"
+          title="切换主题">
+          <span class="material-symbols-outlined theme-icon-light sun-icon">light_mode</span>
+          <span class="material-symbols-outlined theme-icon-dark moon-icon">dark_mode</span>
+        </button>
+        <!-- Theme Popover Modal -->
+        <div id="theme-popover" class="theme-popover float-panel closed">
+          <button class="theme-popover-item" data-theme-mode="light">
+            <span class="material-symbols-outlined">light_mode</span>
+            <span>亮色</span>
+          </button>
+          <button class="theme-popover-item" data-theme-mode="dark">
+            <span class="material-symbols-outlined">dark_mode</span>
+            <span>暗色</span>
+          </button>
+          <button class="theme-popover-item" data-theme-mode="system">
+            <span class="material-symbols-outlined">brightness_auto</span>
+            <span>跟随系统</span>
+          </button>
+        </div>
+        <!-- Mobile Hamburger Menu -->
+        <button id="mobile-menu-toggle" class="navbar-action-btn mobile-menu-btn" aria-label="切换菜单" aria-expanded="false"
+          aria-controls="navbar-menu">
+          <span class="material-symbols-outlined hamburger-icon">menu</span>
         </button>
       </div>
-
-      <!-- Mobile Hamburger Menu -->
-      <button id="mobile-menu-toggle" class="navbar-action-btn mobile-menu-btn" aria-label="切换菜单" aria-expanded="false" aria-controls="navbar-menu">
-        <span class="material-symbols-outlined hamburger-icon">menu</span>
-      </button>
     </div>
   </div>
-</div>
-
 </nav>
-
     </div>
   </div>
 
@@ -807,6 +795,11 @@
 <script src="/js/ui/scroll.js"></script>
 <script src="/js/ui/back-to-top.js"></script>
 <script src="/js/ui/post-layout.js"></script>
+
+<!-- Bangumi 追番页：关闭分页时的滚动加载（PJAX 切换页面后也能重新初始化） -->
+
+<script src="/js/features/bangumi-infinite.js"></script>
+
 
 <!-- Feature Scripts -->
 

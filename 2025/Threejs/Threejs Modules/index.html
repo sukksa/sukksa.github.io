@@ -74,6 +74,7 @@
 <link rel="stylesheet" href="/css/responsive.css?v=2026061801">
 
 
+
 <!-- Font Awesome 6 (Brand Icons for social media) -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">
 
@@ -213,152 +214,139 @@
   <!-- Navbar -->
   <div id="top-row" class="z-50 pointer-events-none relative mx-auto w-full xl:w-[92vw] max-w-[var(--page-width)] px-3 md:px-4">
     <div id="navbar-wrapper" class="pointer-events-auto">
-      
-
-<nav id="navbar"
-     class="navbar sticky transparent"
-     data-transparent="true"
-     role="navigation"
-     aria-label="主导航">
-
+       <nav id="navbar" class="navbar sticky transparent" data-transparent="true"
+  role="navigation" aria-label="主导航">
   <div>
     <div class="navbar-inner">
-    <!-- Left: Logo + Site Title -->
-    <div class="navbar-brand">
-      <a href="/" class="navbar-logo-link" aria-label="sukksa blog - 首页">
-        
+      <!-- Left: Logo + Site Title -->
+      <div class="navbar-brand">
+        <a href="/" class="navbar-logo-link" aria-label="sukksa blog - 首页">
+          <!-- 
         <img src="/img/firefly.png" alt="sukksa blog" class="navbar-logo-img" width="32" height="32">
-        
-        <span class="navbar-title">sukksa blog</span>
-      </a>
-    </div>
-
-    <!-- Center: Menu Links -->
-    <div class="navbar-menu" id="navbar-menu" role="menubar">
-      <ul class="navbar-links">
-        <!-- Home (LinkPreset.Home) -->
-        <li class="navbar-link-item" role="none">
-          <a href="/" class="navbar-link" role="menuitem">
-            <span class="navbar-link-content">
-              <span class="material-symbols-outlined">home</span>
-              <span>首页</span>
-            </span>
-            <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
-          </a>
-        </li>
-
-        <!-- Archive (LinkPreset.Archive) -->
-        <li class="navbar-link-item" role="none">
-          <a href="/archives" class="navbar-link" role="menuitem">
-            <span class="navbar-link-content">
-              <span class="material-symbols-outlined">archive</span>
-              <span>归档</span>
-            </span>
-            <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
-          </a>
-        </li>
-
-        <!-- Categories -->
-        <li class="navbar-link-item" role="none">
-          <a href="/categories" class="navbar-link" role="menuitem">
-            <span class="navbar-link-content">
-              <span class="material-symbols-outlined">folder</span>
-              <span>分类</span>
-            </span>
-            <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
-          </a>
-        </li>
-
-        <!-- Tags -->
-        <li class="navbar-link-item" role="none">
-          <a href="/tags" class="navbar-link" role="menuitem">
-            <span class="navbar-link-content">
-              <span class="material-symbols-outlined">sell</span>
-              <span>标签</span>
-            </span>
-            <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
-          </a>
-        </li>
-
-        <!-- Dynamic -->
-        
-
-        <!-- About -->
-        
-        
-        <li class="navbar-link-item" role="none">
-          <a href="/about" class="navbar-link" role="menuitem">
-            <span class="navbar-link-content">
-              <span class="material-symbols-outlined">person</span>
-              <span>关于</span>
-            </span>
-            <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
-          </a>
-        </li>
-        
-
-        <!-- Friends -->
-        
-
-        <!-- Custom Nav Links / Dropdown Groups -->
-        
-      </ul>
-    </div>
-
-    <!-- Right Side Buttons -->
-    <div class="navbar-actions" style="position: relative;">
-      <!-- Search Toggle -->
-      <button id="search-toggle" class="navbar-action-btn search-toggle-btn" aria-label="搜索" title="搜索">
-        <span class="material-symbols-outlined">search</span>
-      </button>
-
-      <!-- Music Toggle -->
-      <button id="nav-music-btn" class="navbar-action-btn music-toggle-btn" aria-label="音乐" title="音乐">
-        <span class="material-symbols-outlined">music_note</span>
-      </button>
-
-      <!-- Play / Wallpaper Toggle -->
-      <button id="nav-play-btn" class="navbar-action-btn play-toggle-btn" aria-label="壁纸" title="壁纸">
-        <span class="material-symbols-outlined">play_arrow</span>
-      </button>
-
-      <!-- Display Settings Toggle (Palette Icon) -->
-      <button id="display-settings-toggle" class="navbar-action-btn display-settings-toggle" aria-label="显示设置" title="显示设置">
-        <span class="material-symbols-outlined">palette</span>
-      </button>
-
-      <!-- Theme Toggle (Light/Dark/System) -->
-      <button id="theme-toggle" class="navbar-action-btn theme-switch-btn" aria-label="切换主题" title="切换主题">
-        <span class="material-symbols-outlined theme-icon-light sun-icon">light_mode</span>
-        <span class="material-symbols-outlined theme-icon-dark moon-icon">dark_mode</span>
-      </button>
-
-      <!-- Theme Popover Modal -->
-      <div id="theme-popover" class="theme-popover float-panel closed">
-        <button class="theme-popover-item" data-theme-mode="light">
-          <span class="material-symbols-outlined">light_mode</span>
-          <span>亮色</span>
+         -->
+          <span class="navbar-title">sukksa blog</span>
+        </a>
+      </div>
+      <!-- Center: Menu Links -->
+      <div class="navbar-menu" id="navbar-menu" role="menubar">
+        <ul class="navbar-links">
+          <!-- Home (LinkPreset.Home) -->
+          <li class="navbar-link-item" role="none">
+            <a href="/" class="navbar-link" role="menuitem">
+              <span class="navbar-link-content">
+                <span class="material-symbols-outlined">home</span>
+                <span>首页</span>
+              </span>
+              <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
+            </a>
+          </li>
+          <!-- Archive (LinkPreset.Archive) -->
+          <li class="navbar-link-item" role="none">
+            <a href="/archives" class="navbar-link" role="menuitem">
+              <span class="navbar-link-content">
+                <span class="material-symbols-outlined">archive</span>
+                <span>归档</span>
+              </span>
+              <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
+            </a>
+          </li>
+          <!-- Categories -->
+          <li class="navbar-link-item" role="none">
+            <a href="/categories" class="navbar-link"
+              role="menuitem">
+              <span class="navbar-link-content">
+                <span class="material-symbols-outlined">folder</span>
+                <span>分类</span>
+              </span>
+              <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
+            </a>
+          </li>
+          <!-- Tags -->
+          <li class="navbar-link-item" role="none">
+            <a href="/tags" class="navbar-link" role="menuitem">
+              <span class="navbar-link-content">
+                <span class="material-symbols-outlined">sell</span>
+                <span>标签</span>
+              </span>
+              <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
+            </a>
+          </li>
+          <!-- Dynamic --> 
+          <!-- Bangumi 追番 -->  
+          
+           <li class="navbar-link-item" role="none">
+            <a href="/bangumi" class="navbar-link" role="menuitem">
+              <span class="navbar-link-content">
+                <span class="material-symbols-outlined">live_tv</span>
+                <span>追番</span>
+              </span>
+              <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
+            </a>
+          </li> 
+          <!-- About -->   <li class="navbar-link-item" role="none">
+            <a href="/about" class="navbar-link" role="menuitem">
+              <span class="navbar-link-content">
+                <span class="material-symbols-outlined">person</span>
+                <span>关于</span>
+              </span>
+              <span class="material-symbols-outlined dropdown-arrow mobile-arrow">chevron_right</span>
+            </a>
+          </li> 
+          <!-- Friends --> 
+          <!-- Custom Nav Links / Dropdown Groups --> 
+        </ul>
+      </div>
+      <!-- Right Side Buttons -->
+      <div class="navbar-actions" style="position: relative;">
+        <!-- Search Toggle -->
+        <button id="search-toggle" class="navbar-action-btn search-toggle-btn" aria-label="搜索"
+          title="搜索">
+          <span class="material-symbols-outlined">search</span>
         </button>
-        <button class="theme-popover-item" data-theme-mode="dark">
-          <span class="material-symbols-outlined">dark_mode</span>
-          <span>暗色</span>
+        <!-- Music Toggle -->
+        <button id="nav-music-btn" class="navbar-action-btn music-toggle-btn" aria-label="音乐" title="音乐">
+          <span class="material-symbols-outlined">music_note</span>
         </button>
-        <button class="theme-popover-item" data-theme-mode="system">
-          <span class="material-symbols-outlined">brightness_auto</span>
-          <span>跟随系统</span>
+        <!-- Play / Wallpaper Toggle -->
+        <button id="nav-play-btn" class="navbar-action-btn play-toggle-btn" aria-label="壁纸"
+          title="壁纸">
+          <span class="material-symbols-outlined">play_arrow</span>
+        </button>
+        <!-- Display Settings Toggle (Palette Icon) -->
+        <button id="display-settings-toggle" class="navbar-action-btn display-settings-toggle" aria-label="显示设置"
+          title="显示设置">
+          <span class="material-symbols-outlined">palette</span>
+        </button>
+        <!-- Theme Toggle (Light/Dark/System) -->
+        <button id="theme-toggle" class="navbar-action-btn theme-switch-btn" aria-label="切换主题"
+          title="切换主题">
+          <span class="material-symbols-outlined theme-icon-light sun-icon">light_mode</span>
+          <span class="material-symbols-outlined theme-icon-dark moon-icon">dark_mode</span>
+        </button>
+        <!-- Theme Popover Modal -->
+        <div id="theme-popover" class="theme-popover float-panel closed">
+          <button class="theme-popover-item" data-theme-mode="light">
+            <span class="material-symbols-outlined">light_mode</span>
+            <span>亮色</span>
+          </button>
+          <button class="theme-popover-item" data-theme-mode="dark">
+            <span class="material-symbols-outlined">dark_mode</span>
+            <span>暗色</span>
+          </button>
+          <button class="theme-popover-item" data-theme-mode="system">
+            <span class="material-symbols-outlined">brightness_auto</span>
+            <span>跟随系统</span>
+          </button>
+        </div>
+        <!-- Mobile Hamburger Menu -->
+        <button id="mobile-menu-toggle" class="navbar-action-btn mobile-menu-btn" aria-label="切换菜单" aria-expanded="false"
+          aria-controls="navbar-menu">
+          <span class="material-symbols-outlined hamburger-icon">menu</span>
         </button>
       </div>
-
-      <!-- Mobile Hamburger Menu -->
-      <button id="mobile-menu-toggle" class="navbar-action-btn mobile-menu-btn" aria-label="切换菜单" aria-expanded="false" aria-controls="navbar-menu">
-        <span class="material-symbols-outlined hamburger-icon">menu</span>
-      </button>
     </div>
   </div>
-</div>
-
 </nav>
-
     </div>
   </div>
 
@@ -594,7 +582,7 @@
       
         
         <a
-          href="mailto:example@email.com"
+          href="mailto:sukksa@qq.com"
           class="profile-social-link"
           target="_blank"
           rel="noopener noreferrer"
@@ -609,30 +597,30 @@
       
         
         <a
-          href="/donate/"
+          href="https://space.bilibili.com/74396531"
           class="profile-social-link"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Sponsor"
+          aria-label="Bilibili"
         >
           
           
-            <span class="material-symbols-outlined">favorite</span>
+            <svg class="profile-social-icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M18.5 3.5h-13c-2.5 0-3 1.5-3 3v10c0 2 .5 3 3 3h13c2.5 0 3-1 3-3v-10c0-1.5-.5-3-3-3zM9 13.5c0 .3-.2.5-.5.5s-.5-.2-.5-.5v-4c0-.3.2-.5.5-.5s.5.2.5.5v4zm6 0c0 .3-.2.5-.5.5s-.5-.2-.5-.5v-4c0-.3.2-.5.5-.5s.5.2.5.5v4z"/></svg>
           
         </a>
         
       
         
         <a
-          href="/rss/"
+          href="https://bangumi.tv/user/726667"
           class="profile-social-link"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="RSS"
+          aria-label="Bangumi"
         >
           
           
-            <span class="material-symbols-outlined">rss_feed</span>
+            <span class="material-symbols-outlined">live_tv</span>
           
         </a>
         
@@ -699,7 +687,7 @@
       <meting-js
         server="netease"
         type="playlist"
-        id="10046455237"
+        id="18495784452"
         api="https://api.injahow.cn/meting/?server=:server&amp;type=:type&amp;id=:id&amp;r=:r"
         order="list"
         fixed="false"
@@ -956,17 +944,17 @@
       
       <a href="/tags/jQuery/" class="tag-item">jQuery</a>
       
-      <a href="/tags/DOM/" class="tag-item">DOM</a>
-      
       <a href="/tags/Ajax/" class="tag-item">Ajax</a>
       
       <a href="/tags/JavaScript/" class="tag-item">JavaScript</a>
       
+      <a href="/tags/DOM/" class="tag-item">DOM</a>
+      
       <a href="/tags/Threejs/" class="tag-item">Threejs</a>
       
-      <a href="/tags/react/" class="tag-item">react</a>
-      
       <a href="/tags/git/" class="tag-item">git</a>
+      
+      <a href="/tags/react/" class="tag-item">react</a>
       
       
     </div>
@@ -1219,9 +1207,8 @@
         <!-- Post license / copyright -->
         
           
-
 <!-- Support & Share Widget -->
-<div class="post-share-donate-box">
+<!-- <div class="post-share-donate-box">
   <div class="share-donate-left-icon">
     <span class="material-symbols-outlined">favorite</span>
   </div>
@@ -1239,16 +1226,13 @@
       <span class="material-symbols-outlined">arrow_right_alt</span>
     </a>
   </div>
-</div>
-
+</div> -->
 <!-- Copyright Card -->
 <div class="post-copyright-box">
   <div class="copyright-watermark">CC</div>
   <div class="copyright-header">
     <span class="copyright-title">THREE Modules</span>
-    <a class="copyright-link" href="https://sukksa.github.io/2025/Threejs/Threejs%20Modules/" target="_blank" rel="noopener noreferrer">
-      https://sukksa.github.io/2025/Threejs/Threejs%20Modules/
-    </a>
+    <a class="copyright-link" href="https://sukksa.github.io/2025/Threejs/Threejs%20Modules/" target="_blank" rel="noopener noreferrer"> https://sukksa.github.io/2025/Threejs/Threejs%20Modules/ </a>
   </div>
   <div class="copyright-meta">
     <div class="copyright-meta-item">
@@ -1262,33 +1246,30 @@
     <div class="copyright-meta-item">
       <span class="meta-label">许可协议</span>
       <span class="meta-value">
-        <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="license noopener noreferrer">
-          CC BY-NC-SA 4.0
-        </a>
+        <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="license noopener noreferrer"> CC BY-NC-SA 4.0 </a>
       </span>
     </div>
   </div>
 </div>
-
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const shareBtn = document.getElementById('share-post-btn');
-  if (shareBtn) {
-    shareBtn.addEventListener('click', function() {
-      navigator.clipboard.writeText(window.location.href).then(function() {
-        showToast('链接已复制到剪贴板，快去分享给好友吧！');
-      }).catch(function() {
-        showToast('复制失败，请手动复制链接');
+  document.addEventListener('DOMContentLoaded', function () {
+    const shareBtn = document.getElementById('share-post-btn');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', function () {
+        navigator.clipboard.writeText(window.location.href).then(function () {
+          showToast('链接已复制到剪贴板，快去分享给好友吧！');
+        }).catch(function () {
+          showToast('复制失败，请手动复制链接');
+        });
       });
-    });
-  }
-  
-  function showToast(message) {
-    let toast = document.getElementById('firefly-toast');
-    if (!toast) {
-      toast = document.createElement('div');
-      toast.id = 'firefly-toast';
-      toast.style.cssText = `
+    }
+
+    function showToast(message) {
+      let toast = document.getElementById('firefly-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'firefly-toast';
+        toast.style.cssText = `
         position: fixed;
         bottom: 2rem;
         left: 50%;
@@ -1305,21 +1286,20 @@ document.addEventListener('DOMContentLoaded', function() {
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         pointer-events: none;
       `;
-      document.body.appendChild(toast);
+        document.body.appendChild(toast);
+      }
+      toast.textContent = message;
+      setTimeout(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+      }, 50);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(1rem)';
+      }, 2500);
     }
-    toast.textContent = message;
-    setTimeout(() => {
-      toast.style.opacity = '1';
-      toast.style.transform = 'translateX(-50%) translateY(0)';
-    }, 50);
-    setTimeout(() => {
-      toast.style.opacity = '0';
-      toast.style.transform = 'translateX(-50%) translateY(1rem)';
-    }, 2500);
-  }
-});
+  });
 </script>
-
         
 
         <!-- Post meta bottom: tags, last modified -->
@@ -1401,206 +1381,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
   </nav>
 
-  <!-- Side-by-Side Recommendations Grid -->
-  <div class="post-recommendations-row">
-    <!-- Left Column: Related Posts -->
-    <div class="recommendations-column card-base">
-      <div class="recommendations-column-header">
-        <div class="column-header-title">
-          <span class="material-symbols-outlined">schema</span>
-          <h3>相关文章</h3>
-        </div>
-        <span class="recommend-badge smart-badge">智能推荐</span>
-      </div>
-      <ul class="recommend-list">
-        
-          
-          <li>
-            <a href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E6%B3%A2%E6%B5%AA/" class="recommend-item">
-              <span class="recommend-index-badge first-index">1</span>
-              <div class="recommend-item-info">
-                <span class="recommend-item-title">使用着色器绘制波浪</span>
-                <div class="recommend-item-meta-row">
-                  <span class="recommend-item-category">shader</span>
-                  
-                    <span class="recommend-item-excerpt">通过 perlin noise 增加在主浪身上的小波浪循环调用 per...</span>
-                  
-                </div>
-              </div>
-              <span class="material-symbols-outlined recommend-item-chevron">chevron_right</span>
-            </a>
-          </li>
-        
-          
-          <li>
-            <a href="/2025/shader/%E7%9D%80%E8%89%B2%E5%99%A8%E7%BB%98%E5%88%B6%E5%9B%BE%E6%A1%88/" class="recommend-item">
-              <span class="recommend-index-badge ">2</span>
-              <div class="recommend-item-info">
-                <span class="recommend-item-title">使用着色器绘制图案</span>
-                <div class="recommend-item-meta-row">
-                  <span class="recommend-item-category">shader</span>
-                  
-                    <span class="recommend-item-excerpt">What is UV在创建着色器时，我们需要绘制特定的图案，如星星、圆...</span>
-                  
-                </div>
-              </div>
-              <span class="material-symbols-outlined recommend-item-chevron">chevron_right</span>
-            </a>
-          </li>
-        
-          
-          <li>
-            <a href="/2025/shader/%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%9D%80%E8%89%B2%E5%99%A8%E7%A8%8B%E5%BA%8F/" class="recommend-item">
-              <span class="recommend-index-badge ">3</span>
-              <div class="recommend-item-info">
-                <span class="recommend-item-title">第一个 shader 程序</span>
-                <div class="recommend-item-meta-row">
-                  <span class="recommend-item-category">shader</span>
-                  
-                    <span class="recommend-item-excerpt">shader 是用 GLSL(OpenGL Shading Langu...</span>
-                  
-                </div>
-              </div>
-              <span class="material-symbols-outlined recommend-item-chevron">chevron_right</span>
-            </a>
-          </li>
-        
-          
-          <li>
-            <a href="/2026/react/react-hooks/" class="recommend-item">
-              <span class="recommend-index-badge ">4</span>
-              <div class="recommend-item-info">
-                <span class="recommend-item-title">react-hooks</span>
-                <div class="recommend-item-meta-row">
-                  <span class="recommend-item-category">默认分类</span>
-                  
-                    <span class="recommend-item-excerpt">React HooksReact 的核心是组件。v16.8 版本之前，...</span>
-                  
-                </div>
-              </div>
-              <span class="material-symbols-outlined recommend-item-chevron">chevron_right</span>
-            </a>
-          </li>
-        
-          
-          <li>
-            <a href="/2026/cesium/%E5%85%B3%E4%BA%8E-cesium-%E5%9C%A8-micro-app-%E4%B8%8B%E6%97%A0%E6%B3%95%E6%98%BE%E7%A4%BA%E7%9A%84%E9%97%AE%E9%A2%98/" class="recommend-item">
-              <span class="recommend-index-badge ">5</span>
-              <div class="recommend-item-info">
-                <span class="recommend-item-title">关于 cesium 在 micro-app 下无法显示的问题</span>
-                <div class="recommend-item-meta-row">
-                  <span class="recommend-item-category">cesium</span>
-                  
-                    <span class="recommend-item-excerpt">基座：vite + vue3 子应用：vite + vue3 micr...</span>
-                  
-                </div>
-              </div>
-              <span class="material-symbols-outlined recommend-item-chevron">chevron_right</span>
-            </a>
-          </li>
-        
-      </ul>
-    </div>
-
-    <!-- Right Column: Random Posts -->
-    <div class="recommendations-column card-base">
-      <div class="recommendations-column-header">
-        <div class="column-header-title">
-          <span class="material-symbols-outlined">explore</span>
-          <h3>随机文章</h3>
-        </div>
-        <span class="recommend-badge random-badge">随机推荐</span>
-      </div>
-      <ul class="recommend-list">
-        
-          
-          <li>
-            <a href="/2022/ES6/Moudle%20%E7%9A%84%E5%8A%A0%E8%BD%BD%E5%AE%9E%E7%8E%B0/" class="recommend-item">
-              <span class="recommend-index-badge first-index">1</span>
-              <div class="recommend-item-info">
-                <span class="recommend-item-title">Module 的加载实现</span>
-                <div class="recommend-item-meta-row">
-                  <span class="recommend-item-category">ES6</span>
-                  
-                    <span class="recommend-item-excerpt">Module 的加载实现本章介绍如何在浏览器和 Node 之中加载 E...</span>
-                  
-                </div>
-              </div>
-              <span class="material-symbols-outlined recommend-item-chevron">chevron_right</span>
-            </a>
-          </li>
-        
-          
-          <li>
-            <a href="/2022/ES6/%E6%A8%A1%E5%9D%97%E5%8C%96%20module/" class="recommend-item">
-              <span class="recommend-index-badge ">2</span>
-              <div class="recommend-item-info">
-                <span class="recommend-item-title">Module 模块化</span>
-                <div class="recommend-item-meta-row">
-                  <span class="recommend-item-category">ES6</span>
-                  
-                    <span class="recommend-item-excerpt">模块化 module基本概述历史上，JavaScript 一直没有模块...</span>
-                  
-                </div>
-              </div>
-              <span class="material-symbols-outlined recommend-item-chevron">chevron_right</span>
-            </a>
-          </li>
-        
-          
-          <li>
-            <a href="/2022/ES6/Class%E7%9A%84%E7%BB%A7%E6%89%BF/" class="recommend-item">
-              <span class="recommend-index-badge ">3</span>
-              <div class="recommend-item-info">
-                <span class="recommend-item-title">Class的基本用法</span>
-                <div class="recommend-item-meta-row">
-                  <span class="recommend-item-category">ES6</span>
-                  
-                    <span class="recommend-item-excerpt">Class的基本用法Class 可以通过extends关键字实现继承，...</span>
-                  
-                </div>
-              </div>
-              <span class="material-symbols-outlined recommend-item-chevron">chevron_right</span>
-            </a>
-          </li>
-        
-          
-          <li>
-            <a href="/2022/vue/%E6%8C%89%E9%94%AE%E4%BF%AE%E9%A5%B0%E7%AC%A6/" class="recommend-item">
-              <span class="recommend-index-badge ">4</span>
-              <div class="recommend-item-info">
-                <span class="recommend-item-title">按键修饰符</span>
-                <div class="recommend-item-meta-row">
-                  <span class="recommend-item-category">Vue</span>
-                  
-                    <span class="recommend-item-excerpt">按键修饰符在绑定了键盘或鼠标的点击事件后,可以通过按下的按键触发要进行...</span>
-                  
-                </div>
-              </div>
-              <span class="material-symbols-outlined recommend-item-chevron">chevron_right</span>
-            </a>
-          </li>
-        
-          
-          <li>
-            <a href="/2021/javaScript/%E5%AF%B9%E8%B1%A1/" class="recommend-item">
-              <span class="recommend-index-badge ">5</span>
-              <div class="recommend-item-info">
-                <span class="recommend-item-title">对象</span>
-                <div class="recommend-item-meta-row">
-                  <span class="recommend-item-category">javaScript</span>
-                  
-                    <span class="recommend-item-excerpt">对象（Object） 对象是JS中的引用数据类型 对象是一种复合数据类...</span>
-                  
-                </div>
-              </div>
-              <span class="material-symbols-outlined recommend-item-chevron">chevron_right</span>
-            </a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
+  
 </div>
 
     </article>
@@ -1669,6 +1450,17 @@ document.addEventListener('DOMContentLoaded', function() {
       </div>
       <span class="stat-value">17</span>
     </div>
+    
+    <!-- Bangumi 追番量（在看 + 看过） -->
+    
+    <div class="stat-item">
+      <div class="stat-label">
+        <span class="material-symbols-outlined stat-icon">live_tv</span>
+        <span>追番</span>
+      </div>
+      <span class="stat-value" title="Bangumi 在看 + 看过 合计">388</span>
+    </div>
+    
     
     <!-- Total Words -->
     <div class="stat-item">
@@ -1786,7 +1578,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
         
         <a
-          href="mailto:example@email.com"
+          href="mailto:sukksa@qq.com"
           class="profile-social-link"
           target="_blank"
           rel="noopener noreferrer"
@@ -1801,30 +1593,30 @@ document.addEventListener('DOMContentLoaded', function() {
       
         
         <a
-          href="/donate/"
+          href="https://space.bilibili.com/74396531"
           class="profile-social-link"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Sponsor"
+          aria-label="Bilibili"
         >
           
           
-            <span class="material-symbols-outlined">favorite</span>
+            <svg class="profile-social-icon" viewBox="0 0 24 24" width="1em" height="1em" fill="currentColor"><path d="M18.5 3.5h-13c-2.5 0-3 1.5-3 3v10c0 2 .5 3 3 3h13c2.5 0 3-1 3-3v-10c0-1.5-.5-3-3-3zM9 13.5c0 .3-.2.5-.5.5s-.5-.2-.5-.5v-4c0-.3.2-.5.5-.5s.5.2.5.5v4zm6 0c0 .3-.2.5-.5.5s-.5-.2-.5-.5v-4c0-.3.2-.5.5-.5s.5.2.5.5v4z"/></svg>
           
         </a>
         
       
         
         <a
-          href="/rss/"
+          href="https://bangumi.tv/user/726667"
           class="profile-social-link"
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="RSS"
+          aria-label="Bangumi"
         >
           
           
-            <span class="material-symbols-outlined">rss_feed</span>
+            <span class="material-symbols-outlined">live_tv</span>
           
         </a>
         
@@ -1848,7 +1640,7 @@ document.addEventListener('DOMContentLoaded', function() {
       <meting-js
         server="netease"
         type="playlist"
-        id="10046455237"
+        id="18495784452"
         api="https://api.injahow.cn/meting/?server=:server&amp;type=:type&amp;id=:id&amp;r=:r"
         order="list"
         fixed="false"
@@ -2085,6 +1877,17 @@ document.addEventListener('DOMContentLoaded', function() {
       <span class="stat-value">17</span>
     </div>
     
+    <!-- Bangumi 追番量（在看 + 看过） -->
+    
+    <div class="stat-item">
+      <div class="stat-label">
+        <span class="material-symbols-outlined stat-icon">live_tv</span>
+        <span>追番</span>
+      </div>
+      <span class="stat-value" title="Bangumi 在看 + 看过 合计">388</span>
+    </div>
+    
+    
     <!-- Total Words -->
     <div class="stat-item">
       <div class="stat-label">
@@ -2135,17 +1938,17 @@ document.addEventListener('DOMContentLoaded', function() {
       
       <a href="/tags/jQuery/" class="tag-item">jQuery</a>
       
-      <a href="/tags/DOM/" class="tag-item">DOM</a>
-      
       <a href="/tags/Ajax/" class="tag-item">Ajax</a>
       
       <a href="/tags/JavaScript/" class="tag-item">JavaScript</a>
       
+      <a href="/tags/DOM/" class="tag-item">DOM</a>
+      
       <a href="/tags/Threejs/" class="tag-item">Threejs</a>
       
-      <a href="/tags/react/" class="tag-item">react</a>
-      
       <a href="/tags/git/" class="tag-item">git</a>
+      
+      <a href="/tags/react/" class="tag-item">react</a>
       
       
     </div>
@@ -2251,7 +2054,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <span class="material-symbols-outlined">schedule</span>
           </div>
           <div class="site-info-card-label">构建时间</div>
-          <div class="site-info-card-value">2026/10/17 17:42:45</div>
+          <div class="site-info-card-value">2026/10/18 00:42:57</div>
         </div>
 
         <!-- System Info -->
@@ -2540,6 +2343,11 @@ if (!window._siteInfoToggleBound) {
 <script src="/js/ui/scroll.js"></script>
 <script src="/js/ui/back-to-top.js"></script>
 <script src="/js/ui/post-layout.js"></script>
+
+<!-- Bangumi 追番页：关闭分页时的滚动加载（PJAX 切换页面后也能重新初始化） -->
+
+<script src="/js/features/bangumi-infinite.js"></script>
+
 
 <!-- Feature Scripts -->
 
