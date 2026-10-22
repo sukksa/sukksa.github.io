@@ -1,0 +1,33 @@
+﻿# Sukksa's Blog
+> Sukksa 的个人博客：记录前端学习与日常。I Love the World and Everything In It.
+
+## Key Pages
+- [主页](https://sukksa.github.io/)
+- [归档](https://sukksa.github.io/archive/)
+- [关于我](https://sukksa.github.io/about/)
+- [友链](https://sukksa.github.io/friends/): 这里是我的朋友们，欢迎互相访问交流
+- [动态](https://sukksa.github.io/dynamic/): 随手记下此刻的想法与日常。
+- [项目](https://sukksa.github.io/projects/): 这里展示我开发过的项目
+- [bangumi](https://sukksa.github.io/bangumi/): 记录我的二次元之旅
+
+## Recent Posts
+- [に 和 で](https://sukksa.github.io/posts/japanese/01-%E3%81%AB%E5%92%8C%E3%81%A7/)
+- [条件形](https://sukksa.github.io/posts/japanese/02-%E6%9D%A1%E4%BB%B6%E5%BD%A2/)
+- [推量・伝聞](https://sukksa.github.io/posts/japanese/03-%E6%8E%A8%E9%87%8F%E4%BC%A0%E9%97%BB/)
+- [授受・受身・使役](https://sukksa.github.io/posts/japanese/04-%E8%A7%86%E7%82%B9/)
+- [动词变形](https://sukksa.github.io/posts/japanese/05-%E5%8A%A8%E8%AF%8D%E5%BD%A2%E6%80%81/)
+- [体与时态](https://sukksa.github.io/posts/japanese/06-%E4%BD%93%E4%B8%8E%E6%97%B6%E6%80%81/)
+- [react-hooks](https://sukksa.github.io/posts/react/react-hooks/): React 的核心是组件。v16.8 版本之前，组件的标准写法是类（class）。 任何一个组件，可以用类来写，也可以用钩子来写。下面是类的写法。 再来看钩子的写法，也就是函数。 官方推荐使用钩子（函数），而不是类。因为钩子更简洁，代码量少，用起来比较"轻"，而类比较"重"。而且，钩子是函数，更符合…
+- [关于 cesium 在 micro-app 下无法显示的问题](https://sukksa.github.io/posts/cesium/guan-yu-cesium-zai-micro-app-xia-wu-fa-xian-shi-de-wen-ti/): 基座：vite + vue3 子应用：vite + vue3 micro app v1.0.0 rc.29, cesium v1.135 子应用包含一个 cesium map，在基座打开子应用时，cesium 无法显示地图，但是 sence, sky box, model 都能正常显示，唯独地图不显…
+- [TypeScript 进阶](https://sukksa.github.io/posts/typescript/typescript-jin-jie/): 数组合并了相同类型的对象，而元组（Tuple）合并了不同类型的对象。 元组起源于函数编程语言（如 F ），这些语言中会频繁使用元组。 元组是⼀种特殊的数组类型，可以存储固定数量的元素，并且每个元素的类型是已知的且可以不同。元组⽤于精确描述⼀组值的类型， ? 表示可选元素。 定义一对值分别为 stri…
+- [TypeScript 基础](https://sukksa.github.io/posts/typescript/typescript-ji-chu/): JavaScript 的类型分为两种：原始数据类型（Primitive data types）和对象类型（Object types）。 原始数据类型包括：布尔值、数值、字符串、 null 、 undefined 以及 ES6 中的新类型 Symbol 和 ES10 中的新类型 BigInt 。
+- [state](https://sukksa.github.io/posts/react/state/): 组件通常需要根据交互更改屏幕上显示的内容。输入表单应该更新输入字段，单击轮播图上的“下一个”应该更改显示的图片，单击“购买”应该将商品放入购物车。组件需要“记住”某些东西：当前输入值、当前图片、购物车。在 React 中，这种组件特有的记忆被称为 state 。
+- [react 事件](https://sukksa.github.io/posts/react/react-shi-jian/): 使用 React 可以在 JSX 中添加 事件处理函数 。其中事件处理函数为自定义函数，它将在响应交互（如点击、悬停、表单输入框获得焦点等）时触发。 如需添加一个事件处理函数，需要先定义一个函数，然后 将其作为 prop 传入 合适的 JSX 标签。例如，这里有一个没绑定任何事件的按钮： 1. 在…
+- [react 基础](https://sukksa.github.io/posts/react/react-ji-chu/): React 组件使用 props 来互相通信。每个父组件都可以提供 props 给它的子组件，从而将一些信息传递给它。可以通过它们传递任何 JavaScript 值，包括对象、数组和函数。 首先，将一些 props 传递给子组件 Avatar 。例如，传递两个 props： person （一个对象…
+- [从零开始的npm教程](https://sukksa.github.io/posts/git/cong-ling-kai-shi-de-npm-jiao-cheng/): npm 是 Node.js 的标准包管理器，它允许你下载别人写好的代码（称为“包”或 package）直接在你的项目中使用，同时也帮助你管理这些代码之间的 依赖关系 （即你的项目运行所需要的外部代码）。 package.json 是 Node.js 项目中最重要的文件，如果没有它，npm 就不知道你…
+- [将 Hexo 提交到仓库](https://sukksa.github.io/posts/git/jiang-hexo-ti-jiao-dao-cang-ku/): 这是一个 Hexo 双仓库管理问题（一个是用于存放 静态网页 的 xxx.github.io ，一个是用于存放 源代码 的 hexo code ）。 提交不上去是因为 Git 配置冲突 或者 .gitignore 设置不当 造成的。
+- [从现有git仓库切换到另一个仓库](https://sukksa.github.io/posts/git/cong-xian-you-git-cang-ku-qie-huan-dao-ling-yi-ge-cang-ku/): 此方法会 保留 原有的 origin （指向 url1 ），同时 新增 一个指向 url2 的远程仓库。这样本地仓库就可以同时与两个远程仓库进行通信。
+- [《罪与罚》](https://sukksa.github.io/posts/note/zui-yu-fa/): 这是继《钢铁是怎样炼成的》后阅读的第二本俄国文学，或许是第一本？本书作成时沙俄还未推翻罢。 和我印象中的俄国文学一样，光是开篇冗长的人名以及各种昵称都快将我劝退了，直到拉斯克尔尼科夫将放贷的老太婆谋杀后，我才提起兴趣罢。
+- [仅显示某个行政区划（cesium 挖孔）](https://sukksa.github.io/posts/cesium/jin-xian-shi-mou-ge-xing-zheng-qu-hua-cesium-wa-kong/): 添加polygon, 中间挖孔, 仅显示某个区域 GeoJSON为 GeoJSON , 行政区划下载
+- [第一个cesium项目](https://sukksa.github.io/posts/cesium/di-yi-ge-cesium-xiang-mu/): 这里使用vite搭建demo, 选择 Vanilla （代表原生 JS）
+- [使用着色器绘制波浪](https://sukksa.github.io/posts/shader/shi-yong-zhe-se-qi-hui-zhi-bo-lang/): 通过 perlin noise 增加在主浪身上的小波浪 循环调用 perlin noise 显得更加无序 但是多次调用 perlin noise，会导致小波浪的频率变小，但我们希望和主浪保持一样的高度，所以乘以 i 扩大频率，除以 i 缩小高度
