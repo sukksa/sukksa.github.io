@@ -1,0 +1,33 @@
+﻿# Sukksa's Blog
+> Sukksa 的个人博客：记录前端学习与日常。I Love the World and Everything In It.
+
+## Key Pages
+- [主页](https://sukksa.github.io/)
+- [归档](https://sukksa.github.io/archive/)
+- [关于我](https://sukksa.github.io/about/)
+- [友链](https://sukksa.github.io/friends/): 这里是我的朋友们，欢迎互相访问交流
+- [动态](https://sukksa.github.io/dynamic/): 随手记下此刻的想法与日常。
+- [项目](https://sukksa.github.io/projects/): 这里展示我开发过的项目
+- [bangumi](https://sukksa.github.io/bangumi/): 记录我的二次元之旅
+
+## Recent Posts
+- [被动形、使役形与使役被动形](https://sukksa.github.io/posts/japanese/particle/14-%E8%A2%AB%E5%8A%A8%E5%BD%A2%E4%BD%BF%E5%BD%B9%E5%BD%A2%E4%B8%8E%E4%BD%BF%E5%BD%B9%E8%A2%AB%E5%8A%A8%E5%BD%A2/): 整理动词被动形、使役形和使役被动形的构成、句子视角、助词搭配及常见例外。
+- [「～ている」及动作状态表达](https://sukksa.github.io/posts/japanese/particle/15-%E3%81%A6%E3%81%84%E3%82%8B%E5%8F%8A%E5%8A%A8%E4%BD%9C%E7%8A%B6%E6%80%81%E8%A1%A8%E8%BE%BE/): 梳理「～ている」的进行、状态和习惯用法，并说明准备、完成、尝试、状态保持及动作阶段表达。
+- [简体与敬体：普通形的构成和用法](https://sukksa.github.io/posts/japanese/particle/16-%E7%AE%80%E4%BD%93%E4%B8%8E%E6%95%AC%E4%BD%93%E6%99%AE%E9%80%9A%E5%BD%A2%E7%9A%84%E6%9E%84%E6%88%90%E5%92%8C%E7%94%A8%E6%B3%95/): 对照名词、形容词和动词的普通形与丁寧形，并说明两种文体在对话、引用和从句中的使用。
+- [存在句：ある、いる与位置表达](https://sukksa.github.io/posts/japanese/particle/17-%E5%AD%98%E5%9C%A8%E5%8F%A5%E3%81%82%E3%82%8B%E3%81%84%E3%82%8B%E4%B8%8E%E4%BD%8D%E7%BD%AE%E8%A1%A8%E8%BE%BE/): 说明「ある／いる」的区别、存在句的两种基本结构、位置表达及相关助词搭配。
+- [动词可能形、能力与可能表达](https://sukksa.github.io/posts/japanese/particle/18-%E5%8A%A8%E8%AF%8D%E5%8F%AF%E8%83%BD%E5%BD%A2%E8%83%BD%E5%8A%9B%E4%B8%8E%E5%8F%AF%E8%83%BD%E8%A1%A8%E8%BE%BE/): 整理动词可能形的构成、能力和条件可能的表达、可能句中的助词选择，以及能力和习惯变化句型。
+- [请求、许可、禁止与义务表达](https://sukksa.github.io/posts/japanese/particle/19-%E8%AF%B7%E6%B1%82%E8%AE%B8%E5%8F%AF%E7%A6%81%E6%AD%A2%E4%B8%8E%E4%B9%89%E5%8A%A1%E8%A1%A8%E8%BE%BE/): 对照请求、许可、禁止、无需做和必须做的表达，说明接续形式、语气差异及常见变体。
+- [意愿、希望、邀请与计划表达](https://sukksa.github.io/posts/japanese/particle/20-%E6%84%8F%E6%84%BF%E5%B8%8C%E6%9C%9B%E9%82%80%E8%AF%B7%E4%B8%8E%E8%AE%A1%E5%88%92%E8%A1%A8%E8%BE%BE/): 整理愿望、意向、计划和邀请表达的接续方式、语气差异与使用限制。
+- [经验、尝试与动作准备表达](https://sukksa.github.io/posts/japanese/particle/21-%E7%BB%8F%E9%AA%8C%E5%B0%9D%E8%AF%95%E4%B8%8E%E5%8A%A8%E4%BD%9C%E5%87%86%E5%A4%87%E8%A1%A8%E8%BE%BE/): 说明经历与偶尔发生的表达，并辨析尝试、事先准备、结果状态和动作完成句型。
+- [场所、方向与动作对象助词：に、で、へ、を的用法区别](https://sukksa.github.io/posts/japanese/particle/07-%E3%81%AB%E3%81%A7%E3%81%B8%E3%82%92/): 整理「に、で、へ、を」的常见用法，辨析存在地点、动作场所、移动目的地、方向及动作对象、经过地点和离开地点。
+- [起点、终点与比较助词：から、まで、より的用法](https://sukksa.github.io/posts/japanese/particle/08-%E3%81%8B%E3%82%89%E3%81%BE%E3%81%A7%E3%82%88%E3%82%8A/): 分别整理「から」「まで」「より」的主要用法，辨析起点、终点、期限与比较基准。
+- [名词关系助词「の」与「と」的常见用法](https://sukksa.github.io/posts/japanese/particle/09-%E3%81%AE%E5%92%8C%E3%81%A8/): 整理「の」连接名词、表示所属和内容，以及「と」表示共同参与、引用、并列和互动关系的用法。
+- [提示助词与副助词：も、だけ、しか等的用法](https://sukksa.github.io/posts/japanese/particle/10-%E3%82%82%E3%81%A0%E3%81%91%E3%81%97%E3%81%8B/): 整理「も、だけ、しか、ばかり、くらい、など、でも」的常见提示和限定用法，并辨析易混表达。
+- [接续助词：て、から、ので、けれど等的用法](https://sukksa.github.io/posts/japanese/particle/11-%E3%81%A6%E3%81%8B%E3%82%89%E3%81%AE%E3%81%A7%E3%81%91%E3%82%8C%E3%81%A9/): 整理「て形连接、から、ので、が、けれど、ても」表示顺序、并列、原因、转折和让步条件的用法。
+- [终助词：か、ね、よ、な等的句末表达](https://sukksa.github.io/posts/japanese/particle/12-%E3%81%8B%E3%81%AD%E3%82%88%E3%81%AA/): 整理句末「か、ね、よ、な」表达疑问、确认、告知、提醒、禁止和感叹时的语气差异。
+- [形容词：分类、活用与接续](https://sukksa.github.io/posts/japanese/particle/02-%E5%BD%A2%E5%AE%B9%E8%AF%8D%E5%88%86%E7%B1%BB%E6%B4%BB%E7%94%A8%E4%B8%8E%E6%8E%A5%E7%BB%AD/): 复习一类形容词和二类形容词的判断、活用、名词修饰，以及简体与敬体接续。
+- [动词分类与基本活用](https://sukksa.github.io/posts/japanese/particle/03-%E5%8A%A8%E8%AF%8D%E5%88%86%E7%B1%BB%E4%B8%8E%E5%9F%BA%E6%9C%AC%E6%B4%BB%E7%94%A8/): 按辞书形判断动词三类，并整理辞书形、ます形、ない形、て形、た形、可能形、被动形、使役形、使役被动形、命令形和意志形的构成。
+- [自动词与他动词：判断规律与用法](https://sukksa.github.io/posts/japanese/particle/05-%E8%87%AA%E5%8A%A8%E8%AF%8D%E4%B8%8E%E4%BB%96%E5%8A%A8%E8%AF%8D%E5%88%A4%E6%96%AD%E8%A7%84%E5%BE%8B%E4%B8%8E%E7%94%A8%E6%B3%95/): 说明自动词与他动词的语义和句法区别、常见词形对应，以及与「が／を」「～ている」「～てある」「～ておく」的关系。
+- [主题提示与主语标记：は、が的用法区别](https://sukksa.github.io/posts/japanese/particle/06-%E3%81%AF%E5%92%8C%E3%81%8C/): 分别整理「は」与「が」的主要用法，并比较主题、主语、疑问词焦点、判断句、存在句和从句中的选择。
+- [react-hooks](https://sukksa.github.io/posts/react/react-hooks/): React 的核心是组件。v16.8 版本之前，组件的标准写法是类（class）。 任何一个组件，可以用类来写，也可以用钩子来写。下面是类的写法。 再来看钩子的写法，也就是函数。 官方推荐使用钩子（函数），而不是类。因为钩子更简洁，代码量少，用起来比较"轻"，而类比较"重"。而且，钩子是函数，更符合…
+- [关于 cesium 在 micro-app 下无法显示的问题](https://sukksa.github.io/posts/cesium/guan-yu-cesium-zai-micro-app-xia-wu-fa-xian-shi-de-wen-ti/): 基座：vite + vue3 子应用：vite + vue3 micro app v1.0.0 rc.29, cesium v1.135 子应用包含一个 cesium map，在基座打开子应用时，cesium 无法显示地图，但是 sence, sky box, model 都能正常显示，唯独地图不显…
