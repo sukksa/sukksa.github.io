@@ -1,0 +1,33 @@
+﻿# Sukksa's Blog
+> Sukksa 的个人博客：记录前端学习与日常。I Love the World and Everything In It.
+
+## Key Pages
+- [主页](https://sukksa.github.io/)
+- [归档](https://sukksa.github.io/archive/)
+- [关于我](https://sukksa.github.io/about/)
+- [友链](https://sukksa.github.io/friends/): 这里是我的朋友们，欢迎互相访问交流
+- [动态](https://sukksa.github.io/dynamic/): 随手记下此刻的想法与日常。
+- [项目](https://sukksa.github.io/projects/): 这里展示我开发过的项目
+- [bangumi](https://sukksa.github.io/bangumi/): 记录我的二次元之旅
+
+## Recent Posts
+- [引用与信息传达表达](https://sukksa.github.io/posts/japanese/particle/26-%E5%BC%95%E7%94%A8%E4%B8%8E%E4%BF%A1%E6%81%AF%E4%BC%A0%E8%BE%BE%E8%A1%A8%E8%BE%BE/): 说明「と」引用、想法与转述表达，整理「そうだ」「によると」和嵌入疑问句的接续与区别。
+- [复句与从句：连接方式和结构分析](https://sukksa.github.io/posts/japanese/particle/27-%E5%A4%8D%E5%8F%A5%E4%B8%8E%E4%BB%8E%E5%8F%A5%E8%BF%9E%E6%8E%A5%E6%96%B9%E5%BC%8F%E5%92%8C%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90/): 梳理日语复句中的て形、たり、し、ながら，认识时间、原因、条件和引用从句，并练习拆解多层长句。
+- [条件表达：と、ば、たら、なら的区别](https://sukksa.github.io/posts/japanese/particle/28-%E6%9D%A1%E4%BB%B6%E8%A1%A8%E8%BE%BE%E3%81%A8%E3%81%B0%E3%81%9F%E3%82%89%E3%81%AA%E3%82%89%E7%9A%84%E5%8C%BA%E5%88%AB/): 梳理「と、ば、たら、なら」的接续、条件关系和主句限制，并说明「ても」表示让步的用法。
+- [原因、理由与目的表达](https://sukksa.github.io/posts/japanese/particle/29-%E5%8E%9F%E5%9B%A0%E7%90%86%E7%94%B1%E4%B8%8E%E7%9B%AE%E7%9A%84%E8%A1%A8%E8%BE%BE/): 对照原因、理由、目的和逆接表达，梳理「から、ので、ために、ように、には、し、おかげで、せいで、のに」的接续与用法。
+- [变化、结果与动作评价表达](https://sukksa.github.io/posts/japanese/particle/30-%E5%8F%98%E5%8C%96%E7%BB%93%E6%9E%9C%E4%B8%8E%E5%8A%A8%E4%BD%9C%E8%AF%84%E4%BB%B7%E8%A1%A8%E8%BE%BE/): 梳理「なる／する」「ようになる／ようにする」「ことになる／ことにする」及「まま」，并说明动作开始、持续、结束、遗忘和难易程度等表达。
+- [敬语体系：尊他语、谦让语与礼貌语](https://sukksa.github.io/posts/japanese/particle/31-%E6%95%AC%E8%AF%AD%E4%BD%93%E7%B3%BB%E5%B0%8A%E4%BB%96%E8%AF%AD%E8%B0%A6%E8%AE%A9%E8%AF%AD%E4%B8%8E%E7%A4%BC%E8%B2%8C%E8%AF%AD/): 梳理敬语的分类与视角，说明尊敬语、谦让语、礼貌语、美化语的常见构成和使用方式。
+- [名词修饰与名词化：こと和の](https://sukksa.github.io/posts/japanese/particle/32-%E5%90%8D%E8%AF%8D%E4%BF%AE%E9%A5%B0%E4%B8%8E%E5%90%8D%E8%AF%8D%E5%8C%96/): 说明形容词和动词从句修饰名词的结构、从句内助词，以及「こと／の」名词化和「のは／のが／のを」的句法作用。
+- [授受表达：基本授受](https://sukksa.github.io/posts/japanese/particle/22-%E6%8E%88%E5%8F%97%E8%A1%A8%E8%BE%BE%E5%9F%BA%E6%9C%AC%E6%8E%88%E5%8F%97/): 整理「あげる、くれる、もらう」及「てあげる、てくれる、てもらう」的句型、视角和使用注意。
+- [比较与程度表达](https://sukksa.github.io/posts/japanese/particle/23-%E6%AF%94%E8%BE%83%E4%B8%8E%E7%A8%8B%E5%BA%A6%E8%A1%A8%E8%BE%BE/): 整理日语比较、选择、最高级、同等程度及过量表达的常见句型。
+- [推测、传闻与判断表达](https://sukksa.github.io/posts/japanese/particle/24-%E6%8E%A8%E6%B5%8B%E4%BC%A0%E9%97%BB%E4%B8%8E%E5%88%A4%E6%96%AD%E8%A1%A8%E8%BE%BE/): 梳理「でしょう」「かもしれない」「そうだ」「らしい」「ようだ」「みたい」「はずだ」的接续与判断依据。
+- [时间、频率与数量表达](https://sukksa.github.io/posts/japanese/particle/25-%E6%97%B6%E9%97%B4%E9%A2%91%E7%8E%87%E4%B8%8E%E6%95%B0%E9%87%8F%E8%A1%A8%E8%BE%BE/): 整理动作前后、持续区间、期限、时间点、频率、时长与数量分配的常见表达。
+- [被动形、使役形与使役被动形](https://sukksa.github.io/posts/japanese/particle/14-%E8%A2%AB%E5%8A%A8%E5%BD%A2%E4%BD%BF%E5%BD%B9%E5%BD%A2%E4%B8%8E%E4%BD%BF%E5%BD%B9%E8%A2%AB%E5%8A%A8%E5%BD%A2/): 整理动词被动形、使役形和使役被动形的构成、句子视角、助词搭配及常见例外。
+- [「～ている」及动作状态表达](https://sukksa.github.io/posts/japanese/particle/15-%E3%81%A6%E3%81%84%E3%82%8B%E5%8F%8A%E5%8A%A8%E4%BD%9C%E7%8A%B6%E6%80%81%E8%A1%A8%E8%BE%BE/): 梳理「～ている」的进行、状态和习惯用法，并说明准备、完成、尝试、状态保持及动作阶段表达。
+- [简体与敬体：普通形的构成和用法](https://sukksa.github.io/posts/japanese/particle/16-%E7%AE%80%E4%BD%93%E4%B8%8E%E6%95%AC%E4%BD%93%E6%99%AE%E9%80%9A%E5%BD%A2%E7%9A%84%E6%9E%84%E6%88%90%E5%92%8C%E7%94%A8%E6%B3%95/): 对照名词、形容词和动词的普通形与丁寧形，并说明两种文体在对话、引用和从句中的使用。
+- [存在句：ある、いる与位置表达](https://sukksa.github.io/posts/japanese/particle/17-%E5%AD%98%E5%9C%A8%E5%8F%A5%E3%81%82%E3%82%8B%E3%81%84%E3%82%8B%E4%B8%8E%E4%BD%8D%E7%BD%AE%E8%A1%A8%E8%BE%BE/): 说明「ある／いる」的区别、存在句的两种基本结构、位置表达及相关助词搭配。
+- [动词可能形、能力与可能表达](https://sukksa.github.io/posts/japanese/particle/18-%E5%8A%A8%E8%AF%8D%E5%8F%AF%E8%83%BD%E5%BD%A2%E8%83%BD%E5%8A%9B%E4%B8%8E%E5%8F%AF%E8%83%BD%E8%A1%A8%E8%BE%BE/): 整理动词可能形的构成、能力和条件可能的表达、可能句中的助词选择，以及能力和习惯变化句型。
+- [请求、许可、禁止与义务表达](https://sukksa.github.io/posts/japanese/particle/19-%E8%AF%B7%E6%B1%82%E8%AE%B8%E5%8F%AF%E7%A6%81%E6%AD%A2%E4%B8%8E%E4%B9%89%E5%8A%A1%E8%A1%A8%E8%BE%BE/): 对照请求、许可、禁止、无需做和必须做的表达，说明接续形式、语气差异及常见变体。
+- [意愿、希望、邀请与计划表达](https://sukksa.github.io/posts/japanese/particle/20-%E6%84%8F%E6%84%BF%E5%B8%8C%E6%9C%9B%E9%82%80%E8%AF%B7%E4%B8%8E%E8%AE%A1%E5%88%92%E8%A1%A8%E8%BE%BE/): 整理愿望、意向、计划和邀请表达的接续方式、语气差异与使用限制。
+- [经验、尝试与动作准备表达](https://sukksa.github.io/posts/japanese/particle/21-%E7%BB%8F%E9%AA%8C%E5%B0%9D%E8%AF%95%E4%B8%8E%E5%8A%A8%E4%BD%9C%E5%87%86%E5%A4%87%E8%A1%A8%E8%BE%BE/): 说明经历与偶尔发生的表达，并辨析尝试、事先准备、结果状态和动作完成句型。
+- [场所、方向与动作对象助词：に、で、へ、を的用法区别](https://sukksa.github.io/posts/japanese/particle/07-%E3%81%AB%E3%81%A7%E3%81%B8%E3%82%92/): 整理「に、で、へ、を」的常见用法，辨析存在地点、动作场所、移动目的地、方向及动作对象、经过地点和离开地点。
